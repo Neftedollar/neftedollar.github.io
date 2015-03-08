@@ -145,8 +145,8 @@
       <nav id="footer-nav" class="navbar navbar-default navbar-fixed-bottom" role="navigation">
         <div class="container">
           <div class="pull-left text-left">
-            <span class="logo">Bloggler</span>
-            <p class="copyright">Copyright@2014</p>
+            <span class="logo">Stei</span>
+            <p class="copyright">Copyright@2015</p>
           </div>
           <div class="pull-right text-right controls">
             <a href="#homeslider" role="button" data-slide="prev"><span class="fa fa-arrow-left"></span></a>
@@ -172,8 +172,8 @@
       //Home Page BG Slideshow
       //-----------------------------------
       $.backstretch([
-            "http://placehold.it/1600x750?text=Hello, Lisa"
-          , "http://placehold.it/1600x750?text=8 march"
+            "http://placehold.it/1600x750?text=Hello+Lisa"
+          , "http://placehold.it/1600x750?text=8+march"
           , "http://placehold.it/1600x750?text=lol"
         ], {duration: 3000, fade: 750});
     </script>
