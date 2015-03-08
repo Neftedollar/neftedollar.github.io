@@ -172,9 +172,9 @@
       //Home Page BG Slideshow
       //-----------------------------------
       $.backstretch([
-            "http://placehold.it/1600x750?text=Hello, Lisa"
-          , "http://placehold.it/1600x750?text=8 march"
-          , "http://placehold.it/1600x750?text=lol"
+            "http://placehold.it/1600x750"
+          , "http://placehold.it/1600x750"
+          , "http://placehold.it/1600x750"
         ], {duration: 3000, fade: 750});
     </script>
 
