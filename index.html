@@ -18,17 +18,23 @@
         .container {
             text-align: center;
             padding: 2rem;
+            max-width: 600px;
         }
         h1 {
             font-size: 2.5rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1.2rem;
             color: #fff;
         }
-        .tagline {
+        .bio {
             font-size: 1.1rem;
             color: #888;
+            line-height: 1.6;
             margin-bottom: 2rem;
+        }
+        .bio .highlight {
+            color: #c8a2ff;
+            font-style: italic;
         }
         .links {
             display: flex;
@@ -43,16 +49,26 @@
             transition: color 0.2s;
         }
         .links a:hover { color: #fff; }
+        h2 {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Roman Melnikov</h1>
-        <p class="tagline">Software Engineer</p>
+        <p class="bio">
+            CTO who built <span class="highlight">teez</span> marketplace from scratch — 11K daily orders, 28K sellers, 32 cities.<br>
+            Now deep in F#, .NET, Orleans, and fintech infrastructure.
+        </p>
         <div class="links">
             <a href="https://github.com/Neftedollar">GitHub</a>
+            <a href="https://linkedin.com/in/rmelnikov">LinkedIn</a>
         </div>
-        <h2 style="font-size:1.2rem; color:#fff; margin-top:2.5rem; margin-bottom:1rem;">Projects</h2>
+        <h2>Projects</h2>
         <div class="links">
             <a href="https://neftedollar.github.io/fyper/">Fyper</a>
             <a href="https://neftedollar.github.io/Next.fs/">Next.fs</a>
