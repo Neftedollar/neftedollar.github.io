@@ -3,38 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roman Melnikov — CTO, F# &amp; .NET Engineer, Open-Source Contributor</title>
-    <meta name="description" content="CTO who built teez marketplace from scratch. F# community in CIS founder, .NET/Orleans expert. Open-source author of Orleans.FSharp, Fyper, FsMcp.">
+    <title>Roman Melnikov (Neftedollar) — CTO, F#/.NET Engineer, Open-Source Projects</title>
+    <meta name="description" content="Roman Melnikov (Neftedollar): CTO, F#/.NET and Orleans engineer, founder of the F# community in CIS. Projects: Orleans.FSharp, FsMcp, Fyper, age-mcp, Next.fs.">
+    <meta name="keywords" content="Roman Melnikov, Neftedollar, F#, .NET, Orleans, MCP, CTO, open source, Orleans.FSharp, FsMcp, Fyper, age-mcp, Next.fs">
     <link rel="canonical" href="https://neftedollar.com/">
+    <link rel="sitemap" href="https://neftedollar.com/sitemap.xml">
+    <link rel="mcp-actions" href="https://neftedollar.com/mcp-actions.json">
+    <link rel="alternate" type="text/plain" href="https://neftedollar.com/llms.txt" title="LLMs.txt">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Roman Melnikov — CTO, F# & .NET Engineer">
-    <meta property="og:description" content="CTO who built teez marketplace from scratch. F# community in CIS founder, .NET/Orleans expert. Open-source contributor.">
+    <meta property="og:title" content="Roman Melnikov (Neftedollar) — CTO, F#/.NET Engineer">
+    <meta property="og:description" content="CTO and F#/.NET engineer. Founder of the F# community in CIS. Explore top projects and technical profile.">
     <meta property="og:url" content="https://neftedollar.com/">
     <meta property="og:site_name" content="Roman Melnikov">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Roman Melnikov — CTO, F# & .NET Engineer">
-    <meta name="twitter:description" content="CTO who built teez marketplace from scratch. F# community in CIS founder, .NET/Orleans expert.">
+    <meta name="twitter:title" content="Roman Melnikov (Neftedollar) — CTO, F#/.NET Engineer">
+    <meta name="twitter:description" content="CTO and F#/.NET engineer. Founder of the F# community in CIS. Projects: Orleans.FSharp, FsMcp, Fyper, age-mcp, Next.fs.">
 
     <!-- Person Schema -->
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Roman Melnikov",
-        "alternateName": "Neftedollar",
-        "url": "https://neftedollar.com",
-        "jobTitle": "CTO",
-        "knowsAbout": ["F#", ".NET", "Orleans", "Fintech", "Distributed Systems", "MCP"],
-        "sameAs": [
-            "https://github.com/Neftedollar",
-            "https://linkedin.com/in/rmelnikov",
-            "https://t.me/neftedollar"
-        ]
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Roman Melnikov",
+      "alternateName": "Neftedollar",
+      "url": "https://neftedollar.com",
+      "jobTitle": "CTO",
+      "description": "CTO, F#/.NET and Orleans engineer, founder of the F# community in CIS.",
+      "knowsAbout": ["F#", ".NET", "Microsoft Orleans", "Fintech", "Distributed Systems", "MCP"],
+      "sameAs": [
+        "https://github.com/Neftedollar",
+        "https://linkedin.com/in/rmelnikov",
+        "https://t.me/neftedollar"
+      ]
     }
+    </script>
+
+    <!-- Top Projects Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Top Projects",
+      "itemListOrder": "https://schema.org/ItemListOrderDescending",
+      "numberOfItems": 5,
+      "itemListElement": [
+        {"@type":"ListItem","position":1,"url":"https://neftedollar.com/orleans-fsharp/","name":"Orleans.FSharp"},
+        {"@type":"ListItem","position":2,"url":"https://neftedollar.com/FsMcp/","name":"FsMcp"},
+        {"@type":"ListItem","position":3,"url":"https://neftedollar.com/fyper/","name":"Fyper"},
+        {"@type":"ListItem","position":4,"url":"https://neftedollar.com/age-mcp/","name":"age-mcp"},
+        {"@type":"ListItem","position":5,"url":"https://neftedollar.com/Next.fs/","name":"Next.fs"}
+      ]
+    }
+    </script>
+
+    <!-- Imperative WebMCP registration (safe no-op when unsupported) -->
+    <script>
+      (function () {
+        if (typeof navigator === 'undefined') return;
+        var mcp = navigator.mcpActions;
+        if (!mcp || typeof mcp.register !== 'function') return;
+
+        function safeRegister(action) {
+          try { mcp.register(action); } catch (_) {}
+        }
+
+        safeRegister({
+          id: 'open-about-roman',
+          name: 'Open About Roman',
+          description: 'Open the profile page with Roman Melnikov background.',
+          parameters: { type: 'object', properties: {} },
+          handler: async function () {
+            window.location.assign('https://neftedollar.com/');
+            return { success: true, url: 'https://neftedollar.com/' };
+          }
+        });
+
+        safeRegister({
+          id: 'open-top-projects',
+          name: 'Open Top Projects',
+          description: 'Open Roman\'s top F# and .NET open-source projects.',
+          parameters: { type: 'object', properties: {} },
+          handler: async function () {
+            var target = document.getElementById('top-projects');
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+            return { success: true, section: 'top-projects' };
+          }
+        });
+
+        safeRegister({
+          id: 'open-orleans-fsharp',
+          name: 'Open Orleans.FSharp',
+          description: 'Open Orleans.FSharp project docs.',
+          parameters: { type: 'object', properties: {} },
+          handler: async function () {
+            window.location.assign('https://neftedollar.com/orleans-fsharp/');
+            return { success: true, url: 'https://neftedollar.com/orleans-fsharp/' };
+          }
+        });
+
+        safeRegister({
+          id: 'contact-telegram',
+          name: 'Contact via Telegram',
+          description: 'Open Roman\'s Telegram contact for direct communication.',
+          parameters: { type: 'object', properties: {} },
+          handler: async function () {
+            window.location.assign('https://t.me/neftedollar');
+            return { success: true, url: 'https://t.me/neftedollar' };
+          }
+        });
+      })();
     </script>
 
     <style>
@@ -51,31 +132,37 @@
         .container {
             text-align: center;
             padding: 2rem;
-            max-width: 600px;
+            max-width: 760px;
         }
         h1 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 1.2rem;
+            font-size: 2.4rem;
+            font-weight: 650;
+            margin-bottom: 1rem;
             color: #fff;
+            letter-spacing: -0.02em;
         }
         .bio {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: #b0b0b0;
             line-height: 1.6;
-            margin-bottom: 2rem;
+            margin-bottom: 0.9rem;
         }
         .bio .highlight {
             color: #a8f06e;
             font-style: italic;
             text-decoration: none;
         }
-        .bio .highlight:hover {
-            text-decoration: underline;
+        .bio .highlight:hover { text-decoration: underline; }
+
+        .lang-note {
+            font-size: 0.9rem;
+            color: #8f8f8f;
+            margin-bottom: 1.8rem;
         }
+
         .links {
             display: flex;
-            gap: 1.5rem;
+            gap: 1.25rem;
             justify-content: center;
             flex-wrap: wrap;
         }
@@ -86,37 +173,103 @@
             transition: color 0.2s;
         }
         .links a:hover { color: #fff; }
+
         h2 {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: #fff;
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
+            margin-top: 2.3rem;
+            margin-bottom: 0.95rem;
         }
+
+        .project-grid {
+            display: grid;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .project-card {
+            display: block;
+            text-align: left;
+            padding: 0.8rem 0.95rem;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            background: #111;
+            text-decoration: none;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .project-card:hover {
+            border-color: #4b4b4b;
+            transform: translateY(-1px);
+        }
+
+        .project-card strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.98rem;
+        }
+
+        .project-card span {
+            color: #9f9f9f;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .other-projects {
+            margin-top: 1.1rem;
+            font-size: 0.92rem;
+        }
+
+        .other-projects a { color: #9ac0ff; }
     </style>
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <h1>Roman Melnikov</h1>
         <p class="bio">
             CTO who built <a href="https://teez.kz" class="highlight" rel="noopener">teez</a> marketplace from scratch — 11K daily orders, 28K sellers, 32 cities.<br>
-            Now deep in F#, .NET, Orleans, and fintech infrastructure.
+            Now focused on F#, .NET, Orleans, MCP, and fintech infrastructure.
         </p>
+        <p class="bio">Основатель F# сообщества в СНГ.</p>
+        <p class="lang-note">EN + RU profile. Main tasks for AI agents: learn about Roman and navigate core projects.</p>
+
         <div class="links">
-            <a href="https://github.com/Neftedollar" rel="noopener">GitHub</a>
-            <a href="https://linkedin.com/in/rmelnikov" rel="noopener">LinkedIn</a>
-            <a href="https://t.me/neftedollar" rel="noopener">Telegram</a>
+            <a href="https://github.com/Neftedollar" rel="noopener" data-mcp-action="open-github-profile" data-mcp-description="Open Roman Melnikov's GitHub profile">GitHub</a>
+            <a href="https://linkedin.com/in/rmelnikov" rel="noopener" data-mcp-action="open-linkedin-profile" data-mcp-description="Open Roman Melnikov's LinkedIn profile">LinkedIn</a>
+            <a href="https://t.me/neftedollar" rel="noopener" data-mcp-action="contact-telegram" data-mcp-description="Open Telegram contact">Telegram</a>
         </div>
-        <h2>Projects</h2>
-        <div class="links">
-            <a href="https://neftedollar.com/orleans-fsharp/" rel="noopener">Orleans.FSharp</a>
-            <a href="https://neftedollar.com/fyper/" rel="noopener">Fyper</a>
-            <a href="https://neftedollar.com/FsMcp/" rel="noopener">FsMcp</a>
-            <a href="https://neftedollar.com/age-mcp/" rel="noopener">AgeMCP</a>
-            <a href="https://neftedollar.com/Next.fs/" rel="noopener">Next.fs</a>
-            <a href="https://github.com/Neftedollar/FsLangMCP" rel="noopener">FsLangMCP</a>
+
+        <h2 id="top-projects">Top 5 Projects</h2>
+        <div class="project-grid">
+            <a class="project-card" href="https://neftedollar.com/orleans-fsharp/" rel="noopener" data-mcp-action="open-orleans-fsharp" data-mcp-description="Open Orleans.FSharp documentation">
+                <strong>Orleans.FSharp</strong>
+                <span>Idiomatic F# API for Microsoft Orleans.</span>
+            </a>
+            <a class="project-card" href="https://neftedollar.com/FsMcp/" rel="noopener" data-mcp-action="open-fsmcp" data-mcp-description="Open FsMcp documentation">
+                <strong>FsMcp</strong>
+                <span>F# toolkit for building MCP servers and clients.</span>
+            </a>
+            <a class="project-card" href="https://neftedollar.com/fyper/" rel="noopener" data-mcp-action="open-fyper" data-mcp-description="Open Fyper project page">
+                <strong>Fyper</strong>
+                <span>Type-safe Cypher ORM/query builder for F#.</span>
+            </a>
+            <a class="project-card" href="https://neftedollar.com/age-mcp/" rel="noopener" data-mcp-action="open-age-mcp" data-mcp-description="Open age-mcp docs">
+                <strong>age-mcp</strong>
+                <span>MCP server for Apache AGE graph databases.</span>
+            </a>
+            <a class="project-card" href="https://neftedollar.com/Next.fs/" rel="noopener" data-mcp-action="open-next-fs" data-mcp-description="Open Next.fs docs">
+                <strong>Next.fs</strong>
+                <span>F# bindings for Next.js App Router patterns.</span>
+            </a>
+        </div>
+
+        <p class="other-projects">
+            Other projects:
+            <a href="https://neftedollar.com/multiagent-template/" rel="noopener">multiagent-template</a>,
+            <a href="https://github.com/Neftedollar/FsLangMCP" rel="noopener">FsLangMCP</a>,
             <a href="https://github.com/Neftedollar/ll-lang" rel="noopener">ll-lang</a>
-            <a href="https://neftedollar.com/multiagent-template/" rel="noopener">multiagent-template</a>
-        </div>
-    </div>
+        </p>
+    </main>
 </body>
 </html>

@@ -1,0 +1,74 @@
+{
+  "version": "1.0",
+  "site": "https://neftedollar.com/",
+  "owner": "Roman Melnikov",
+  "actions": [
+    {
+      "id": "open-about-roman",
+      "name": "Open About Roman",
+      "description": "Open Roman Melnikov profile page.",
+      "method": "link",
+      "href": "https://neftedollar.com/",
+      "priority": "high",
+      "intent": ["about", "profile", "bio"]
+    },
+    {
+      "id": "open-top-projects",
+      "name": "Open Top Projects",
+      "description": "Open Roman's top 5 F#/.NET projects.",
+      "method": "link",
+      "href": "https://neftedollar.com/#top-projects",
+      "priority": "high",
+      "intent": ["projects", "portfolio", "open-source"]
+    },
+    {
+      "id": "open-orleans-fsharp",
+      "name": "Open Orleans.FSharp",
+      "description": "Open Orleans.FSharp project docs.",
+      "method": "link",
+      "href": "https://neftedollar.com/orleans-fsharp/",
+      "priority": "high"
+    },
+    {
+      "id": "open-fsmcp",
+      "name": "Open FsMcp",
+      "description": "Open FsMcp project docs.",
+      "method": "link",
+      "href": "https://neftedollar.com/FsMcp/",
+      "priority": "high"
+    },
+    {
+      "id": "open-fyper",
+      "name": "Open Fyper",
+      "description": "Open Fyper project docs.",
+      "method": "link",
+      "href": "https://neftedollar.com/fyper/",
+      "priority": "high"
+    },
+    {
+      "id": "open-age-mcp",
+      "name": "Open age-mcp",
+      "description": "Open age-mcp project docs.",
+      "method": "link",
+      "href": "https://neftedollar.com/age-mcp/",
+      "priority": "high"
+    },
+    {
+      "id": "open-next-fs",
+      "name": "Open Next.fs",
+      "description": "Open Next.fs project docs.",
+      "method": "link",
+      "href": "https://neftedollar.com/Next.fs/",
+      "priority": "high"
+    },
+    {
+      "id": "contact-telegram",
+      "name": "Contact via Telegram",
+      "description": "Open Telegram contact with Roman Melnikov.",
+      "method": "link",
+      "href": "https://t.me/neftedollar",
+      "priority": "medium",
+      "intent": ["contact", "reach-out", "telegram"]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+AI discovery file.
+
+Primary: https://neftedollar.com/llms.txt
+Extended: https://neftedollar.com/llms-full.txt
+Actions: https://neftedollar.com/mcp-actions.json

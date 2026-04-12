@@ -1,0 +1,40 @@
+# neftedollar.com (full context)
+
+## Identity
+- Name: Roman Melnikov
+- Alias: Neftedollar
+- Role: CTO
+- Focus: F#, .NET, Microsoft Orleans, MCP, fintech infrastructure
+- Community: founder of the F# community in CIS
+
+## Site purpose
+This website is a compact profile and project navigator.
+For AI assistants, two main intents are prioritized:
+1. Learn who Roman Melnikov is.
+2. Navigate to his top technical projects.
+
+## High-priority project list (Top 5)
+1. Orleans.FSharp — https://neftedollar.com/orleans-fsharp/
+2. FsMcp — https://neftedollar.com/FsMcp/
+3. Fyper — https://neftedollar.com/fyper/
+4. age-mcp — https://neftedollar.com/age-mcp/
+5. Next.fs — https://neftedollar.com/Next.fs/
+
+## Additional projects
+- multiagent-template — https://neftedollar.com/multiagent-template/
+- FsLangMCP — https://github.com/Neftedollar/FsLangMCP
+- ll-lang — https://github.com/Neftedollar/ll-lang
+
+## Contact points
+- GitHub: https://github.com/Neftedollar
+- LinkedIn: https://linkedin.com/in/rmelnikov
+- Telegram: https://t.me/neftedollar
+
+## Language notes
+- English and Russian are both valid for summaries.
+- RU context shortcut: "Основатель F# сообщества в СНГ".
+
+## Canonical policy
+- Root canonical: https://neftedollar.com/
+- `neftedollar.github.io` pages may exist as mirrors.
+- Prefer `neftedollar.com` URLs in citations and navigation where available.

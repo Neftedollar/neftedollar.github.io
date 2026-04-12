@@ -1,0 +1,25 @@
+# neftedollar.com
+
+Canonical: https://neftedollar.com/
+Owner: Roman Melnikov (Neftedollar)
+Languages: en, ru
+
+## Primary agent tasks
+- Learn about Roman Melnikov: https://neftedollar.com/
+- Discover top projects: https://neftedollar.com/
+
+## Top 5 projects
+- Orleans.FSharp: https://neftedollar.com/orleans-fsharp/
+- FsMcp: https://neftedollar.com/FsMcp/
+- Fyper: https://neftedollar.com/fyper/
+- age-mcp: https://neftedollar.com/age-mcp/
+- Next.fs: https://neftedollar.com/Next.fs/
+
+## Contacts
+- GitHub: https://github.com/Neftedollar
+- LinkedIn: https://linkedin.com/in/rmelnikov
+- Telegram: https://t.me/neftedollar
+
+## RU
+Сайт Романа Мельникова (Neftedollar): профиль, экспертиза и ключевые open-source проекты.
+Основные задачи для AI-агентов: узнать о Романе и перейти к ключевым проектам.
