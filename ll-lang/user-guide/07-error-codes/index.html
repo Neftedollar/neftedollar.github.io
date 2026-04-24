@@ -1,0 +1,2603 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/user-guide/07-error-codes/">
+      
+      
+        <link rel="prev" href="../06-modules/">
+      
+      
+        <link rel="next" href="../08-cli/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Error codes - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#error-codes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Error codes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#e001-typemismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E001 — TypeMismatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e002-unboundvar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E002 — UnboundVar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e003-nonexhaustivematch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E003 — NonExhaustiveMatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e004-unitmismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E004 — UnitMismatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e005-tagviolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E005 — TagViolation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e006-missingimpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E006 — MissingImpl
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e007-platformmismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E007 — PlatformMismatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e008-infinitetype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E008 — InfiniteType
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e026-unknownexternalmapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E026 — UnknownExternalMapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e027-invalidfixityassoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E027 — InvalidFixityAssoc
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e028-invalidfixityprecedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E028 — InvalidFixityPrecedence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e029-duplicatefixity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E029 — DuplicateFixity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e030-reservedoperatorfixity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E030 — ReservedOperatorFixity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-expected-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing expected errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#e001-typemismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E001 — TypeMismatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e002-unboundvar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E002 — UnboundVar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e003-nonexhaustivematch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E003 — NonExhaustiveMatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e004-unitmismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E004 — UnitMismatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e005-tagviolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E005 — TagViolation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e006-missingimpl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E006 — MissingImpl
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e007-platformmismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E007 — PlatformMismatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e008-infinitetype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E008 — InfiniteType
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e026-unknownexternalmapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E026 — UnknownExternalMapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e027-invalidfixityassoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E027 — InvalidFixityAssoc
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e028-invalidfixityprecedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E028 — InvalidFixityPrecedence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e029-duplicatefixity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E029 — DuplicateFixity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e030-reservedoperatorfixity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E030 — ReservedOperatorFixity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-expected-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing expected errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="error-codes">Error codes<a class="headerlink" href="#error-codes" title="Permanent link">&para;</a></h1>
+<p>All compiler errors follow a compact, single-line format:</p>
+<div class="codehilite"><pre><span></span><code>EXXX line:col ErrorName &lt;details&gt;
+</code></pre></div>
+
+<p>Designed so an LLM agent can parse errors without extracting from prose.</p>
+<p>The table:</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Name</th>
+<th>When it fires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>E001</code></td>
+<td>TypeMismatch</td>
+<td>Two rigid types fail to unify</td>
+</tr>
+<tr>
+<td><code>E002</code></td>
+<td>UnboundVar</td>
+<td>Identifier not in scope</td>
+</tr>
+<tr>
+<td><code>E003</code></td>
+<td>NonExhaustiveMatch</td>
+<td>Match expression misses a sum constructor</td>
+</tr>
+<tr>
+<td><code>E004</code></td>
+<td>UnitMismatch</td>
+<td>Two numeric tags have the same base but different units</td>
+</tr>
+<tr>
+<td><code>E005</code></td>
+<td>TagViolation</td>
+<td>Untagged value passed where tag required</td>
+</tr>
+<tr>
+<td><code>E006</code></td>
+<td>MissingImpl</td>
+<td>No <code>impl</code> found for a constrained type</td>
+</tr>
+<tr>
+<td><code>E007</code></td>
+<td>PlatformMismatch</td>
+<td>Platform module unavailable on selected target</td>
+</tr>
+<tr>
+<td><code>E008</code></td>
+<td>InfiniteType</td>
+<td>Unification would produce an infinite type (occurs check)</td>
+</tr>
+<tr>
+<td><code>E026</code></td>
+<td>UnknownExternalMapping</td>
+<td>Unknown external declaration for selected target</td>
+</tr>
+<tr>
+<td><code>E027</code></td>
+<td>InvalidFixityAssoc</td>
+<td>Invalid fixity associativity for current phase</td>
+</tr>
+<tr>
+<td><code>E028</code></td>
+<td>InvalidFixityPrecedence</td>
+<td>Fixity precedence outside supported range</td>
+</tr>
+<tr>
+<td><code>E029</code></td>
+<td>DuplicateFixity</td>
+<td>Duplicate fixity declaration for same operator</td>
+</tr>
+<tr>
+<td><code>E030</code></td>
+<td>ReservedOperatorFixity</td>
+<td>Fixity declaration targets reserved/unsupported/unsafe operator shape</td>
+</tr>
+</tbody>
+</table>
+<p>Below: the minimal program that reproduces each error, sourced from
+<code>spec/examples/invalid/</code>.</p>
+<h2 id="e001-typemismatch">E001 — TypeMismatch<a class="headerlink" href="#e001-typemismatch" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>-- expect: E001
+module Invalid.E001
+
+greet(name Str) = name
+
+bad = greet 42
+</code></pre></div>
+
+<p><code>greet</code> expects <code>Str</code>, got <code>Int</code>.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code>E001 TypeMismatch Int vs Str
+</code></pre></div>
+
+<p><strong>Fix:</strong> pass a string, not an int. <code>bad = greet "alice"</code>.</p>
+<h2 id="e002-unboundvar">E002 — UnboundVar<a class="headerlink" href="#e002-unboundvar" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>-- expect: E002
+module Invalid.E002
+
+broken = undefinedFunction 42
+</code></pre></div>
+
+<p><code>undefinedFunction</code> is not declared anywhere in the module and has no builtin.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code>E002 UnboundVar undefinedFunction
+</code></pre></div>
+
+<p><strong>Fix:</strong> declare the missing function or import a module that provides it.</p>
+<h2 id="e003-nonexhaustivematch">E003 — NonExhaustiveMatch<a class="headerlink" href="#e003-nonexhaustivematch" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="o">--</span><span class="w"> </span><span class="n">expect</span><span class="o">:</span><span class="w"> </span><span class="n">E003</span>
+<span class="kr">module</span><span class="w"> </span><span class="n">Invalid</span><span class="p">.</span><span class="n">E003</span>
+
+<span class="n">Shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Circle</span><span class="w"> </span><span class="n">Float</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Rect</span><span class="w"> </span><span class="n">Float</span><span class="w"> </span><span class="n">Float</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Empty</span>
+
+<span class="n">area</span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="n">Shape</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Circle</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mf">3.14159</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Rect</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span>
+</code></pre></div>
+
+<p>The <code>Empty</code> constructor of <code>Shape</code> is not covered.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code>E003 0:0 NonExhaustiveMatch Shape missing:Empty
+</code></pre></div>
+
+<p><strong>Fix:</strong> add a branch for the missing constructor, or use <code>_ -&gt; default</code> as
+a catch-all.</p>
+<h2 id="e004-unitmismatch">E004 — UnitMismatch<a class="headerlink" href="#e004-unitmismatch" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- expect: E004</span>
+<span class="k">module</span><span class="w"> </span><span class="n">Invalid</span><span class="p">.</span><span class="n">E004</span>
+
+<span class="n">unit</span><span class="w"> </span><span class="n">m</span>
+<span class="n">unit</span><span class="w"> </span><span class="n">kg</span>
+
+<span class="n">mkM</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="nc">Float</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="o">[</span><span class="n">m</span><span class="o">]</span>
+<span class="n">mkKg</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="nc">Float</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="o">[</span><span class="n">kg</span><span class="o">]</span>
+
+<span class="n">speed</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="nc">Float</span><span class="o">[</span><span class="n">m</span><span class="o">]</span><span class="p">)(</span><span class="n">t</span><span class="w"> </span><span class="nc">Float</span><span class="o">[</span><span class="n">kg</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">t</span>
+
+<span class="n">bad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">speed</span><span class="w"> </span><span class="p">(</span><span class="n">mkKg</span><span class="w"> </span><span class="mf">5.0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">mkM</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+</code></pre></div>
+
+<p><code>speed</code> is declared with <code>d Float[m]</code> but receives <code>Float[kg]</code>.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">E004</span><span class="w"> </span><span class="n">UnitMismatch</span><span class="w"> </span><span class="nc">Float</span><span class="o">[</span><span class="n">kg</span><span class="o">]</span><span class="w"> </span><span class="n">vs</span><span class="w"> </span><span class="nc">Float</span><span class="o">[</span><span class="n">m</span><span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Fix:</strong> produce the value with the expected unit. Unit mismatches almost
+always mean the math is wrong somewhere upstream.</p>
+<h2 id="e005-tagviolation">E005 — TagViolation<a class="headerlink" href="#e005-tagviolation" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- expect: E005</span>
+<span class="k">module</span><span class="w"> </span><span class="n">Invalid</span><span class="p">.</span><span class="n">E005</span>
+
+<span class="n">tag</span><span class="w"> </span><span class="n">UserId</span>
+
+<span class="n">getUser</span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nf">Str</span><span class="o">[</span><span class="n">UserId</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">id</span>
+
+<span class="n">bad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getUser</span><span class="w"> </span><span class="ss">&quot;raw-string&quot;</span>
+</code></pre></div>
+
+<p><code>getUser</code> expects <code>Str[UserId]</code>; a raw <code>Str</code> is not automatically tagged.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">E005</span><span class="w"> </span><span class="n">TaggedUntaggedMismatch</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">vs</span><span class="w"> </span><span class="nf">Str</span><span class="o">[</span><span class="n">UserId</span><span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Fix:</strong> tag the value explicitly: <code>getUser "raw-string"[UserId]</code>.</p>
+<h2 id="e006-missingimpl">E006 — MissingImpl<a class="headerlink" href="#e006-missingimpl" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- expect: E006</span>
+<span class="k">module</span><span class="w"> </span><span class="n">Invalid</span><span class="p">.</span><span class="n">E006</span>
+
+<span class="n">trait</span><span class="w"> </span><span class="n">Functor</span><span class="w"> </span><span class="n">F</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="k">map</span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">B</span><span class="p">)(</span><span class="n">fa</span><span class="w"> </span><span class="n">F</span><span class="o">[</span><span class="n">A</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">F</span><span class="o">[</span><span class="n">B</span><span class="o">]</span>
+
+<span class="n">Box</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Box</span><span class="w"> </span><span class="n">A</span>
+
+<span class="n">doubled</span><span class="o">[</span><span class="n">F: Functor</span><span class="o">]</span><span class="p">(</span><span class="n">xs</span><span class="w"> </span><span class="n">F</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">map</span><span class="w"> </span><span class="p">(</span><span class="err">\</span><span class="n">x</span><span class="p">.</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
+
+<span class="n">bad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doubled</span><span class="w"> </span><span class="p">(</span><span class="n">Box</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+
+<p><code>doubled</code> is constrained to any <code>Functor F</code>, but there's no
+<code>impl Functor Box</code> in scope.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nv">E006</span><span class="w"> </span><span class="nv">MissingImpl</span><span class="w"> </span><span class="nv">Functor</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">Box</span>
+</code></pre></div>
+
+<p><strong>Fix:</strong> add an <code>impl Functor Box</code> block defining <code>map</code>, or call <code>doubled</code> with
+a type that already has an impl (e.g. <code>Maybe</code>).</p>
+<h2 id="e007-platformmismatch">E007 — PlatformMismatch<a class="headerlink" href="#e007-platformmismatch" title="Permanent link">&para;</a></h2>
+<p>Fires when a <code>Platform.*</code> module is imported but the selected target does
+not support that module surface.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code>E007 2:1 PlatformMismatch module:Platform.DotNet.ASP target:python
+</code></pre></div>
+
+<p><strong>Fix:</strong> switch to a target that supports the imported module, or remove the
+platform-specific import.</p>
+<h2 id="e008-infinitetype">E008 — InfiniteType<a class="headerlink" href="#e008-infinitetype" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>-- no corpus file (triggered by recursive lambda without annotation)
+oops = \x. x x
+</code></pre></div>
+
+<p>The unifier tries to solve <code>a = a -&gt; b</code>, which creates a cycle. The
+occurs check catches it.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code>E008 OccursCheck $0 in TyFn(TyVar &quot;$0&quot;, TyVar &quot;$1&quot;)
+</code></pre></div>
+
+<p><strong>Fix:</strong> recursive self-application requires an explicit fixed-point
+combinator or recursive type declaration. In practice, avoid the pattern.</p>
+<h2 id="e026-unknownexternalmapping">E026 — UnknownExternalMapping<a class="headerlink" href="#e026-unknownexternalmapping" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>-- expect: E026
+module Invalid.E026
+
+external host_log(msg Str) Unit
+main() Unit = host_log &quot;hi&quot;
+</code></pre></div>
+
+<p>The selected backend has no mapping for the declared external name. Compilation
+now fails before codegen.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code>E026 2:1 UnknownExternalMapping target:python name:host_log
+</code></pre></div>
+
+<p><strong>Fix:</strong> add a backend mapping for that external, or switch to a known external
+name.</p>
+<h2 id="e027-invalidfixityassoc">E027 — InvalidFixityAssoc<a class="headerlink" href="#e027-invalidfixityassoc" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>-- expect: E027
+module Invalid.E027
+
+infixl +
+ok(a Int)(b Int) = a == b
+</code></pre></div>
+
+<p>The declaration is malformed (<code>infixl</code> missing precedence and operator position).</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code>E027 3:1 InvalidFixityAssoc assoc:invalid
+</code></pre></div>
+
+<p><strong>Fix:</strong> use canonical syntax, e.g. <code>infixl 4 ==</code>.</p>
+<h2 id="e028-invalidfixityprecedence">E028 — InvalidFixityPrecedence<a class="headerlink" href="#e028-invalidfixityprecedence" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>-- expect: E028
+module Invalid.E028
+
+infixl 12 +
+add(a Int)(b Int) = a + b
+</code></pre></div>
+
+<p>Precedence must be in range <code>1..9</code>.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code>E028 3:1 InvalidFixityPrecedence value:12
+</code></pre></div>
+
+<p><strong>Fix:</strong> choose a precedence inside <code>1..9</code>.</p>
+<h2 id="e029-duplicatefixity">E029 — DuplicateFixity<a class="headerlink" href="#e029-duplicatefixity" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>-- expect: E029
+module Invalid.E029
+
+infixl 6 +
+infixl 7 +
+add(a Int)(b Int) = a + b
+</code></pre></div>
+
+<p>Only one fixity declaration is allowed per operator in a module.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code>E029 4:1 DuplicateFixity op:+
+</code></pre></div>
+
+<p><strong>Fix:</strong> keep exactly one declaration for <code>+</code>.</p>
+<h2 id="e030-reservedoperatorfixity">E030 — ReservedOperatorFixity<a class="headerlink" href="#e030-reservedoperatorfixity" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>-- expect: E030
+module Invalid.E030
+
+infixl 6 =
+x = 1
+</code></pre></div>
+
+<p><code>=</code> is reserved and not part of the supported fixity surface.
+<code>E030</code> also covers malformed/unsafe custom symbolic forms.</p>
+<p><strong>Compact output example:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">E030</span><span class="w"> </span><span class="mi">3</span><span class="o">:</span><span class="mi">1</span><span class="w"> </span><span class="n">ReservedOperatorFixity</span><span class="w"> </span><span class="nb">op</span><span class="o">:=</span><span class="w"> </span><span class="n">reason</span><span class="o">:</span><span class="n">reserved</span><span class="o">-</span><span class="n">token</span>
+</code></pre></div>
+
+<p><strong>Fix:</strong> use symbolic non-reserved operator forms, avoid malformed (<code>?</code>),
+comment-like (<code>--</code>) and overlong declarations.</p>
+<h2 id="testing-expected-errors">Testing expected errors<a class="headerlink" href="#testing-expected-errors" title="Permanent link">&para;</a></h2>
+<p>Every <code>.lll</code> file in <code>spec/examples/invalid/</code> declares the expected code
+on line 1:</p>
+<div class="codehilite"><pre><span></span><code>-- expect: E001
+module Invalid.E001
+...
+</code></pre></div>
+
+<p>The compiler test runner asserts that running the elaborator+inference
+pipeline on that file produces exactly that error code.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

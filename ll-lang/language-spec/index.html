@@ -1,0 +1,2789 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/language-spec/">
+      
+      
+        <link rel="prev" href="../tutorials/04-multi-target/">
+      
+      
+        <link rel="next" href="../stdlib-reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>ll-lang Language Specification - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ll-lang-language-specification" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ll-lang Language Specification
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-authority-and-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Authority and versioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-stable-1x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Stable 1.x
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Stable 1.x">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-product-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Product definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-lexical-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Lexical structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-tags-and-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Tags and units
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Expressions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-type-checking-and-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Type checking and inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-module-and-project-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 Module and project system
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 Backends
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-stdlib-and-tooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Stdlib and tooling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-planned-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Planned v2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-deferred-beyond-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Deferred beyond v2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-documentation-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Documentation map
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-authority-and-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Authority and versioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-stable-1x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Stable 1.x
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Stable 1.x">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-product-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Product definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-lexical-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Lexical structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-tags-and-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Tags and units
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Expressions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-type-checking-and-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Type checking and inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-module-and-project-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 Module and project system
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#210-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10 Backends
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#211-stdlib-and-tooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11 Stdlib and tooling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-planned-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Planned v2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-deferred-beyond-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Deferred beyond v2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-documentation-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Documentation map
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ll-lang-language-specification">ll-lang Language Specification<a class="headerlink" href="#ll-lang-language-specification" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> canonical language spec<br />
+<strong>Current stable line:</strong> <code>1.x</code><br />
+<strong>Planned next line:</strong> <code>v2</code><br />
+<strong>Extension:</strong> <code>.lll</code><br />
+<strong>Encoding:</strong> UTF-8 source, ASCII-only operator surface</p>
+<h2 id="1-authority-and-versioning">1. Authority and versioning<a class="headerlink" href="#1-authority-and-versioning" title="Permanent link">&para;</a></h2>
+<p>This document is the single source of truth for ll-lang language behavior.</p>
+<p>It is versioned in three buckets:</p>
+<ul>
+<li><strong>Stable <code>1.x</code></strong> — behavior covered by the shipped release contract.</li>
+<li><strong>Planned <code>v2</code></strong> — intended target architecture and language direction.</li>
+<li><strong>Deferred</strong> — explicitly outside the <code>v2</code> commitment.</li>
+</ul>
+<p>If another document disagrees with this one:</p>
+<ul>
+<li>use this document for current language behavior</li>
+<li>treat older design documents as motivation or backlog unless they are updated</li>
+</ul>
+<p>Supporting specs for <code>v2</code> live in:</p>
+<ul>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/spec/v2-type-system.md">v2-type-system</a></li>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/spec/v2-project-system.md">v2-project-system</a></li>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/spec/v2-self-hosting.md">v2-self-hosting</a></li>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/spec/v2-llm-tooling.md">v2-llm-tooling</a></li>
+</ul>
+<p>The release contract for <code>1.0</code> is defined separately in
+<a href="/Users/roman/Documents/dev/tens/code/ll-lang/docs/release-contract-1.0.md">release-contract-1.0.md</a>.</p>
+<h2 id="2-stable-1x">2. Stable <code>1.x</code><a class="headerlink" href="#2-stable-1x" title="Permanent link">&para;</a></h2>
+<h3 id="21-product-definition">2.1 Product definition<a class="headerlink" href="#21-product-definition" title="Permanent link">&para;</a></h3>
+<p><code>1.x</code> is a statically-typed functional language compiled to:</p>
+<ul>
+<li>F# (<code>fs</code>, default)</li>
+<li>TypeScript (<code>ts</code>)</li>
+<li>Python (<code>py</code>)</li>
+<li>Java (<code>java</code>)</li>
+<li>C# (<code>cs</code>)</li>
+</ul>
+<p>LLVM (<code>llvm</code>) exists but remains experimental in <code>1.x</code>.</p>
+<p>The stable <code>1.x</code> surface includes:</p>
+<ul>
+<li>lexer, parser, elaborator, HM inference, diagnostics, and forward codegen</li>
+<li>CLI workflows: <code>build</code>, <code>check</code>, <code>run</code>, <code>new</code>, <code>install</code>, <code>mcp</code></li>
+<li>project mode via <code>lll.toml</code></li>
+<li>module system with deterministic topo loading</li>
+<li>structured error-code contract</li>
+</ul>
+<h3 id="22-lexical-structure">2.2 Lexical structure<a class="headerlink" href="#22-lexical-structure" title="Permanent link">&para;</a></h3>
+<p><strong>Indentation</strong></p>
+<ul>
+<li>Significant indentation.</li>
+<li>Files must use spaces, not tabs.</li>
+<li>Indentation must be consistent per file.</li>
+<li>The lexer emits synthetic <code>INDENT</code> and <code>DEDENT</code> tokens.</li>
+</ul>
+<p><strong>Comments</strong></p>
+<ul>
+<li><code>--</code> starts a line comment and runs to end of line.</li>
+</ul>
+<p><strong>Keywords</strong></p>
+<p>The current lexer reserves:</p>
+<p><code>match  if  else  import  export  module  trait  impl  external  opaque  tag  unit  true  false  let</code></p>
+<p>Notes:</p>
+<ul>
+<li><code>let</code> is valid in local and top-level bindings.</li>
+<li>Bare declaration forms remain idiomatic even where older docs used <code>fn</code> or <code>type</code>.</li>
+</ul>
+<p><strong>Identifiers</strong></p>
+<ul>
+<li>values/functions: <code>[a-z_][a-zA-Z0-9_]*</code></li>
+<li>types/constructors/modules: <code>[A-Z][a-zA-Z0-9_]*</code></li>
+<li>some <code>external</code> names may use mixed-case host symbols, such as <code>JSON_parse</code></li>
+</ul>
+<p><strong>Literals</strong></p>
+<ul>
+<li><code>42</code> — <code>Int</code></li>
+<li><code>3.14</code> — <code>Float</code></li>
+<li><code>"hello"</code> — <code>Str</code></li>
+<li><code>true</code>, <code>false</code> — <code>Bool</code></li>
+<li><code>'a'</code> — <code>Char</code></li>
+</ul>
+<h3 id="23-types">2.3 Types<a class="headerlink" href="#23-types" title="Permanent link">&para;</a></h3>
+<p><strong>Primitive types</strong></p>
+<p><code>Int  Float  Str  Bool  Char  Unit</code></p>
+<p><strong>Composite types</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="k">[1 2 3]            -- List[Int]</span>
+<span class="k">[1; 2; 3]          -- List[Int]</span>
+<span class="na">1, &quot;hello&quot;         -- (Int, Str)</span>
+<span class="na">Int -&gt; Int -&gt; Bool -- right-associative function type</span>
+<span class="na">List[A]            -- parametric type application</span>
+<span class="na">RBMap[K][V]        -- nested type application</span>
+</code></pre></div>
+
+<p>List rules:</p>
+<ul>
+<li><code>[a b c]</code> is the compact list form</li>
+<li><code>[a; b; c]</code> is the explicit-separator form</li>
+<li>commas inside brackets do not form lists</li>
+</ul>
+<p><strong>User-defined types</strong></p>
+<div class="codehilite"><pre><span></span><code>Maybe A = Some A | None
+Result A E = Ok A | Err E
+
+Shape =
+  | Circle Float
+  | Rect Float Float
+  | Empty
+
+Point = x Float, y Float
+</code></pre></div>
+
+<h3 id="24-tags-and-units">2.4 Tags and units<a class="headerlink" href="#24-tags-and-units" title="Permanent link">&para;</a></h3>
+<p>Stable <code>1.x</code> supports:</p>
+<ul>
+<li>semantic tags via <code>tag</code></li>
+<li>numeric unit algebra via <code>unit</code></li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="n">tag</span><span class="w"> </span><span class="n">UserId</span>
+<span class="n">unit</span><span class="w"> </span><span class="n">m</span>
+<span class="n">unit</span><span class="w"> </span><span class="n">s</span>
+
+<span class="n">uid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;user-42&quot;</span><span class="o">[</span><span class="n">UserId</span><span class="o">]</span>
+<span class="n">speed</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="nc">Float</span><span class="o">[</span><span class="n">m</span><span class="o">]</span><span class="p">)(</span><span class="n">t</span><span class="w"> </span><span class="nc">Float</span><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">t</span>
+</code></pre></div>
+
+<p>Contract:</p>
+<ul>
+<li>tagged values are distinct types</li>
+<li>tag mismatch is a compile-time error (<code>E005</code>)</li>
+<li>incompatible units are a compile-time error (<code>E004</code>)</li>
+<li>numeric <code>*</code> and <code>/</code> compose units algebraically</li>
+</ul>
+<h3 id="25-declarations">2.5 Declarations<a class="headerlink" href="#25-declarations" title="Permanent link">&para;</a></h3>
+<p>Canonical <code>1.x</code> declaration forms:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">My</span><span class="o">.</span><span class="n">App</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Map</span>
+<span class="kn">import</span><span class="w"> </span><span class="s2">&quot;github.com/user/json/Parser&quot;</span>   <span class="o">--</span> <span class="n">remote</span> <span class="kn">import</span><span class="w"> </span><span class="p">(</span><span class="n">M2</span><span class="p">)</span>
+
+<span class="n">export</span> <span class="p">{</span> <span class="n">main</span><span class="p">,</span> <span class="n">helper</span> <span class="p">}</span>
+
+<span class="n">Maybe</span> <span class="n">A</span> <span class="o">=</span> <span class="n">Some</span> <span class="n">A</span> <span class="o">|</span> <span class="kc">None</span>
+
+<span class="n">add</span><span class="p">(</span><span class="n">a</span> <span class="n">Int</span><span class="p">)(</span><span class="n">b</span> <span class="n">Int</span><span class="p">)</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="n">main</span><span class="p">()</span> <span class="o">=</span>
+  <span class="n">_</span> <span class="o">=</span> <span class="n">printfn</span> <span class="s2">&quot;hello&quot;</span>
+  <span class="mi">0</span>
+
+<span class="n">external</span> <span class="n">console_log</span><span class="p">(</span><span class="n">msg</span> <span class="n">Str</span><span class="p">)</span> <span class="n">Unit</span>
+<span class="n">opaque</span> <span class="n">Any</span>
+</code></pre></div>
+
+<p>Stable declaration categories:</p>
+<ul>
+<li>module header</li>
+<li>imports (local: <code>import Std.Map</code>; remote: <code>import "github.com/user/repo/Module"</code>)</li>
+<li>explicit export list</li>
+<li>top-level value bindings</li>
+<li>top-level function bindings</li>
+<li>ADTs and record-like product types</li>
+<li><code>external</code></li>
+<li><code>opaque</code></li>
+<li><code>tag</code></li>
+<li><code>unit</code></li>
+</ul>
+<p>Legacy compatibility:</p>
+<ul>
+<li>per-declaration <code>export decl</code> is still accepted</li>
+<li>no-arg call sites may use either <code>main</code> or <code>main()</code></li>
+</ul>
+<h3 id="26-expressions">2.6 Expressions<a class="headerlink" href="#26-expressions" title="Permanent link">&para;</a></h3>
+<p>Stable <code>1.x</code> expression forms:</p>
+<ul>
+<li>literals</li>
+<li>variables</li>
+<li>constructors</li>
+<li>application by juxtaposition</li>
+<li><code>f()</code> zero-arg call suffix</li>
+<li>arithmetic and comparison operators</li>
+<li><code>!expr</code></li>
+<li><code>if</code></li>
+<li><code>match</code></li>
+<li>lambdas</li>
+<li>local layout bindings</li>
+<li>tuples</li>
+<li>lists</li>
+<li>cons <code>::</code></li>
+<li>tagged values <code>value[Tag]</code></li>
+<li>fixed symbolic operators <code>|&gt;</code>, <code>&gt;&gt;=</code>, <code>&gt;&gt;</code>, <code>&lt;|&gt;</code></li>
+</ul>
+<p>Examples:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">double</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="nc">Int</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span>
+
+<span class="n">process</span><span class="p">(</span><span class="n">xs</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="n">ys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xs</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">listMap</span><span class="w"> </span><span class="p">(</span><span class="err">\</span><span class="n">x</span><span class="p">.</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">  </span><span class="n">listLen</span><span class="w"> </span><span class="n">ys</span>
+
+<span class="n">area</span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="n">Shape</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Circle</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mf">3.14159</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Rect</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Empty</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mf">0.0</span>
+
+<span class="n">main</span><span class="p">()</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">printfn</span><span class="w"> </span><span class="ss">&quot;step 1&quot;</span>
+<span class="w">  </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">printfn</span><span class="w"> </span><span class="ss">&quot;step 2&quot;</span>
+<span class="w">  </span><span class="mi">0</span>
+</code></pre></div>
+
+<p>Operator contract (versioned):</p>
+<ul>
+<li><strong>Operator Contract Version:</strong> <code>1.0.0</code></li>
+<li><strong>Status:</strong> stable for <code>1.x</code> self-host parser surface</li>
+<li><strong>Change policy:</strong> any new symbolic operator or precedence change requires a
+  spec version bump.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Role</th>
+<th>Associativity</th>
+<th>Precedence (low -&gt; high)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;|&gt;</code></td>
+<td>choice</td>
+<td>left</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;=</code></td>
+<td>bind</td>
+<td>left</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;</code></td>
+<td>sequence (discard left)</td>
+<td>left</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>|&gt;</code> / <code>-&gt;</code></td>
+<td>pipe (<code>-&gt;</code> is legacy alias in expression context)</td>
+<td>left</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>==</code> <code>!=</code> <code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code></td>
+<td>comparisons</td>
+<td>left</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>::</code></td>
+<td>list cons</td>
+<td>right</td>
+<td>5</td>
+</tr>
+<tr>
+<td><code>+</code> <code>-</code></td>
+<td>additive arithmetic</td>
+<td>left</td>
+<td>6</td>
+</tr>
+<tr>
+<td><code>*</code> <code>/</code></td>
+<td>multiplicative arithmetic</td>
+<td>left</td>
+<td>7</td>
+</tr>
+<tr>
+<td>application by juxtaposition</td>
+<td>function application</td>
+<td>left</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>These are the canonical baseline operators from <code>Std.Operators</code>.
+Projects may add custom symbolic operators via <code>infix</code>/<code>infixl</code>/<code>infixr</code>
+declarations, subject to <code>E030</code> safety constraints (reserved token collisions,
+malformed/comment-like forms, and readability guardrails). Parser precedence in
+<code>1.x</code> starts from the canonical table and extends with validated declarations.</p>
+<h3 id="27-patterns">2.7 Patterns<a class="headerlink" href="#27-patterns" title="Permanent link">&para;</a></h3>
+<p>Stable <code>1.x</code> pattern forms:</p>
+<ul>
+<li>wildcard <code>_</code></li>
+<li>variable</li>
+<li>literal</li>
+<li>constructor pattern</li>
+<li>nested constructor pattern</li>
+<li>cons pattern <code>h :: t</code></li>
+<li>empty list <code>[]</code></li>
+<li>tuple pattern</li>
+</ul>
+<p>All matches must be exhaustive. Missing coverage is <code>E003</code>.</p>
+<h3 id="28-type-checking-and-inference">2.8 Type checking and inference<a class="headerlink" href="#28-type-checking-and-inference" title="Permanent link">&para;</a></h3>
+<p>Stable <code>1.x</code> uses Hindley-Milner-style inference.</p>
+<p>Practical contract:</p>
+<ul>
+<li>function parameters are annotated in canonical examples and APIs</li>
+<li>return types are usually inferable and may be omitted</li>
+<li>local bindings are inferred</li>
+<li>diagnostics carry compact machine-readable error codes</li>
+</ul>
+<p>The stable <code>1.x</code> error-code set covered by the release contract is:</p>
+<ul>
+<li><code>E001</code> <code>TypeMismatch</code></li>
+<li><code>E002</code> <code>UnboundVar</code></li>
+<li><code>E003</code> <code>NonExhaustiveMatch</code></li>
+<li><code>E004</code> <code>UnitMismatch</code></li>
+<li><code>E005</code> <code>TagViolation</code></li>
+<li><code>E007</code> <code>PlatformMismatch</code></li>
+<li><code>E008</code> <code>InfiniteType</code></li>
+<li><code>E020</code> <code>ModulePathMismatch</code></li>
+<li><code>E024</code> <code>ModuleCycle</code></li>
+<li><code>E025</code> <code>NoProjectForImport</code></li>
+<li><code>E026</code> <code>UnknownExternalMapping</code></li>
+<li><code>E027</code> <code>InvalidFixityAssoc</code></li>
+<li><code>E028</code> <code>InvalidFixityPrecedence</code></li>
+<li><code>E029</code> <code>DuplicateFixity</code></li>
+<li><code>E030</code> <code>ReservedOperatorFixity</code></li>
+</ul>
+<h3 id="29-module-and-project-system">2.9 Module and project system<a class="headerlink" href="#29-module-and-project-system" title="Permanent link">&para;</a></h3>
+<p>Stable <code>1.x</code> project shape:</p>
+<ul>
+<li><code>lll.toml</code> manifest at project root</li>
+<li><code>src/</code> source tree</li>
+<li>module-path to file-path validation</li>
+<li>project load/build via topo-sorted module graph</li>
+</ul>
+<p>Canonical manifest example:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>
+<span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;src/Main.lll&quot;</span>
+</code></pre></div>
+
+<p>Stable CLI/project workflows:</p>
+<ul>
+<li><code>lllc new</code></li>
+<li><code>lllc check [dir]</code></li>
+<li><code>lllc self check &lt;file.lll&gt;</code></li>
+<li><code>lllc build</code></li>
+<li><code>lllc run</code></li>
+<li><code>lllc install</code></li>
+<li><code>lllc mcp</code></li>
+</ul>
+<p>Dependency-management expansion beyond this baseline is planned for <code>v2</code>.</p>
+<h3 id="210-backends">2.10 Backends<a class="headerlink" href="#210-backends" title="Permanent link">&para;</a></h3>
+<p>Stable <code>1.x</code> backends:</p>
+<ul>
+<li><code>fs</code></li>
+<li><code>ts</code></li>
+<li><code>py</code></li>
+<li><code>java</code></li>
+<li><code>cs</code></li>
+</ul>
+<p>Experimental in <code>1.x</code>:</p>
+<ul>
+<li><code>llvm</code></li>
+<li><code>reverse</code></li>
+</ul>
+<h3 id="211-stdlib-and-tooling">2.11 Stdlib and tooling<a class="headerlink" href="#211-stdlib-and-tooling" title="Permanent link">&para;</a></h3>
+<p>Stable <code>1.x</code> includes:</p>
+<ul>
+<li>prelude functions always in scope</li>
+<li>self-hosted stdlib modules under <code>stdlib/src</code></li>
+<li>embedded MCP server</li>
+</ul>
+<p>Canonical reference docs:</p>
+<ul>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/docs/stdlib-reference.md">stdlib-reference.md</a></li>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/docs/user-guide/09-mcp.md">09-mcp.md</a></li>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/docs/user-guide/09-llm-prompting.md">09-llm-prompting.md</a></li>
+</ul>
+<h2 id="3-planned-v2">3. Planned <code>v2</code><a class="headerlink" href="#3-planned-v2" title="Permanent link">&para;</a></h2>
+<p><code>v2</code> is the first release where the canonical compiler/toolchain path is fully
+owned by ll-lang.</p>
+<p>High-level commitments:</p>
+<ul>
+<li>pure ll-lang core for canonical compiler, stdlib, project resolver, and CLI logic</li>
+<li>F# retained only as isolated stage0 bootstrap</li>
+<li>small strict language core preserved</li>
+<li>explicit <code>Lazy</code></li>
+<li>stronger project/dependency model</li>
+<li>stdlib designed specifically for compiler authoring and LLM use</li>
+<li>LLM leverage concentrated in MCP, docs, diagnostics, and benchmarks</li>
+</ul>
+<p><code>v2</code> does <strong>not</strong> require:</p>
+<ul>
+<li>full HKT/typeclass inference as a release blocker</li>
+<li>S-expression primary syntax</li>
+<li>language-level prompt directives</li>
+</ul>
+<p><code>v2</code> details are defined by the companion specs:</p>
+<ul>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/spec/v2-type-system.md">v2-type-system</a></li>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/spec/v2-project-system.md">v2-project-system</a></li>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/spec/v2-self-hosting.md">v2-self-hosting</a></li>
+<li><a href="/Users/roman/Documents/dev/tens/code/ll-lang/spec/v2-llm-tooling.md">v2-llm-tooling</a></li>
+</ul>
+<h2 id="4-deferred-beyond-v2">4. Deferred beyond <code>v2</code><a class="headerlink" href="#4-deferred-beyond-v2" title="Permanent link">&para;</a></h2>
+<p>Explicitly deferred research tracks:</p>
+<ul>
+<li>full HKT/typeclass engine with constrained inference</li>
+<li>effect rows / capability system</li>
+<li>S-expression IR or macro notation as a first-class language layer</li>
+<li>reverse parsing as a release-critical path</li>
+<li>optimizer-heavy IR work beyond self-hosting and backend sanity</li>
+</ul>
+<p>These may be revisited in a later roadmap, but they are not part of the <code>v2</code>
+baseline.</p>
+<h2 id="5-documentation-map">5. Documentation map<a class="headerlink" href="#5-documentation-map" title="Permanent link">&para;</a></h2>
+<p>Use these documents together:</p>
+<ul>
+<li>current stable release guarantees:
+  <a href="/Users/roman/Documents/dev/tens/code/ll-lang/docs/release-contract-1.0.md">release-contract-1.0.md</a></li>
+<li>compiler contributor entrypoint:
+  <a href="/Users/roman/Documents/dev/tens/code/ll-lang/docs/compiler-dev/README.md">compiler-dev/README.md</a></li>
+<li><code>v2</code> architecture north star:
+  <a href="/Users/roman/Documents/dev/tens/code/ll-lang/docs/compiler-dev/12-v2-language-architecture.md">12-v2-language-architecture.md</a></li>
+<li>tracked <code>v2</code> execution plan:
+  <a href="/Users/roman/Documents/dev/tens/code/ll-lang/docs/compiler-dev/13-v2-implementation-roadmap.md">13-v2-implementation-roadmap.md</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

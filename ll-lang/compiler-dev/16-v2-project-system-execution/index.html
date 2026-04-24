@@ -1,0 +1,3855 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/16-v2-project-system-execution/">
+      
+      
+        <link rel="prev" href="../15-v2-pass-contracts/">
+      
+      
+        <link rel="next" href="../17-v2-stdlib-foundation-execution/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>v2 Project System Execution - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v2-project-system-execution" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              v2 Project System Execution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-canonical-manifest-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — Canonical manifest contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — Canonical manifest contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-resolver-semantics-as-product-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Resolver semantics as product contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Resolver semantics as product contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-lock-file-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Lock file contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Lock file contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-vendor-layout-and-source-ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Vendor layout and source ownership
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Vendor layout and source ownership">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-e-cli-lifecycle-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package E — CLI lifecycle contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package E — CLI lifecycle contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-f-project-loader-and-module-graph-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package F — Project loader and module graph integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package F — Project loader and module graph integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ll-lang-implementation-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ll-lang implementation progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-g-compatibility-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package G — Compatibility cleanup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package G — Compatibility cleanup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-h-validation-and-release-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package H — Validation and release gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package H — Validation and release gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#milestone-2-validation-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Milestone 2 validation matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manifest-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manifest questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolver-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolver questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-hosting-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-hosting questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 2
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-canonical-manifest-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — Canonical manifest contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — Canonical manifest contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-resolver-semantics-as-product-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Resolver semantics as product contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Resolver semantics as product contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-lock-file-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Lock file contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Lock file contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-vendor-layout-and-source-ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Vendor layout and source ownership
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Vendor layout and source ownership">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-e-cli-lifecycle-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package E — CLI lifecycle contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package E — CLI lifecycle contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-f-project-loader-and-module-graph-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package F — Project loader and module graph integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package F — Project loader and module graph integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ll-lang-implementation-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ll-lang implementation progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-g-compatibility-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package G — Compatibility cleanup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package G — Compatibility cleanup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-h-validation-and-release-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package H — Validation and release gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package H — Validation and release gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#milestone-2-validation-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Milestone 2 validation matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manifest-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manifest questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolver-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolver questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-hosting-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-hosting questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 2
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="v2-project-system-execution">v2 Project System Execution<a class="headerlink" href="#v2-project-system-execution" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> doc/policy phase complete — implementation gaps tracked in epic #52
+<strong>Closes:</strong> #53 #54 #55 #56 #57 #58 #59 #60
+<strong>Audience:</strong> implementers of <code>Milestone 2</code><br />
+<strong>Parent docs:</strong> <a href="../13-v2-implementation-roadmap/">v2 implementation roadmap</a>, <a href="../../spec/v2-project-system.md">v2 project system spec</a></p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>This document decomposes <code>Milestone 2</code> into implementation-sized work packages.
+It is intentionally operational: each item should be easy to mark yes or no,
+and each package has explicit evidence, exit criteria, and validation.</p>
+<p>This is not a greenfield design. The current repo already contains a partial
+project/dependency system. <code>Milestone 2</code> is about turning that behavior into a
+fully canonical, fully documented, and fully self-host-friendly contract.</p>
+<p>The architectural target is not "better F# dependency tooling". The target is a
+project/dependency system whose canonical implementation is eventually owned by
+<code>ll-lang</code> itself. Any F# work in this milestone must therefore be judged by one
+question: does it clarify, preserve, or unlock the future <code>ll-lang</code>-owned
+implementation?</p>
+<h2 id="status-model">Status model<a class="headerlink" href="#status-model" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>[x]</code> done in current repo and should be preserved</li>
+<li><code>[ ]</code> not done or not yet canonical for <code>v2</code></li>
+</ul>
+<p>Use commit messages and issue notes for nuance. Do not use half-checked tasks.</p>
+<h2 id="current-repo-baseline">Current-repo baseline<a class="headerlink" href="#current-repo-baseline" title="Permanent link">&para;</a></h2>
+<p>The following capabilities already exist in code and tests:</p>
+<ul>
+<li>[x] <code>lll.toml</code> parsing with <code>[project]</code>, <code>[deps]</code>, <code>[platform]</code></li>
+<li>[x] <code>version</code> and <code>entry</code> fields in manifest parsing</li>
+<li>[x] <code>GitDep(url, ref)</code> and <code>PathDep(path)</code> source forms</li>
+<li>[x] git dependency default ref of <code>main</code></li>
+<li>[x] <code>lllc install</code></li>
+<li>[x] <code>lllc mod add</code></li>
+<li>[x] <code>lllc mod tidy</code></li>
+<li>[x] <code>lllc mod why</code></li>
+<li>[x] deterministic single-winner resolver</li>
+<li>[x] winner policy <code>PathDep &gt; GitDep</code></li>
+<li>[x] semver-over-non-semver git ranking</li>
+<li>[x] lexical tie-break for non-semver refs</li>
+<li>[x] <code>ll.sum</code> generation</li>
+<li>[x] <code>vendor/</code> materialization</li>
+<li>[x] stale <code>vendor/</code> cleanup</li>
+<li>[x] transitive dependency traversal</li>
+<li>[x] lock-pin influence from <code>ll.sum</code></li>
+<li>[x] project loader integration with <code>vendor/&lt;dep&gt;/src</code></li>
+</ul>
+<p>The following are still not canonical enough for <code>v2</code>:</p>
+<ul>
+<li>[ ] <code>lll.toml</code> is the only supported manifest path</li>
+<li>[ ] manifest schema diagnostics are strict and versioned</li>
+<li>[ ] <code>ll.sum</code> contract is explicitly enforced as part of public product surface</li>
+<li>[ ] <code>vendor/</code> semantics are documented as the only supported local dependency layout</li>
+<li>[ ] CLI outputs are stabilized for MCP/automation consumption</li>
+<li>[ ] project/dependency behavior is described as one coherent contract across spec, CLI docs, and tests</li>
+<li>[ ] legacy parallel dependency flows are explicitly unsupported</li>
+</ul>
+<h2 id="work-package-a-canonical-manifest-contract">Work package A — Canonical manifest contract<a class="headerlink" href="#work-package-a-canonical-manifest-contract" title="Permanent link">&para;</a></h2>
+<h3 id="goal">Goal<a class="headerlink" href="#goal" title="Permanent link">&para;</a></h3>
+<p>Turn <code>lll.toml</code> from "what current parser accepts" into a documented and
+enforced source-of-truth contract.</p>
+<h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Make <code>lll.toml</code> the only canonical manifest path in docs, CLI help, and implementation.</li>
+<li>[x] Demote <code>ll.toml</code> fallback to compatibility-only behavior, then remove it from the supported path.</li>
+<li>[x] Require <code>project.name</code> and <code>project.version</code> as canonical fields.</li>
+<li>[x] Keep <code>project.entry</code> as the canonical executable entry selector.</li>
+<li>[x] Define policy for unknown keys/tables: tolerated only during migration, then diagnosable.</li>
+<li>[x] Ensure scaffolded projects always emit the canonical manifest shape.</li>
+</ul>
+<blockquote>
+<p><strong>Closed by</strong> <code>spec/v2-project-system.md</code> §"Project identity and manifest schema" — canonical
+field set (<code>name</code>, <code>version</code>, <code>entry</code>), <code>ll.toml</code> fallback explicitly marked compatibility-only,
+unknown-key diagnostics policy defined for <code>check</code> mode post-migration window.
+Closes #53.</p>
+</blockquote>
+<h3 id="exit-criteria">Exit criteria<a class="headerlink" href="#exit-criteria" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A new contributor sees exactly one manifest name in docs and CLI examples.</li>
+<li>The manifest schema is stable enough for MCP and tool-assisted editing.</li>
+<li>Compatibility fallback, if temporarily retained, is explicitly marked non-canonical.</li>
+<li>The manifest contract is precise enough to be reimplemented in <code>ll-lang</code>
+  without reading F# parser internals.</li>
+</ul>
+<h3 id="evidence">Evidence<a class="headerlink" href="#evidence" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>Manifest.fs</code></li>
+<li><code>ProjectLoader.findManifest</code></li>
+<li>scaffold tests in <code>ModuleSystemTests.fs</code></li>
+</ul>
+<h2 id="work-package-b-resolver-semantics-as-product-contract">Work package B — Resolver semantics as product contract<a class="headerlink" href="#work-package-b-resolver-semantics-as-product-contract" title="Permanent link">&para;</a></h2>
+<h3 id="goal_1">Goal<a class="headerlink" href="#goal_1" title="Permanent link">&para;</a></h3>
+<p>Promote the current deterministic resolver behavior from implementation detail
+to intentional product contract.</p>
+<h3 id="tasks_1">Tasks<a class="headerlink" href="#tasks_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Freeze the single-winner-per-dependency-name model as the <code>v2</code> baseline.</li>
+<li>[x] Freeze winner ranking:</li>
+<li>path beats git</li>
+<li>semver git ref beats non-semver git ref</li>
+<li>semver compares numerically</li>
+<li>non-semver compares lexically by ref then URL</li>
+<li>[x] Freeze root-restart convergence semantics when a stronger contender appears.</li>
+<li>[x] Document what <code>ll.sum</code> may pin and what it may not override.</li>
+<li>[x] Add a versioned upgrade note for any future resolver beyond this baseline.</li>
+</ul>
+<blockquote>
+<p><strong>Closed by</strong> <code>spec/v2-project-system.md</code> §"Canonical winner model" and §"Convergence behavior" —
+five-rule winner ordering frozen as <code>v2</code> baseline, <code>ll.sum</code> pin semantics specified (source
+selection only, not hash override of winner ranking), future resolver changes must be versioned
+explicitly. Closes #54.</p>
+</blockquote>
+<h3 id="exit-criteria_1">Exit criteria<a class="headerlink" href="#exit-criteria_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Same graph always resolves to the same winners.</li>
+<li>Resolver behavior is explainable without reading <code>Program.fs</code>.</li>
+<li>A future resolver change would require an explicit spec change, not a silent refactor.</li>
+<li>The winner model is documented tightly enough to be ported into the
+  self-hosted compiler/tooling path.</li>
+</ul>
+<h3 id="evidence_1">Evidence<a class="headerlink" href="#evidence_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>resolver code around <code>compareGitCandidates</code>, <code>comparePreferredWinner</code>, <code>resolveWithPreferred</code></li>
+<li>deterministic winner tests in <code>ModuleSystemTests.fs</code></li>
+</ul>
+<h2 id="work-package-c-lock-file-contract">Work package C — Lock file contract<a class="headerlink" href="#work-package-c-lock-file-contract" title="Permanent link">&para;</a></h2>
+<h3 id="goal_2">Goal<a class="headerlink" href="#goal_2" title="Permanent link">&para;</a></h3>
+<p>Turn <code>ll.sum</code> into a real public contract rather than an incidental artifact.</p>
+<h3 id="tasks_2">Tasks<a class="headerlink" href="#tasks_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Freeze line format and ordering semantics.</li>
+<li>[x] Define whether comments and blank lines remain tolerated.</li>
+<li>[x] Specify exactly which fields participate in pinning and which only in drift detection.</li>
+<li>[x] Document recovery behavior when <code>ll.sum</code> is absent, stale, or partially malformed.</li>
+<li>[x] Decide whether checksum drift is fatal during <code>check/build</code> or only corrected by <code>install/tidy</code>.</li>
+</ul>
+<blockquote>
+<p><strong>Closed by</strong> <code>spec/v2-project-system.md</code> §"Lock file semantics" — line format frozen as
+<code>&lt;name&gt; &lt;source&gt; sha256:&lt;hash&gt;</code>, lines sorted by name, blank/comment lines tolerated on read,
+source field drives pinning, hash field drives drift detection. Recovery policy: absent or
+malformed <code>ll.sum</code> is corrected by <code>install</code>/<code>tidy</code>; checksum drift is not fatal during
+<code>check/build</code> but is reported as a warning. Closes #55.</p>
+</blockquote>
+<h3 id="exit-criteria_2">Exit criteria<a class="headerlink" href="#exit-criteria_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A developer can hand-inspect <code>ll.sum</code> and know what it means.</li>
+<li>Tooling can parse <code>ll.sum</code> deterministically.</li>
+<li>Tests cover both generation and consumption semantics.</li>
+<li>The file format is simple enough to be parsed and emitted by <code>ll-lang</code>
+  without special bootstrap exceptions.</li>
+</ul>
+<h3 id="evidence_2">Evidence<a class="headerlink" href="#evidence_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>writeLlSum</code></li>
+<li><code>readLlSumSources</code></li>
+<li><code>ll.sum</code> tests in <code>ModuleSystemTests.fs</code></li>
+</ul>
+<h2 id="work-package-d-vendor-layout-and-source-ownership">Work package D — Vendor layout and source ownership<a class="headerlink" href="#work-package-d-vendor-layout-and-source-ownership" title="Permanent link">&para;</a></h2>
+<h3 id="goal_3">Goal<a class="headerlink" href="#goal_3" title="Permanent link">&para;</a></h3>
+<p>Make <code>vendor/</code> the only supported materialization model and lock down its
+interaction with nested path deps and project loading.</p>
+<h3 id="tasks_3">Tasks<a class="headerlink" href="#tasks_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Freeze <code>vendor/&lt;dep&gt;/</code> as the only canonical local layout.</li>
+<li>[x] Define git materialization semantics precisely enough for reproducibility.</li>
+<li>[x] Define path-dependency copy semantics precisely enough for nested local graphs.</li>
+<li>[x] Freeze stale directory cleanup as canonical install/tidy behavior.</li>
+<li>[x] Define whether tool-private caches may exist and confirm they are non-semantic.</li>
+</ul>
+<blockquote>
+<p><strong>Closed by</strong> <code>spec/v2-project-system.md</code> §"Vendor materialization contract" — <code>vendor/&lt;dep&gt;/</code>
+frozen as sole canonical layout, <code>GitDep</code> clone-and-checkout semantics specified, <code>PathDep</code> copy
+semantics specified with nested path-dep resolution relative to original repo root, stale cleanup
+confirmed as install/tidy behavior. Tool-private caches explicitly declared non-semantic.
+Closes #56.</p>
+</blockquote>
+<h3 id="exit-criteria_3">Exit criteria<a class="headerlink" href="#exit-criteria_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Builds do not depend on hidden dependency locations outside <code>vendor/</code>.</li>
+<li>Nested path dependency behavior is explained and tested.</li>
+<li>Project loader and installer agree on vendored tree ownership.</li>
+<li>The vendored tree contract is backend-neutral and self-host-friendly.</li>
+</ul>
+<h3 id="evidence_3">Evidence<a class="headerlink" href="#evidence_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>materializeDepOrFail</code></li>
+<li><code>ProjectLoader.loadDepFiles</code></li>
+<li>stale vendor cleanup tests</li>
+</ul>
+<h2 id="work-package-e-cli-lifecycle-contract">Work package E — CLI lifecycle contract<a class="headerlink" href="#work-package-e-cli-lifecycle-contract" title="Permanent link">&para;</a></h2>
+<h3 id="goal_4">Goal<a class="headerlink" href="#goal_4" title="Permanent link">&para;</a></h3>
+<p>Make the dependency CLI a coherent lifecycle instead of a bag of commands.</p>
+<h3 id="tasks_4">Tasks<a class="headerlink" href="#tasks_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define <code>install</code> as the canonical graph realization command.</li>
+<li>[x] Define <code>mod add</code> as manifest mutation plus install.</li>
+<li>[x] Define <code>mod tidy</code> as stale cleanup plus lock rewrite.</li>
+<li>[x] Define <code>mod why</code> as graph explanation, not a best-effort debug helper.</li>
+<li>[x] Stabilize command side effects and human-readable output shape.</li>
+<li>[x] Add or reserve machine-readable output modes if MCP automation needs them.</li>
+</ul>
+<blockquote>
+<p><strong>Closed by</strong> <code>spec/v2-project-system.md</code> §"CLI contract" — all four commands defined with
+explicit responsibilities and required invariants. <code>mod why</code> declared part of the LLM/MCP
+observability surface with stable machine-readable semantics once CLI surfaces are versioned.
+Machine-readable modes reserved for Milestone 6 (<code>TODO(v2:mcp-output)</code> noted in spec).
+Closes #57.</p>
+</blockquote>
+<h3 id="exit-criteria_4">Exit criteria<a class="headerlink" href="#exit-criteria_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Every dependency lifecycle operation maps to exactly one command.</li>
+<li>Side effects are deterministic and documented.</li>
+<li><code>mod why</code> becomes a reliable graph-observability surface for humans and LLMs.</li>
+<li>Command semantics are factored so they can migrate from stage0 CLI code into
+  <code>ll-lang</code>-owned tooling.</li>
+</ul>
+<h3 id="evidence_4">Evidence<a class="headerlink" href="#evidence_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>Program.fs</code> command handlers</li>
+<li>command help text</li>
+<li><code>ModuleSystemTests.fs</code></li>
+</ul>
+<h2 id="work-package-f-project-loader-and-module-graph-integration">Work package F — Project loader and module graph integration<a class="headerlink" href="#work-package-f-project-loader-and-module-graph-integration" title="Permanent link">&para;</a></h2>
+<h3 id="goal_5">Goal<a class="headerlink" href="#goal_5" title="Permanent link">&para;</a></h3>
+<p>Ensure dependency resolution, module loading, and build ordering form one
+backend-independent project model.</p>
+<h3 id="tasks_5">Tasks<a class="headerlink" href="#tasks_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Freeze source discovery rules for root and vendored deps.</li>
+<li>[x] Freeze module-path derivation from project name plus file path.</li>
+<li>[x] Freeze module-path mismatch as a stable diagnostic.</li>
+<li>[x] Freeze topological ordering as dependency-first across root plus vendored modules.</li>
+<li>[x] Clarify which unresolved imports are tolerated during ad hoc <code>run</code> and which are hard errors during project <code>check/build</code>.</li>
+</ul>
+<blockquote>
+<p><strong>Closed by</strong> <code>spec/v2-project-system.md</code> §"Module and project loading" — source discovery rules
+frozen (<code>src/**/*.lll</code> for root, <code>vendor/&lt;dep&gt;/src/**/*.lll</code> for deps), module-path derivation
+from project name + relative path canonical, <code>E020</code> mismatch diagnostic frozen, topo order
+dependency-first with cycle rejection. Unresolved imports: tolerated during ad hoc <code>run</code>,
+hard errors during project <code>check/build</code>. Closes #58.</p>
+</blockquote>
+<h3 id="exit-criteria_5">Exit criteria<a class="headerlink" href="#exit-criteria_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Project load behavior is documented independently of any backend.</li>
+<li>Contributors can reason about graph construction without reading parser code.</li>
+<li>Self-hosted compiler projects and ordinary multi-module apps use the same loader contract.</li>
+<li>The loader contract is precise enough to become part of the self-hosted
+  compiler without semantic drift.</li>
+</ul>
+<h3 id="evidence_5">Evidence<a class="headerlink" href="#evidence_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>ProjectLoader.fs</code></li>
+<li><code>resolveRunImports</code> behavior in <code>Program.fs</code></li>
+</ul>
+<h3 id="ll-lang-implementation-progress">ll-lang implementation progress<a class="headerlink" href="#ll-lang-implementation-progress" title="Permanent link">&para;</a></h3>
+<p>Two ll-lang modules now provide the pure graph/ordering logic that <code>ProjectLoader.fs</code> owns in stage0:</p>
+<ul>
+<li><code>stdlib/src/CompilerManifest.lll</code> (<code>Std.CompilerManifest</code>) — <code>DepSource</code>, <code>LLManifest</code>, <code>ManifestError</code>, <code>parseTomlManifest</code>; wraps <code>Std.Toml</code>; 12/12 self-tests pass.</li>
+<li><code>stdlib/src/CompilerLoader.lll</code> (<code>Std.CompilerLoader</code>) — <code>LoadedFile</code>, <code>LoaderResult</code>, <code>LoaderError</code>; <code>buildDepMap</code>, DFS cycle detection, Kahn's topo sort, <code>loadProject</code> entry; 12/12 self-tests pass.</li>
+</ul>
+<p>These are the ll-lang-owned implementations targeted by §"Self-hosting questions" below.</p>
+<h2 id="work-package-g-compatibility-cleanup">Work package G — Compatibility cleanup<a class="headerlink" href="#work-package-g-compatibility-cleanup" title="Permanent link">&para;</a></h2>
+<h3 id="goal_6">Goal<a class="headerlink" href="#goal_6" title="Permanent link">&para;</a></h3>
+<p>Remove or quarantine all behavior that would reintroduce multiple supported
+dependency paths.</p>
+<h3 id="tasks_6">Tasks<a class="headerlink" href="#tasks_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Remove <code>ll.toml</code> from supported-path docs.</li>
+<li>[x] Remove any old dependency path that competes with <code>vendor/</code>.</li>
+<li>[x] Audit CLI docs and README for obsolete manifest/dependency language.</li>
+<li>[x] Add explicit <code>TODO(v2:resolver)</code> or <code>TODO(v2:bootstrap)</code> markers where temporary compatibility remains.</li>
+</ul>
+<blockquote>
+<p><strong>Closed by</strong> <code>spec/v2-project-system.md</code> §"Compatibility and migration notes" — <code>ll.toml</code>
+fallback named as non-canonical, alternate cache layouts named as non-canonical, unknown-key
+tolerance named as migration-only. Remaining compatibility behaviors require explicit
+<code>TODO(v2:resolver)</code> or <code>TODO(v2:bootstrap)</code> markers in implementation code. Closes #59.</p>
+</blockquote>
+<h3 id="exit-criteria_6">Exit criteria<a class="headerlink" href="#exit-criteria_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The supported path is unambiguous in docs and code.</li>
+<li>Compatibility shims, if any remain, are visibly transitional.</li>
+<li>Remaining transitional F#-only behaviors are tracked as explicit
+  <code>TODO(v2:resolver)</code> / <code>TODO(v2:bootstrap)</code> items rather than accidental product surface.</li>
+</ul>
+<h3 id="evidence_6">Evidence<a class="headerlink" href="#evidence_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>README</li>
+<li>user-guide CLI docs</li>
+<li>project loader manifest discovery</li>
+</ul>
+<h2 id="work-package-h-validation-and-release-gates">Work package H — Validation and release gates<a class="headerlink" href="#work-package-h-validation-and-release-gates" title="Permanent link">&para;</a></h2>
+<h3 id="goal_7">Goal<a class="headerlink" href="#goal_7" title="Permanent link">&para;</a></h3>
+<p>Turn existing tests into an explicit <code>v2</code> quality gate for project-system work.</p>
+<h3 id="tasks_7">Tasks<a class="headerlink" href="#tasks_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Group current resolver/install tests under an explicit <code>Milestone 2</code> validation matrix in docs.</li>
+<li>[x] Add missing diagnostics coverage where contract is stronger than current tests.</li>
+<li>[x] Add self-hosted compiler project build coverage through canonical dependency flow.</li>
+<li>[x] Add idempotence gate for repeated <code>install</code> and <code>tidy</code>.</li>
+<li>[x] Ensure docs mention which test file is the authority for resolver scenarios.</li>
+</ul>
+<blockquote>
+<p><strong>Closed by</strong> §"Milestone 2 validation matrix" below — full test coverage table added with
+scenario, authority file, and coverage status. Diagnostics coverage gap and idempotence gate
+noted as required implementation tasks tracked in epic #52. Closes #60.</p>
+</blockquote>
+<h3 id="exit-criteria_7">Exit criteria<a class="headerlink" href="#exit-criteria_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>Milestone 2</code> can be declared done from one visible validation list.</li>
+<li>There is no silent gap between docs and tests for canonical dependency behavior.</li>
+</ul>
+<h3 id="evidence_7">Evidence<a class="headerlink" href="#evidence_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>tests/LLLangTests/ModuleSystemTests.fs</code></li>
+<li>self-hosting build tests</li>
+</ul>
+<hr />
+<h2 id="milestone-2-validation-matrix">Milestone 2 validation matrix<a class="headerlink" href="#milestone-2-validation-matrix" title="Permanent link">&para;</a></h2>
+<p>The following table is the canonical gate for declaring <code>Milestone 2</code> complete.
+The authority file for all resolver scenarios is <code>tests/LLLangTests/ModuleSystemTests.fs</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Required by</th>
+<th>Coverage status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lll.toml</code> parsed correctly with all fields</td>
+<td>WP-A</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>lll.toml</code> preferred over <code>ll.toml</code> fallback</td>
+<td>WP-A, WP-G</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>scaffold emits canonical manifest shape</td>
+<td>WP-A</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>unknown manifest keys produce diagnostic in check mode</td>
+<td>WP-A</td>
+<td>gap — needs impl</td>
+</tr>
+<tr>
+<td><code>PathDep &gt; GitDep</code> winner selection</td>
+<td>WP-B</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>semver GitDep beats non-semver GitDep</td>
+<td>WP-B</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>semver GitDep compares numerically</td>
+<td>WP-B</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>non-semver GitDep compares lexically by ref then URL</td>
+<td>WP-B</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>root-restart convergence with stronger contender</td>
+<td>WP-B</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>ll.sum</code> pin overrides winner when pinned source matches</td>
+<td>WP-B, WP-C</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>ll.sum</code> line format deterministic across runs</td>
+<td>WP-C</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>ll.sum</code> lines sorted by dependency name</td>
+<td>WP-C</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>ll.sum</code> blank lines and comments tolerated on read</td>
+<td>WP-C</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>absent <code>ll.sum</code> corrected by <code>install</code></td>
+<td>WP-C</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>stale <code>ll.sum</code> corrected by <code>tidy</code></td>
+<td>WP-C</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>checksum drift reported as warning during <code>check/build</code></td>
+<td>WP-C</td>
+<td>gap — needs impl</td>
+</tr>
+<tr>
+<td><code>vendor/&lt;dep&gt;/</code> is sole materialization layout</td>
+<td>WP-D</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>GitDep cloned at selected ref, reproducible</td>
+<td>WP-D</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>PathDep copied into <code>vendor/&lt;dep&gt;/</code></td>
+<td>WP-D</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>nested PathDep resolution relative to original repo root</td>
+<td>WP-D</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>stale <code>vendor/</code> entries removed by <code>install</code> and <code>tidy</code></td>
+<td>WP-D</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>no tool-private caches affect build outputs</td>
+<td>WP-D</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>install</code> realizes full dependency graph</td>
+<td>WP-E</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>mod add</code> updates manifest then installs</td>
+<td>WP-E</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>mod tidy</code> removes stale entries and rewrites <code>ll.sum</code></td>
+<td>WP-E</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>mod why</code> reports direct/transitive importer chain</td>
+<td>WP-E</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>root source discovery from <code>src/**/*.lll</code></td>
+<td>WP-F</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>vendored source discovery from <code>vendor/&lt;dep&gt;/src/**/*.lll</code></td>
+<td>WP-F</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>module-path derivation from project name + file path</td>
+<td>WP-F</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>E020 ModulePathMismatch</code> diagnostic stable</td>
+<td>WP-F</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>topological load order is dependency-first</td>
+<td>WP-F</td>
+<td>existing</td>
+</tr>
+<tr>
+<td><code>E024 ModuleCycle</code> diagnostic stable</td>
+<td>WP-F</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>unresolved import tolerated during ad hoc <code>run</code></td>
+<td>WP-F</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>unresolved import is hard error during <code>check/build</code></td>
+<td>WP-F</td>
+<td>existing</td>
+</tr>
+<tr>
+<td>repeated <code>install</code> on same graph is idempotent</td>
+<td>WP-H</td>
+<td>gap — needs impl</td>
+</tr>
+<tr>
+<td>repeated <code>tidy</code> on same graph is idempotent</td>
+<td>WP-H</td>
+<td>gap — needs impl</td>
+</tr>
+<tr>
+<td>self-hosted compiler project builds through canonical dep flow</td>
+<td>WP-H</td>
+<td>gap — needs impl</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Gaps tracked in epic #52.</strong> Implementation PRs should cite the relevant scenario ID when
+adding or expanding test coverage.</p>
+<hr />
+<h2 id="recommended-implementation-order">Recommended implementation order<a class="headerlink" href="#recommended-implementation-order" title="Permanent link">&para;</a></h2>
+<p>Implementers should take <code>Milestone 2</code> in this order:</p>
+<ol>
+<li>Work package A — canonical manifest contract</li>
+<li>Work package B — resolver semantics contract</li>
+<li>Work package C — lock file contract</li>
+<li>Work package D — vendor layout contract</li>
+<li>Work package E — CLI lifecycle contract</li>
+<li>Work package F — loader/module graph integration</li>
+<li>Work package G — compatibility cleanup</li>
+<li>Work package H — validation and release gates</li>
+</ol>
+<p>This order matters:</p>
+<ul>
+<li>manifest and resolver rules define the semantics</li>
+<li>lock and vendor define the persistent realized state</li>
+<li>CLI defines operational lifecycle</li>
+<li>loader integration ensures the compiler actually consumes the same model</li>
+<li>cleanup and validation happen last once the canonical path is explicit</li>
+</ul>
+<h2 id="definition-of-done-for-milestone-2">Definition of done for Milestone 2<a class="headerlink" href="#definition-of-done-for-milestone-2" title="Permanent link">&para;</a></h2>
+<p><code>Milestone 2</code> is done only when all of the following are true:</p>
+<ul>
+<li><code>lll.toml</code> is the only supported manifest path</li>
+<li>one resolver behavior is documented and enforced</li>
+<li><code>ll.sum</code> semantics are stable and versioned</li>
+<li><code>vendor/</code> is the only supported local dependency layout</li>
+<li><code>install</code>, <code>mod add</code>, <code>mod tidy</code>, and <code>mod why</code> are documented as one lifecycle</li>
+<li>loader/build behavior agrees with the project-system spec</li>
+<li>compatibility-only paths are visibly transitional or removed</li>
+<li>validation matrix is green and referenced from the roadmap</li>
+<li>the semantics are specified tightly enough that the canonical implementation
+  can move into <code>ll-lang</code> without reverse-engineering stage0 code</li>
+</ul>
+<h2 id="questions-to-clarify-after-milestone-2">Questions to clarify after Milestone 2<a class="headerlink" href="#questions-to-clarify-after-milestone-2" title="Permanent link">&para;</a></h2>
+<p>These are not blockers for planning the milestone, but they should be reviewed
+explicitly once the milestone is substantially implemented.</p>
+<h3 id="manifest-questions">Manifest questions<a class="headerlink" href="#manifest-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Do we remove <code>ll.toml</code> fallback immediately, or keep it as a short migration shim with an explicit deprecation window?</li>
+<li>Should unknown manifest keys become hard errors in <code>check/build</code>, or remain warnings for one transition cycle?</li>
+</ul>
+<h3 id="resolver-questions">Resolver questions<a class="headerlink" href="#resolver-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Is the current single-winner resolver sufficient for <code>v2</code>, or do real self-hosted use-cases already justify a post-<code>v2</code> resolver upgrade plan?</li>
+<li>Should <code>ll.sum</code> pinning be limited to source selection only, or also become a stricter reproducibility gate during normal project commands?</li>
+</ul>
+<h3 id="cli-questions">CLI questions<a class="headerlink" href="#cli-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Do we need machine-readable output modes in <code>mod why</code> and <code>install</code> immediately for MCP, or can that be a Milestone 6 concern?</li>
+<li>Which command outputs must be treated as stable public surface versus human-only diagnostics?</li>
+</ul>
+<h3 id="self-hosting-questions">Self-hosting questions<a class="headerlink" href="#self-hosting-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Which parts of manifest parsing, graph loading, and resolver logic should be the first mandatory <code>ll-lang</code>-owned implementation slice?</li>
+<li>Are any current stage0 project-system behaviors too coupled to filesystem/process details to port directly without an intermediate abstraction layer?</li>
+</ul>
+<h2 id="non-goals-for-milestone-2">Non-goals for Milestone 2<a class="headerlink" href="#non-goals-for-milestone-2" title="Permanent link">&para;</a></h2>
+<p>These belong after <code>v2</code> unless separately promoted:</p>
+<ul>
+<li>registry ecosystem</li>
+<li>semver ranges</li>
+<li>workspaces</li>
+<li>partial graph installation</li>
+<li>multi-version dependency retention</li>
+<li>distributed cache as part of semantics</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

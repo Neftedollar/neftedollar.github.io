@@ -1,0 +1,2479 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/03-parser/">
+      
+      
+        <link rel="prev" href="../02-lexer/">
+      
+      
+        <link rel="next" href="../04-elaborator/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Parser - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#parser" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Parser
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expression-precedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expression precedence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juxtaposition-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Juxtaposition = application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tagged-literals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tagged literals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-matching-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern matching branches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type expressions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-zero-param-function-empty-paren-quirk-historical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The zero-param function / empty-paren quirk (historical)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module parsing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#declaration-dispatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declaration dispatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-body-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type body parsing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern parsing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expression-precedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expression precedence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juxtaposition-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Juxtaposition = application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tagged-literals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tagged literals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-matching-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern matching branches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type expressions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-zero-param-function-empty-paren-quirk-historical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The zero-param function / empty-paren quirk (historical)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module parsing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#declaration-dispatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declaration dispatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-body-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type body parsing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern parsing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="parser">Parser<a class="headerlink" href="#parser" title="Permanent link">&para;</a></h1>
+<p>File: <code>src/LLLangCompiler/Parser.fs</code> (~1230 lines).</p>
+<p>A hand-written recursive-descent parser with a mutable cursor over a
+<code>Tok array</code>. The <code>private Ctx</code> record holds the token array, a mutable
+position index, and a <code>PosMap</code> side-table for attaching source
+positions to AST nodes:</p>
+<p>Note: this file documents the <strong>legacy parser path</strong>. The primary strict
+front-end is <code>src/LLLangCompiler/FParsecParser.fs</code>; both paths currently
+coexist for migration/parity checks.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="nc">private</span><span class="w"> </span><span class="n">Ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">Tokens</span><span class="o">:</span><span class="w"> </span><span class="n">Tok</span><span class="w"> </span><span class="n">array</span>
+<span class="w">    </span><span class="k">mutable</span><span class="w"> </span><span class="n">Pos</span><span class="o">:</span><span class="w"> </span><span class="n">int</span>
+<span class="o">}</span>
+</code></pre></div>
+
+<p>All parser combinators return <code>Result&lt;T, string&gt;</code>. On error they leave
+the cursor where it was and the module-level recovery simply advances
+one token (<code>| Error _ -&gt; advance c  // skip bad token</code>).</p>
+<h2 id="expression-precedence">Expression precedence<a class="headerlink" href="#expression-precedence" title="Permanent link">&para;</a></h2>
+<p>Climbing chain, from lowest to highest binding:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">parseExprInner</span><span class="w">          </span><span class="c1">-- let, if, match, \lambda, else delegate to parsePipe</span>
+<span class="w">    </span><span class="n">parsePipe</span><span class="w">           </span><span class="c1">-- -&gt;  (left-associative)</span>
+<span class="w">        </span><span class="n">parseCmp</span><span class="w">        </span><span class="c1">-- &lt; &gt; &lt;= &gt;= == !=</span>
+<span class="w">            </span><span class="n">parseCons</span><span class="w">   </span><span class="c1">-- ::  (right-associative)</span>
+<span class="w">                </span><span class="n">parseAdd</span><span class="w">        </span><span class="c1">-- + -</span>
+<span class="w">                    </span><span class="n">parseMul</span><span class="w">    </span><span class="c1">-- * /</span>
+<span class="w">                        </span><span class="n">parseApp</span><span class="w">        </span><span class="c1">-- juxtaposition (function application)</span>
+<span class="w">                            </span><span class="n">parseTagged</span><span class="w"> </span><span class="c1">-- atom[Tag]</span>
+<span class="w">                                </span><span class="n">parseAtom</span><span class="w"> </span><span class="c1">-- literal, ident, paren, list</span>
+</code></pre></div>
+
+<p><code>parseBlockExpr</code> is a layout-aware wrapper used for bodies where an
+<code>Indent</code>-terminated block of statements (<code>let ... let ... expr</code>) is
+allowed. It delegates to <code>parseExprInner</code> for each statement.</p>
+<p>Binary operators are desugared on the fly into nested <code>EApp</code> nodes:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">result</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">EApp</span><span class="o">(</span><span class="n">EApp</span><span class="o">(</span><span class="n">EVar</span><span class="w"> </span><span class="n">opName</span><span class="o">,</span><span class="w"> </span><span class="n">result</span><span class="o">),</span><span class="w"> </span><span class="n">right</span><span class="o">)</span>
+</code></pre></div>
+
+<p>The operator name is an <code>EVar</code> (<code>"+"</code>, <code>"&lt;"</code>, etc.) — these are looked
+up in <code>builtinEnv</code> during elaboration so they never raise E002.</p>
+<h2 id="juxtaposition-application">Juxtaposition = application<a class="headerlink" href="#juxtaposition-application" title="Permanent link">&para;</a></h2>
+<p><code>parseApp</code> keeps consuming atom tokens as long as the next token can
+start one:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">while</span><span class="w"> </span><span class="n">cont</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">curTok</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">IntLit</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">FloatLit</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">StrLit</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">CharLit</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwTrue</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwFalse</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Ident</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">TypeId</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">LParen</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">LBrack</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="n">EApp</span><span class="o">(</span><span class="n">result</span><span class="o">,</span><span class="w"> </span><span class="n">arg</span><span class="o">)</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">cont</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">false</span>
+</code></pre></div>
+
+<p>Left-associative by construction (<code>result</code> accumulates on the left).</p>
+<h2 id="tagged-literals">Tagged literals<a class="headerlink" href="#tagged-literals" title="Permanent link">&para;</a></h2>
+<p><code>parseTagged</code> is a thin wrapper that, after reading an atom, checks for
+<code>LBrack TypeId RBrack</code> and wraps the atom in <code>ETagged</code>. On failure it
+backtracks:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">saved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">.</span><span class="n">Pos</span>
+<span class="n">advance</span><span class="w"> </span><span class="n">c</span>
+<span class="k">match</span><span class="w"> </span><span class="n">curTok</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">with</span>
+<span class="o">|</span><span class="w"> </span><span class="n">TypeId</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="n">advance</span><span class="w"> </span><span class="n">c</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">RBrack</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="bp">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="o">(</span><span class="n">ETagged</span><span class="o">(</span><span class="n">atom</span><span class="o">,</span><span class="w"> </span><span class="n">name</span><span class="o">))</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">c</span><span class="o">.</span><span class="n">Pos</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">saved</span><span class="o">;</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="n">atom</span>
+</code></pre></div>
+
+<h2 id="pattern-matching-branches">Pattern matching branches<a class="headerlink" href="#pattern-matching-branches" title="Permanent link">&para;</a></h2>
+<p><code>parseMatchBranches</code> consumes a sequence of <code>| pat -&gt; expr</code> lines:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">while</span><span class="w"> </span><span class="n">cont</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">curTok</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bar</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="n">advance</span><span class="w"> </span><span class="n">c</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">parsePattern</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="n">pat</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="n">skip</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">Arrow</span><span class="w"> </span><span class="k">with</span>
+<span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="bp">()</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">            </span><span class="k">match</span><span class="w"> </span><span class="n">parseExprInner</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">with</span>
+<span class="w">            </span><span class="o">|</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="n">expr</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">branches</span><span class="o">.</span><span class="n">Add</span><span class="o">((</span><span class="n">pat</span><span class="o">,</span><span class="w"> </span><span class="n">expr</span><span class="o">));</span><span class="w"> </span><span class="n">skipNewlines</span><span class="w"> </span><span class="n">c</span>
+</code></pre></div>
+
+<p>It's called from <code>parseFnBody</code> whenever the body starts with <code>Bar</code> (or
+with <code>Indent</code> followed by <code>Bar</code>).</p>
+<h2 id="type-expressions">Type expressions<a class="headerlink" href="#type-expressions" title="Permanent link">&para;</a></h2>
+<p><code>parseTypeExpr</code> has its own precedence chain:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">parseTypeExprTop</span><span class="w">        </span><span class="c1">-- type arrow A -&gt; B (right-associative)</span>
+<span class="w">    </span><span class="n">parseApp</span><span class="w">            </span><span class="c1">-- Maybe[Int] — repeated [type]</span>
+<span class="w">        </span><span class="n">parseBase</span><span class="w">       </span><span class="c1">-- TypeId, Ident (type var), (parenthesized)</span>
+</code></pre></div>
+
+<p><code>LBrack</code> after a base type starts a parametric application. The
+ambiguity with the start of a tagged expression in <code>parseAtom</code> is
+avoided by context: <code>parseTypeExpr</code> is only called inside type positions.</p>
+<h2 id="the-zero-param-function-empty-paren-quirk-historical">The zero-param function / empty-paren quirk (historical)<a class="headerlink" href="#the-zero-param-function-empty-paren-quirk-historical" title="Permanent link">&para;</a></h2>
+<p>In earlier ll-lang the <code>fn main()</code> form — zero parameters expressed as
+empty parens — used to crash the parser because the old code treated
+every <code>LParen</code> as the start of a <code>parseParam</code>, which expected
+<code>(ident type)</code>. The fix (still in the stage0 codebase):</p>
+<div class="codehilite"><pre><span></span><code><span class="k">while</span><span class="w"> </span><span class="n">paramCont</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">curTok</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LParen</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">saved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">.</span><span class="n">Pos</span>
+<span class="w">    </span><span class="n">advance</span><span class="w"> </span><span class="n">c</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">curTok</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RParen</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="n">advance</span><span class="w"> </span><span class="n">c</span>
+<span class="w">        </span><span class="c1">// `()` group contributes zero params; continue loop to allow mixing.</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">        </span><span class="n">c</span><span class="o">.</span><span class="n">Pos</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">saved</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="n">parseParam</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">with</span>
+<span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">parms</span><span class="o">.</span><span class="n">Add</span><span class="o">(</span><span class="n">p</span><span class="o">)</span>
+<span class="w">        </span><span class="o">|</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">c</span><span class="o">.</span><span class="n">Pos</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">saved</span><span class="o">;</span><span class="w"> </span><span class="n">paramCont</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">false</span>
+</code></pre></div>
+
+<p>In <strong>v2</strong>, <code>fn</code> was removed. A zero-parameter entry point is written as
+a bare value binding: <code>main = ...</code>. The resulting <code>FnSig</code> still has
+<code>Params = []</code>. Codegen special-cases <code>sig_.Name = "main" &amp;&amp; List.isEmpty sig_.Params</code>
+into <code>[&lt;EntryPoint&gt;] let main (argv: string[]) = ...</code>.</p>
+<h2 id="module-parsing">Module parsing<a class="headerlink" href="#module-parsing" title="Permanent link">&para;</a></h2>
+<p><code>parseModule</code> follows a fixed shape:</p>
+<ol>
+<li>Expect <code>module</code> keyword.</li>
+<li>Read dotted path (<code>TypeId (Dot TypeId)*</code>).</li>
+<li>Loop over <code>import</code> declarations.</li>
+<li>Loop over remaining tokens: optional <code>export</code> prefix, then <code>parseDecl</code>.</li>
+<li>On decl error, advance one token and keep trying (best-effort
+   recovery so that cascading errors all surface at once).</li>
+<li>Terminate on <code>Eof</code>.</li>
+</ol>
+<p>Output: <code>LLModule { Path; Imports; Decls }</code> where <code>Decls</code> is a list of
+<code>(Decl * bool)</code> (the boolean is <code>isExported</code>). Two public entry points
+exist: <code>parseModule</code> (returns just the module) and
+<code>parseModuleWithPos</code> (returns the module plus the populated <code>PosMap</code>
+that the elaborator and HMInfer read when emitting errors).</p>
+<h2 id="declaration-dispatch">Declaration dispatch<a class="headerlink" href="#declaration-dispatch" title="Permanent link">&para;</a></h2>
+<p><code>parseDecl</code> dispatches on the leading token. In the stage0 bootstrap the
+AST still uses <code>DFn</code>/<code>DType</code> nodes internally; in v2 surface syntax the
+<code>fn</code> and <code>type</code> keywords are gone and functions/types are recognized by
+leading <code>IDENT (params…) =</code> and <code>TYPEID =</code> patterns:</p>
+<table>
+<thead>
+<tr>
+<th>Surface (v2) / Stage0 trigger</th>
+<th>AST node</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IDENT ( param )+ = body</code></td>
+<td><code>DFn(FnSig, Expr)</code> — function declaration</td>
+</tr>
+<tr>
+<td><code>IDENT = expr</code> (no params)</td>
+<td><code>DLet(Ident, Expr)</code> — value binding / entry point</td>
+</tr>
+<tr>
+<td><code>TYPEID type-params? = type-body</code></td>
+<td><code>DType(TypeIdent, TypeParam list, TypeBody)</code></td>
+</tr>
+<tr>
+<td><code>tag TYPEID</code></td>
+<td><code>DTag(TypeIdent)</code></td>
+</tr>
+<tr>
+<td><code>unit TYPEID</code></td>
+<td><code>DUnit(TypeIdent)</code></td>
+</tr>
+<tr>
+<td><code>trait TYPEID …</code></td>
+<td><code>DTrait(TypeIdent, Ident list, FnSig list)</code></td>
+</tr>
+<tr>
+<td><code>impl TYPEID TYPEID …</code></td>
+<td><code>DImpl(TypeIdent, TypeIdent, (FnSig * Expr) list)</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>DLet</code> is parsed pattern-first: a bare <code>PVar</code> falls back to <code>DLet</code> so
+all existing code paths keep working, while non-trivial patterns
+(tuples, cons, constructors) produce <code>DLetPat</code>.</p>
+<h2 id="type-body-parsing">Type body parsing<a class="headerlink" href="#type-body-parsing" title="Permanent link">&para;</a></h2>
+<p><code>parseTypeBody</code> disambiguates between sum, record, and wrapped types:</p>
+<ul>
+<li>Leading <code>TypeId</code> → sum (<code>Ctor args | Ctor args | ...</code>).</li>
+<li>Leading <code>Ident</code> followed by a type → record (<code>name Type, name Type</code>).</li>
+<li>Anything else → wrapped (<code>type Foo = Int</code>), treated as a single-arg
+  newtype.</li>
+</ul>
+<p>The "record vs wrapped" decision is tentative — after reading
+<code>fieldName typeExpr</code> it checks for a comma; if missing and the first
+field was a bare wrapped type, it falls back to <code>TBWrapped</code>.</p>
+<h2 id="pattern-parsing">Pattern parsing<a class="headerlink" href="#pattern-parsing" title="Permanent link">&para;</a></h2>
+<p><code>parsePattern</code> is split into two levels:</p>
+<ul>
+<li><code>parsePatCons</code> — top-level, handles right-associative <code>::</code>
+  (<code>h :: t</code>) producing <code>PCons(h, t)</code>.</li>
+<li><code>parsePatAtom</code> — atoms:</li>
+<li><code>TypeId (args ...)</code> — constructor pattern <code>PCon(name, args)</code>.</li>
+<li><code>Ident</code> → <code>PVar</code></li>
+<li><code>Underscore</code> → <code>PWild</code></li>
+<li>Literals (<code>IntLit</code>, <code>FloatLit</code>, <code>StrLit</code>, <code>CharLit</code>, <code>KwTrue</code>,
+    <code>KwFalse</code>) → <code>PLit</code></li>
+<li><code>(pat)</code> → parenthesized inner pattern; <code>(p1, p2, ..., pN)</code> becomes
+    <code>PTuple</code>.</li>
+<li><code>[]</code> → empty-list pattern, emitted as <code>PCon("[]", [])</code> so downstream
+    pattern emission can special-case it back to F#'s <code>[]</code>.</li>
+</ul>
+<p>Constructor subpatterns do not themselves accept constructor args without
+parens — to nest constructors you must write <code>Some (Cons x xs)</code>.</p>
+<h2 id="error-recovery">Error recovery<a class="headerlink" href="#error-recovery" title="Permanent link">&para;</a></h2>
+<p>The parser is opportunistic: on a bad decl it calls <code>advance c</code> and
+resumes at the next token. This means a single syntax error rarely
+derails the whole file, which is important for LLM-driven fix loops —
+the compiler can surface multiple errors per pass.</p>
+<h2 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">&para;</a></h2>
+<p><code>tests/LLLangTests/ParserTests.fs</code> covers:</p>
+<ul>
+<li>Every decl form.</li>
+<li>Expression precedence (ordering of <code>+</code>, <code>*</code>, <code>-&gt;</code>, etc.).</li>
+<li>Record vs sum vs wrapped type bodies.</li>
+<li>Zero-param entry point (<code>main = ...</code> as a bare value binding).</li>
+<li>Pattern match branches with and without indentation.</li>
+</ul>
+<p>Run:</p>
+<div class="codehilite"><pre><span></span><code>dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span>ParserTests
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

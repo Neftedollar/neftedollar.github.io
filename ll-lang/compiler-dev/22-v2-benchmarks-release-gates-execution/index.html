@@ -1,0 +1,3375 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/22-v2-benchmarks-release-gates-execution/">
+      
+      
+        <link rel="prev" href="../21-v2-llm-operating-system-execution/">
+      
+      
+        <link rel="next" href="../../release-contract-1.0/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>v2 Benchmarks and Release Gates Execution - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v2-benchmarks-and-release-gates-execution" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              v2 Benchmarks and Release Gates Execution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-token-efficiency-benchmark-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — Token-efficiency benchmark suite
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — Token-efficiency benchmark suite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-methodology-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark methodology (frozen)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-compile-latency-and-self-host-baselines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Compile-latency and self-host baselines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Compile-latency and self-host baselines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#baseline-definition-and-measurement-approach-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Baseline definition and measurement approach (frozen)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-semantic-equivalence-corpus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Semantic equivalence corpus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Semantic equivalence corpus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#corpus-requirements-and-equivalence-definition-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Corpus requirements and equivalence definition (frozen)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-release-checklist-and-ci-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Release checklist and CI gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Release checklist and CI gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v2-release-checklist-passfail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v2 Release checklist (pass/fail)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v2 Release checklist (pass/fail)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gate-1-test-suite-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 1 — Test suite (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-2-token-efficiency-benchmark-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 2 — Token-efficiency benchmark (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-3-compile-latency-baseline-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 3 — Compile-latency baseline (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-4-semantic-equivalence-corpus-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 4 — Semantic equivalence corpus (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-5-spec-and-docs-completeness-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 5 — Spec and docs completeness (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-6-artifact-storage-required-not-a-blocker-for-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 6 — Artifact storage (required, not a blocker for tag)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warning-only-gates-non-blocking-for-v200-must-be-tracked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warning-only gates (non-blocking for v2.0.0, must be tracked)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ci-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI naming convention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 7
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 7
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 7">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 7
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-token-efficiency-benchmark-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — Token-efficiency benchmark suite
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — Token-efficiency benchmark suite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-methodology-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark methodology (frozen)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-compile-latency-and-self-host-baselines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Compile-latency and self-host baselines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Compile-latency and self-host baselines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#baseline-definition-and-measurement-approach-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Baseline definition and measurement approach (frozen)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-semantic-equivalence-corpus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Semantic equivalence corpus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Semantic equivalence corpus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#corpus-requirements-and-equivalence-definition-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Corpus requirements and equivalence definition (frozen)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-release-checklist-and-ci-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Release checklist and CI gates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Release checklist and CI gates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v2-release-checklist-passfail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v2 Release checklist (pass/fail)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v2 Release checklist (pass/fail)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gate-1-test-suite-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 1 — Test suite (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-2-token-efficiency-benchmark-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 2 — Token-efficiency benchmark (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-3-compile-latency-baseline-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 3 — Compile-latency baseline (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-4-semantic-equivalence-corpus-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 4 — Semantic equivalence corpus (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-5-spec-and-docs-completeness-hard-blocker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 5 — Spec and docs completeness (hard blocker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gate-6-artifact-storage-required-not-a-blocker-for-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gate 6 — Artifact storage (required, not a blocker for tag)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warning-only-gates-non-blocking-for-v200-must-be-tracked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warning-only gates (non-blocking for v2.0.0, must be tracked)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ci-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI naming convention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 7
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 7
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 7">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 7
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="v2-benchmarks-and-release-gates-execution">v2 Benchmarks and Release Gates Execution<a class="headerlink" href="#v2-benchmarks-and-release-gates-execution" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> doc/policy phase complete — implementation gaps tracked in epic #108
+<strong>Closes:</strong> #110 #112 #113 #114
+<strong>Audience:</strong> implementers of <code>Milestone 7</code><br />
+<strong>Parent docs:</strong> <a href="../13-v2-implementation-roadmap/">v2 implementation roadmap</a>, <a href="../12-v2-language-architecture/">v2 language architecture</a>, <a href="../../spec/v2-llm-tooling.md">v2 llm tooling spec</a></p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p><code>Milestone 7</code> exists to stop <code>v2</code> from shipping on vibes.</p>
+<p>ll-lang makes explicit claims about:</p>
+<ul>
+<li>token efficiency</li>
+<li>self-hosting viability</li>
+<li>deterministic tooling</li>
+<li>backend correctness</li>
+<li>LLM productivity</li>
+</ul>
+<p>Those claims need versioned evidence and explicit release gates.</p>
+<h2 id="status-model">Status model<a class="headerlink" href="#status-model" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>[x]</code> done in current repo and should be preserved</li>
+<li><code>[ ]</code> not done or not yet canonical for <code>v2</code></li>
+</ul>
+<h2 id="current-repo-baseline">Current-repo baseline<a class="headerlink" href="#current-repo-baseline" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] tests and fixpoint/self-hosting concerns already exist in the repo</li>
+<li>[x] docs already treat benchmarks as part of future <code>v2</code> work</li>
+</ul>
+<p>Still not done enough for <code>v2</code>:</p>
+<ul>
+<li>[x] token-efficiency claims are now backed by a stable benchmark suite (<code>benchmarks/token-benchmark.py</code>, results in <code>benchmarks/results/</code>)</li>
+<li>[ ] self-hosted-vs-stage0 performance deltas are not yet tracked (tracked in epic #108)</li>
+<li>[ ] semantic equivalence across backends is not yet formalized as a benchmark/corpus gate (tracked in epic #108)</li>
+<li>[x] <code>v2</code> release checklist is now a concrete contract (see Work package D below)</li>
+</ul>
+<h2 id="work-package-a-token-efficiency-benchmark-suite">Work package A — Token-efficiency benchmark suite<a class="headerlink" href="#work-package-a-token-efficiency-benchmark-suite" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> <code>benchmarks/token-benchmark.py</code> (implemented), <code>benchmarks/results/token-benchmark.md</code> and <code>benchmarks/results/token-benchmark.json</code> (versioned output). See methodology below.</p>
+<h3 id="goal">Goal<a class="headerlink" href="#goal" title="Permanent link">&para;</a></h3>
+<p>Measure the actual compactness advantage ll-lang claims to provide.</p>
+<h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define benchmark corpus categories: data modeling, parser combinators, stateful passes, config parsing, multi-module projects.</li>
+<li>[x] Define comparison baselines: F#, TypeScript, Python, Java, C#.</li>
+<li>[x] Freeze token-count methodology.</li>
+<li>[x] Store benchmark artifacts in a reproducible form.</li>
+</ul>
+<h3 id="benchmark-methodology-frozen">Benchmark methodology (frozen)<a class="headerlink" href="#benchmark-methodology-frozen" title="Permanent link">&para;</a></h3>
+<p><strong>Tokenizer:</strong> <code>cl100k_base</code> (tiktoken, GPT-4 encoding). This is the canonical tokenizer for all ll-lang token-efficiency claims. Do not change without updating all historical results.</p>
+<p><strong>Three measurement tiers:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>What</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 1</td>
+<td>Compiled output comparison</td>
+<td>lll source vs compiler-generated F#/TS output. Measures the compactness of the source representation.</td>
+</tr>
+<tr>
+<td>Tier 2</td>
+<td>Hand-written equivalents</td>
+<td>lll source vs hand-written F# performing the same function. Measures real-world authoring efficiency.</td>
+</tr>
+<tr>
+<td>Tier 3</td>
+<td>Micro-benchmarks</td>
+<td>Isolated patterns (sum types, pattern match, curried functions, parametric ADTs) across lll/F#/TS/Python/Java. Pinpoints where ll-lang is compact and where it is not.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What is counted:</strong></p>
+<ul>
+<li><code>tokens_raw</code>: all tokens in the file, including comments and blank lines.</li>
+<li><code>tokens_code</code>: tokens after stripping comment lines and blank lines. <strong>This is the canonical metric.</strong></li>
+<li>F# compiled output strips the ll-lang stdlib prelude (<code>tokens_no_prelude</code>) to measure only the code that corresponds to the ll-lang source.</li>
+</ul>
+<p><strong>How to run:</strong></p>
+<div class="codehilite"><pre><span></span><code>cd benchmarks
+python token-benchmark.py
+</code></pre></div>
+
+<p>Output: <code>benchmarks/results/token-benchmark.json</code> (machine-readable) and <code>benchmarks/results/token-benchmark.md</code> (human-readable).</p>
+<p><strong>How to interpret results:</strong></p>
+<ul>
+<li>Ratio <code>&lt; 1.0</code>: ll-lang is more verbose than the target language for this pattern.</li>
+<li>Ratio <code>1.0 – 1.3</code>: marginal advantage; within noise of hand-authoring style.</li>
+<li>Ratio <code>1.3 – 2.0</code>: clear compactness win for ll-lang.</li>
+<li>Ratio <code>&gt; 2.0</code>: strong win; typical for type-heavy patterns (sum types, parametric ADTs).</li>
+</ul>
+<p><strong>Baseline results (2026-04-11, cl100k_base):</strong></p>
+<p>Tier 1 (compiled output, F# ratio = F# tokens / lll tokens):</p>
+<table>
+<thead>
+<tr>
+<th>Sample</th>
+<th>ll-lang tokens</th>
+<th>F# (no prelude)</th>
+<th>Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01-basics</td>
+<td>110</td>
+<td>122</td>
+<td>1.11x</td>
+</tr>
+<tr>
+<td>Map (RBTree)</td>
+<td>1 771</td>
+<td>2 073</td>
+<td>1.17x</td>
+</tr>
+<tr>
+<td>Toml parser</td>
+<td>2 030</td>
+<td>2 359</td>
+<td>1.16x</td>
+</tr>
+<tr>
+<td>Bootstrap</td>
+<td>16 957</td>
+<td>18 393</td>
+<td>1.08x</td>
+</tr>
+</tbody>
+</table>
+<p>Tier 3 (micro-benchmarks, F# ratio):</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>lll</th>
+<th>F#</th>
+<th>TS</th>
+<th>Py</th>
+<th>Java</th>
+<th>F#/lll</th>
+<th>TS/lll</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sum_type_3_ctor</td>
+<td>11</td>
+<td>14</td>
+<td>36</td>
+<td>49</td>
+<td>35</td>
+<td>1.27x</td>
+<td>3.27x</td>
+</tr>
+<tr>
+<td>pattern_match</td>
+<td>39</td>
+<td>43</td>
+<td>58</td>
+<td>52</td>
+<td>58</td>
+<td>1.10x</td>
+<td>1.49x</td>
+</tr>
+<tr>
+<td>curried_fn</td>
+<td>13</td>
+<td>21</td>
+<td>20</td>
+<td>18</td>
+<td>16</td>
+<td>1.62x</td>
+<td>1.54x</td>
+</tr>
+<tr>
+<td>parametric_adt</td>
+<td>8</td>
+<td>12</td>
+<td>23</td>
+<td>47</td>
+<td>31</td>
+<td>1.50x</td>
+<td>2.88x</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Corpus categories covered (Tier 1):</strong>
+- data modeling: <code>01-basics.lll</code> (type definitions, basic functions)
+- config parsing: <code>Toml.lll</code> (parser combinator + structured output)
+- stateful tree passes: <code>Map.lll</code> (RBTree implementation)
+- multi-module / bootstrap: <code>20-bootstrap-compiler.lll</code> (full compiler bootstrap)</p>
+<p><strong>Comparison baselines:</strong> F# (primary), TypeScript (secondary), Python, Java (micro tier 3).</p>
+<h3 id="exit-criteria">Exit criteria<a class="headerlink" href="#exit-criteria" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Token-efficiency claims are backed by versioned corpus data.</li>
+<li>[x] Benchmark methodology is explicit enough for reruns and diffs.</li>
+</ul>
+<h2 id="work-package-b-compile-latency-and-self-host-baselines">Work package B — Compile-latency and self-host baselines<a class="headerlink" href="#work-package-b-compile-latency-and-self-host-baselines" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by (doc/policy):</strong> methodology and baseline definition documented below. Actual timing measurements are tracked as an implementation gap in epic #108.</p>
+<h3 id="goal_1">Goal<a class="headerlink" href="#goal_1" title="Permanent link">&para;</a></h3>
+<p>Measure the operational cost of the self-host transition.</p>
+<h3 id="tasks_1">Tasks<a class="headerlink" href="#tasks_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define stage0-vs-self-host timing comparisons.</li>
+<li>[x] Define which build scenarios matter: single-file, multi-module, dependency-bearing, self-build.</li>
+<li>[x] Record stable baselines and variance guidance.</li>
+</ul>
+<h3 id="baseline-definition-and-measurement-approach-frozen">Baseline definition and measurement approach (frozen)<a class="headerlink" href="#baseline-definition-and-measurement-approach-frozen" title="Permanent link">&para;</a></h3>
+<p><strong>Two compiler stages:</strong></p>
+<ul>
+<li><code>stage0</code>: the compiler built with the F# host toolchain (dotnet build from F# source).</li>
+<li><code>self-host</code>: the compiler built by a previously compiled version of ll-lang (bootstrap scenario).</li>
+</ul>
+<p><strong>Build scenarios to measure (in order of priority):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Command</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>single-file</td>
+<td><code>lllc build spec/examples/valid/01-basics.lll</code></td>
+<td>Baseline latency; cold-start cost</td>
+</tr>
+<tr>
+<td>multi-module stdlib</td>
+<td><code>lllc build stdlib/src/Map.lll</code></td>
+<td>Module resolution overhead</td>
+</tr>
+<tr>
+<td>dependency-bearing</td>
+<td>compile a file that imports multiple stdlib modules</td>
+<td>Import graph traversal cost</td>
+</tr>
+<tr>
+<td>self-build</td>
+<td>compile <code>20-bootstrap-compiler.lll</code></td>
+<td>Full-compiler throughput; most representative</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Measurement protocol:</strong>
+1. Run each scenario 5 times on a warmed process (discard first run).
+2. Record median, p90, and max wall-clock time.
+3. Record the git commit SHA of both stage0 and self-host at time of measurement.
+4. Store results in <code>benchmarks/results/latency-&lt;YYYY-MM-DD&gt;.json</code>.</p>
+<p><strong>Variance guidance:</strong>
+- A change of <code>&lt; 10%</code> on median is within noise; do not flag.
+- A change of <code>10–30%</code> on median is notable; add a comment in the PR.
+- A change of <code>&gt; 30%</code> on median is a regression; block or justify explicitly.</p>
+<p><strong>Status:</strong> baseline measurement not yet implemented. Tracked in epic #108. The protocol above is the contract implementers must satisfy.</p>
+<h3 id="exit-criteria_1">Exit criteria<a class="headerlink" href="#exit-criteria_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Contributors can tell whether self-host changes improved or degraded compiler throughput. (Protocol defined; implementation pending.)</li>
+<li>[x] Performance discussions reference data, not anecdotes. (Methodology frozen; first data point is the responsibility of the self-host implementation milestone.)</li>
+</ul>
+<h2 id="work-package-c-semantic-equivalence-corpus">Work package C — Semantic equivalence corpus<a class="headerlink" href="#work-package-c-semantic-equivalence-corpus" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by (doc/policy):</strong> corpus requirements and equivalence definition documented below. Corpus population and gate wiring are tracked in epic #108.</p>
+<h3 id="goal_2">Goal<a class="headerlink" href="#goal_2" title="Permanent link">&para;</a></h3>
+<p>Ensure stable backends still mean the same thing.</p>
+<h3 id="tasks_2">Tasks<a class="headerlink" href="#tasks_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define representative corpus for semantic equivalence across supported backends.</li>
+<li>[x] Define what counts as acceptable divergence, if any.</li>
+<li>[x] Tie corpus outputs to release gates and regression review.</li>
+</ul>
+<h3 id="corpus-requirements-and-equivalence-definition-frozen">Corpus requirements and equivalence definition (frozen)<a class="headerlink" href="#corpus-requirements-and-equivalence-definition-frozen" title="Permanent link">&para;</a></h3>
+<p><strong>What the corpus must cover:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Example files</th>
+<th>Backends required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primitive arithmetic and comparison</td>
+<td><code>01-basics.lll</code></td>
+<td>F#, TS</td>
+</tr>
+<tr>
+<td>Sum types and pattern matching</td>
+<td><code>01-basics.lll</code>, micro samples</td>
+<td>F#, TS</td>
+</tr>
+<tr>
+<td>Parametric types</td>
+<td><code>Maybe</code>, <code>Result</code> patterns</td>
+<td>F#, TS</td>
+</tr>
+<tr>
+<td>Higher-order functions and closures</td>
+<td>stdlib samples</td>
+<td>F#</td>
+</tr>
+<tr>
+<td>Recursive data structures</td>
+<td><code>Map.lll</code> (RBTree)</td>
+<td>F#</td>
+</tr>
+<tr>
+<td>Config parsing</td>
+<td><code>Toml.lll</code></td>
+<td>F#</td>
+</tr>
+<tr>
+<td>Full bootstrap</td>
+<td><code>20-bootstrap-compiler.lll</code></td>
+<td>F#</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What constitutes semantic equivalence:</strong></p>
+<p>Semantic equivalence is satisfied if and only if:</p>
+<ol>
+<li>Both backends compile the same <code>.lll</code> source without error.</li>
+<li>The outputs, when executed against the same inputs, produce identical observable results (stdout, return values, no additional effects).</li>
+<li>For pure functions: all tested inputs yield equal outputs. No tolerance for divergence on pure code.</li>
+</ol>
+<p><strong>Acceptable divergence (exhaustive list):</strong></p>
+<ul>
+<li>Floating-point formatting differences across runtimes are acceptable if the numeric value is within <code>1e-9</code> relative error.</li>
+<li>Whitespace and newline normalization in string outputs is acceptable.</li>
+<li>Stack traces and error messages are not part of the equivalence contract.</li>
+</ul>
+<p><strong>No other divergence is acceptable.</strong> If a backend produces a different result for a pure function, it is a regression, not a known limitation.</p>
+<p><strong>Gate wiring (policy):</strong></p>
+<ul>
+<li>Corpus outputs are captured as golden files in <code>benchmarks/corpus/</code>.</li>
+<li>A CI check compares compiled + executed output against golden files for every commit that touches a backend code generator.</li>
+<li>To update a golden file, a PR must include an explicit "Semantics change: intentional" note in the PR body and must be approved by a second reviewer.</li>
+</ul>
+<p><strong>Status:</strong> corpus files and CI gate not yet implemented. Tracked in epic #108. The definitions above are the contract.</p>
+<h3 id="exit-criteria_2">Exit criteria<a class="headerlink" href="#exit-criteria_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Backend regressions are observable against a shared corpus. (Definition frozen; population pending.)</li>
+<li>[x] "Compiles" is not mistaken for "preserves language semantics". (Policy established; enforcement pending implementation.)</li>
+</ul>
+<h2 id="work-package-d-release-checklist-and-ci-gates">Work package D — Release checklist and CI gates<a class="headerlink" href="#work-package-d-release-checklist-and-ci-gates" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by (doc/policy):</strong> explicit release checklist with pass/fail criteria below.</p>
+<h3 id="goal_3">Goal<a class="headerlink" href="#goal_3" title="Permanent link">&para;</a></h3>
+<p>Turn <code>v2</code> release readiness into a concrete contract.</p>
+<h3 id="tasks_3">Tasks<a class="headerlink" href="#tasks_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define the required benchmark and test gates for <code>v2</code>.</li>
+<li>[x] Define which docs/spec checks are release blockers.</li>
+<li>[x] Define artifact publication or storage requirements for benchmark results.</li>
+<li>[x] Wire release checklist into docs and CI naming.</li>
+</ul>
+<h3 id="v2-release-checklist-passfail">v2 Release checklist (pass/fail)<a class="headerlink" href="#v2-release-checklist-passfail" title="Permanent link">&para;</a></h3>
+<p>All items must be PASS before a <code>v2.0.0</code> tag is created.</p>
+<h4 id="gate-1-test-suite-hard-blocker">Gate 1 — Test suite (hard blocker)<a class="headerlink" href="#gate-1-test-suite-hard-blocker" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] <code>dotnet test</code> passes with zero failures and zero skipped tests.</li>
+<li>[ ] No test is marked <code>[&lt;Ignore&gt;]</code> or equivalent without a linked issue.</li>
+</ul>
+<h4 id="gate-2-token-efficiency-benchmark-hard-blocker">Gate 2 — Token-efficiency benchmark (hard blocker)<a class="headerlink" href="#gate-2-token-efficiency-benchmark-hard-blocker" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] <code>benchmarks/token-benchmark.py</code> runs to completion without errors.</li>
+<li>[ ] <code>benchmarks/results/token-benchmark.json</code> is committed and dated within 7 days of release.</li>
+<li>[ ] Tier 1 F#/lll ratios for all four samples are documented and show no regression vs. the baseline in this file.</li>
+</ul>
+<h4 id="gate-3-compile-latency-baseline-hard-blocker">Gate 3 — Compile-latency baseline (hard blocker)<a class="headerlink" href="#gate-3-compile-latency-baseline-hard-blocker" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] <code>benchmarks/results/latency-&lt;date&gt;.json</code> exists and covers all four build scenarios defined in Work package B.</li>
+<li>[ ] Stage0 vs self-host median latency delta is documented. Any regression <code>&gt; 30%</code> is either fixed or has an explicit justification note in the release PR.</li>
+</ul>
+<h4 id="gate-4-semantic-equivalence-corpus-hard-blocker">Gate 4 — Semantic equivalence corpus (hard blocker)<a class="headerlink" href="#gate-4-semantic-equivalence-corpus-hard-blocker" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] <code>benchmarks/corpus/</code> contains golden files for all corpus categories defined in Work package C.</li>
+<li>[ ] CI semantic equivalence check passes for all committed golden files.</li>
+<li>[ ] Any intentional semantics change has been reviewed by a second reviewer.</li>
+</ul>
+<h4 id="gate-5-spec-and-docs-completeness-hard-blocker">Gate 5 — Spec and docs completeness (hard blocker)<a class="headerlink" href="#gate-5-spec-and-docs-completeness-hard-blocker" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] <code>spec/grammar.ebnf</code> covers all syntax used in <code>spec/examples/valid/</code>.</li>
+<li>[ ] <code>docs/language-spec.md</code> documents all language features exercised in the corpus.</li>
+<li>[ ] No <code>TODO</code> or <code>FIXME</code> comments remain in <code>spec/</code> without a linked issue.</li>
+</ul>
+<h4 id="gate-6-artifact-storage-required-not-a-blocker-for-tag">Gate 6 — Artifact storage (required, not a blocker for tag)<a class="headerlink" href="#gate-6-artifact-storage-required-not-a-blocker-for-tag" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] Benchmark JSON results are stored in <code>benchmarks/results/</code> and committed.</li>
+<li>[ ] A <code>CHANGELOG</code> entry or release notes document the key numbers for <code>v2.0.0</code>.</li>
+<li>[ ] Benchmark results are tagged with the compiler git SHA and run date.</li>
+</ul>
+<h4 id="warning-only-gates-non-blocking-for-v200-must-be-tracked">Warning-only gates (non-blocking for <code>v2.0.0</code>, must be tracked)<a class="headerlink" href="#warning-only-gates-non-blocking-for-v200-must-be-tracked" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Self-host bootstrap round-trip (compile the compiler with itself) — warning if not passing.</li>
+<li>TypeScript backend parity with F# for all Tier 1 samples — warning if not complete.</li>
+</ul>
+<h3 id="ci-naming-convention">CI naming convention<a class="headerlink" href="#ci-naming-convention" title="Permanent link">&para;</a></h3>
+<p>Gates 1–5 map to CI check names:</p>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>CI check name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>test-suite</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>benchmark-token-efficiency</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>benchmark-compile-latency</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>semantic-equivalence-corpus</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>spec-docs-completeness</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="exit-criteria_3">Exit criteria<a class="headerlink" href="#exit-criteria_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] <code>v2</code> readiness can be answered by checking named gates.</li>
+<li>[x] Release evidence is reproducible, not manual folklore.</li>
+</ul>
+<h2 id="recommended-implementation-order">Recommended implementation order<a class="headerlink" href="#recommended-implementation-order" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Work package A — token-efficiency benchmarks</li>
+<li>Work package B — compile/self-host baselines</li>
+<li>Work package C — semantic equivalence corpus</li>
+<li>Work package D — release checklist and CI gates</li>
+</ol>
+<h2 id="definition-of-done-for-milestone-7">Definition of done for Milestone 7<a class="headerlink" href="#definition-of-done-for-milestone-7" title="Permanent link">&para;</a></h2>
+<p><code>Milestone 7</code> is done only when all of the following are true:</p>
+<ul>
+<li>[x] token-efficiency benchmark suite exists and is versioned</li>
+<li>[ ] stage0 vs self-host performance baselines exist (tracked in epic #108)</li>
+<li>[ ] semantic equivalence corpus gates stable backends (tracked in epic #108)</li>
+<li>[x] release checklist and CI gates make <code>v2</code> readiness explicit</li>
+</ul>
+<h2 id="questions-to-clarify-after-milestone-7">Questions to clarify after Milestone 7<a class="headerlink" href="#questions-to-clarify-after-milestone-7" title="Permanent link">&para;</a></h2>
+<h3 id="benchmark-questions">Benchmark questions<a class="headerlink" href="#benchmark-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Which benchmark corpus examples are most representative of ll-lang's real value proposition?</li>
+<li>Should token counts be measured on raw source, canonicalized formatting, or prompt-ready snippets?</li>
+</ul>
+<h3 id="performance-questions">Performance questions<a class="headerlink" href="#performance-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>What regressions are acceptable during self-host transition versus post-<code>v2</code> stabilization?</li>
+<li>Which performance metrics belong in CI versus periodic benchmark runs?</li>
+</ul>
+<h3 id="release-questions">Release questions<a class="headerlink" href="#release-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Which gates are hard blockers for <code>v2.0.0</code>, and which are warning-only for the first release?</li>
+<li>How are benchmark artifacts published or stored so they remain comparable over time?</li>
+</ul>
+<h2 id="non-goals-for-milestone-7">Non-goals for Milestone 7<a class="headerlink" href="#non-goals-for-milestone-7" title="Permanent link">&para;</a></h2>
+<ul>
+<li>heroic micro-optimization unrelated to product claims</li>
+<li>backend-specific benchmark suites that do not map back to language-level guarantees</li>
+<li>vague "performance improvements" without corpus evidence</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3017 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/user-guide/02-syntax/">
+      
+      
+        <link rel="prev" href="../01-installation/">
+      
+      
+        <link rel="next" href="../03-types-and-inference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Syntax - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#syntax" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Syntax
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module header
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#value-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Value declarations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Value declarations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#literals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Literals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-line-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-line body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-arg-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-arg functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-bindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local bindings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lambdas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lambdas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operators-and-fixity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operators and fixity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operators and fixity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixity-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixity declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#if-else" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        if / else
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type declarations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Type declarations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sum-types-tagged-unions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sum types (tagged unions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametric-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parametric types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phantom-type-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phantom type parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#match-pattern-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        match: pattern matching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tag-semantic-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tag: semantic labels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trait-higher-kinded-type-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trait: higher-kinded type classes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impl-trait-implementations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        impl: trait implementations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#external-platform-native-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        external: platform-native functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opaque-platform-native-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        opaque: platform-native types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expression-level-constructs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expression-level constructs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Expression-level constructs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-juxtaposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application (juxtaposition)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tuples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-and-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic and comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module header
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#value-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Value declarations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Value declarations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#literals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Literals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-line-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-line body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-arg-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-arg functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-bindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local bindings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lambdas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lambdas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operators-and-fixity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operators and fixity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Operators and fixity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixity-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixity declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#if-else" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        if / else
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type declarations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Type declarations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sum-types-tagged-unions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sum types (tagged unions)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametric-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parametric types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phantom-type-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phantom type parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#match-pattern-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        match: pattern matching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tag-semantic-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tag: semantic labels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trait-higher-kinded-type-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trait: higher-kinded type classes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#impl-trait-implementations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        impl: trait implementations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#external-platform-native-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        external: platform-native functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opaque-platform-native-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        opaque: platform-native types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expression-level-constructs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expression-level constructs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Expression-level constructs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-juxtaposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application (juxtaposition)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tuples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arithmetic-and-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arithmetic and comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="syntax">Syntax<a class="headerlink" href="#syntax" title="Permanent link">&para;</a></h1>
+<p>Every ll-lang file begins with <code>module</code>, followed by optional <code>import</code>
+declarations, then top-level declarations: type declarations (Uppercase),
+function declarations (lowercase + params), value bindings (lowercase),
+<code>tag</code>, <code>unit</code>, <code>trait</code>, <code>impl</code>, <code>external</code>, and <code>opaque</code>.</p>
+<p>Indentation is significant. Comments start with <code>--</code> and run to end of line;
+both full-line (<code>-- header</code>) and trailing (<code>x + 1 -- increment</code>) forms are
+accepted. ASCII only. No semicolons, no braces.</p>
+<p><strong>Active keywords:</strong> <code>let</code>, <code>tag</code>, <code>unit</code>, <code>trait</code>, <code>impl</code>, <code>import</code>, <code>export</code>,
+<code>module</code>, <code>external</code>, <code>opaque</code>, <code>infix</code>, <code>infixl</code>, <code>infixr</code>, <code>if</code>, <code>else</code>,
+<code>true</code>, <code>false</code>, <code>match</code>.
+There is no <code>fn</code>, <code>type</code>, <code>in</code>, <code>then</code>, or <code>with</code> keyword.</p>
+<h2 id="module-header">Module header<a class="headerlink" href="#module-header" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">module</span> <span class="n">Examples</span>.<span class="n">Basics</span>
+</code></pre></div>
+
+<p>The module path is one or more uppercase-starting segments separated by dots.
+Must be the first non-comment token in the file.</p>
+<h2 id="value-declarations">Value declarations<a class="headerlink" href="#value-declarations" title="Permanent link">&para;</a></h2>
+<p>Three declaration forms at the top level:</p>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name = expr</code></td>
+<td>value binding (no params)</td>
+<td><code>pi = 3.14159</code></td>
+</tr>
+<tr>
+<td><code>name(p T)... = expr</code></td>
+<td>function declaration</td>
+<td><code>add(a Int)(b Int) = a + b</code></td>
+</tr>
+<tr>
+<td><code>let name = expr</code></td>
+<td>constant (explicit <code>let</code>)</td>
+<td><code>let greeting = "hello"</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>let</code> is optional for simple constants without parameters. Both <code>pi = 3.14159</code>
+and <code>let pi = 3.14159</code> are accepted at the top level.</p>
+<h3 id="literals">Literals<a class="headerlink" href="#literals" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>42</code></td>
+<td><code>Int</code></td>
+<td>64-bit signed</td>
+</tr>
+<tr>
+<td><code>3.14</code></td>
+<td><code>Float</code></td>
+<td>requires a decimal point</td>
+</tr>
+<tr>
+<td><code>"hi"</code></td>
+<td><code>Str</code></td>
+<td>supports escapes <code>\n</code>, <code>\t</code>, <code>\\</code>, <code>\"</code></td>
+</tr>
+<tr>
+<td><code>true</code> / <code>false</code></td>
+<td><code>Bool</code></td>
+<td>keywords, not constructors</td>
+</tr>
+<tr>
+<td><code>'c'</code></td>
+<td><code>Char</code></td>
+<td>supports escapes <code>\n</code>, <code>\t</code>, <code>\\</code>, <code>\'</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
+<p>Parameters come in individual <code>(name Type)</code> groups. Juxtaposition with
+separate parens means currying, not multi-arg:</p>
+<div class="codehilite"><pre><span></span><code>add(a Int)(b Int) = a + b
+double(x Int) = x * 2
+</code></pre></div>
+
+<p>The return type after the last param is optional when H-M can infer it.
+<code>double</code> above has no return annotation — the inferred type is <code>Int -&gt; Int</code>.</p>
+<h3 id="multi-line-body">Multi-line body<a class="headerlink" href="#multi-line-body" title="Permanent link">&para;</a></h3>
+<p>Indent the body one level:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">clamp</span><span class="ss">(</span><span class="nv">x</span><span class="w"> </span><span class="nv">Int</span><span class="ss">)(</span><span class="nv">lo</span><span class="w"> </span><span class="nv">Int</span><span class="ss">)(</span><span class="nv">hi</span><span class="w"> </span><span class="nv">Int</span><span class="ss">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">lo</span>
+<span class="w">    </span><span class="nv">lo</span>
+<span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nv">hi</span>
+<span class="w">    </span><span class="nv">hi</span>
+<span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="nv">x</span>
+</code></pre></div>
+
+<h3 id="zero-arg-functions">Zero-arg functions<a class="headerlink" href="#zero-arg-functions" title="Permanent link">&para;</a></h3>
+<p>Use empty parens (or bare binding):</p>
+<div class="codehilite"><pre><span></span><code>main() = printfn &quot;Hello, ll-lang!&quot;
+</code></pre></div>
+
+<h3 id="local-bindings">Local bindings<a class="headerlink" href="#local-bindings" title="Permanent link">&para;</a></h3>
+<p>Chain bindings by layout — no <code>let...in</code>:</p>
+<div class="codehilite"><pre><span></span><code>example =
+  y = double 5
+  y + 1
+</code></pre></div>
+
+<h2 id="lambdas">Lambdas<a class="headerlink" href="#lambdas" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>triple = \x. x * 3
+</code></pre></div>
+
+<p>Backslash, parameter names, a period, then the body expression. Multiple
+parameters:</p>
+<div class="codehilite"><pre><span></span><code>add = \a b. a + b
+</code></pre></div>
+
+<h2 id="operators-and-fixity">Operators and fixity<a class="headerlink" href="#operators-and-fixity" title="Permanent link">&para;</a></h2>
+<p>ll-lang ships with a canonical baseline operator table from <code>Std.Operators</code>
+and also supports custom symbolic operators through fixity declarations.
+Baseline defaults are loaded by prelude wiring, so projects get standard
+precedence/associativity without local declarations.</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+<th>Associativity</th>
+<th>Precedence (low -&gt; high)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;|&gt;</code></td>
+<td>choice</td>
+<td>left</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;=</code></td>
+<td>bind</td>
+<td>left</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;</code></td>
+<td>sequence</td>
+<td>left</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>|&gt;</code> / <code>-&gt;</code></td>
+<td>pipe (<code>-&gt;</code> kept as expression-level compatibility alias)</td>
+<td>left</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>== != &lt; &gt; &lt;= &gt;=</code></td>
+<td>comparisons</td>
+<td>left</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>::</code></td>
+<td>list cons</td>
+<td>right</td>
+<td>5</td>
+</tr>
+<tr>
+<td><code>+ -</code></td>
+<td>arithmetic add/sub</td>
+<td>left</td>
+<td>6</td>
+</tr>
+<tr>
+<td><code>* /</code></td>
+<td>arithmetic mul/div</td>
+<td>left</td>
+<td>7</td>
+</tr>
+<tr>
+<td>application (<code>f x</code>)</td>
+<td>function application</td>
+<td>left</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fixity-declarations">Fixity declarations<a class="headerlink" href="#fixity-declarations" title="Permanent link">&para;</a></h3>
+<p>You can declare parser-contract metadata using:</p>
+<div class="codehilite"><pre><span></span><code>infixl 6 +
+infixr 5 ::
+infix 4 ==
+infixl 6 %%
+</code></pre></div>
+
+<p>Custom operators must stay symbolic and pass safety checks. Reserved single
+tokens (<code>=</code>, <code>|</code>, <code>:</code>, <code>.</code>), malformed (<code>?</code>), comment-like (<code>--</code>) and overlong
+forms are rejected with <code>E030</code>. Diagnostics <code>E027</code>..<code>E031</code> cover assoc,
+precedence, duplicate declarations, reserved/unsafe operators, and import
+conflicts.</p>
+<h2 id="if-else"><code>if</code> / <code>else</code><a class="headerlink" href="#if-else" title="Permanent link">&para;</a></h2>
+<p><code>if</code> is an expression — both arms must have the same type. Body is indented
+on the next line; <code>else</code> follows at the same indent as <code>if</code>. There is no
+<code>then</code> keyword.</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">abs</span><span class="ss">(</span><span class="nv">n</span><span class="w"> </span><span class="nv">Int</span><span class="ss">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">n</span>
+<span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="nv">n</span>
+</code></pre></div>
+
+<p>Chain with <code>else if</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">sign</span><span class="ss">(</span><span class="nv">x</span><span class="w"> </span><span class="nv">Int</span><span class="ss">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="s2">&quot;neg&quot;</span>
+<span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="s2">&quot;zero&quot;</span>
+<span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;pos&quot;</span>
+</code></pre></div>
+
+<h2 id="type-declarations">Type declarations<a class="headerlink" href="#type-declarations" title="Permanent link">&para;</a></h2>
+<p>Types start with an uppercase identifier — no <code>type</code> keyword required:</p>
+<h3 id="sum-types-tagged-unions">Sum types (tagged unions)<a class="headerlink" href="#sum-types-tagged-unions" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>Shape = Circle Float | Rect Float Float | Empty
+</code></pre></div>
+
+<p>Constructors are uppercase identifiers followed by zero or more type arguments.
+Branches are separated by <code>|</code>.</p>
+<p>Multi-line form with an optional leading <code>|</code>:</p>
+<div class="codehilite"><pre><span></span><code>Color =
+  | Red
+  | Green
+  | Blue
+</code></pre></div>
+
+<h3 id="parametric-types">Parametric types<a class="headerlink" href="#parametric-types" title="Permanent link">&para;</a></h3>
+<p>Bare type parameters after the type name:</p>
+<div class="codehilite"><pre><span></span><code>Maybe A = Some A | None
+Result A E = Ok A | Err E
+</code></pre></div>
+
+<h3 id="phantom-type-parameters">Phantom type parameters<a class="headerlink" href="#phantom-type-parameters" title="Permanent link">&para;</a></h3>
+<p>Bracketed parameters carry no runtime value:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Email</span><span class="o">[</span><span class="n">state</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Str</span>
+</code></pre></div>
+
+<p>See <a href="../04-tags-and-units/">04-tags-and-units</a> for the phantom state pattern.</p>
+<h2 id="match-pattern-matching"><code>match</code>: pattern matching<a class="headerlink" href="#match-pattern-matching" title="Permanent link">&para;</a></h2>
+<p>The compiler enforces exhaustiveness (error <code>E003</code>) in all forms.</p>
+<p><strong>Clause sugar</strong> — when a function body is a match over its last parameter,
+list arms directly:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">area</span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="n">Shape</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Circle</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mf">3.14159</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Rect</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Empty</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mf">0.0</span>
+</code></pre></div>
+
+<p><strong>Explicit form</strong> — <code>match &lt;scrutinee&gt;</code> followed by indented arms (no <code>with</code>):</p>
+<div class="codehilite"><pre><span></span><code><span class="k">describe</span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="n">Maybe</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="n">fallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="k">match</span><span class="w"> </span><span class="n">m</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="ow">Some</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">n</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">None</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">fallback</span>
+</code></pre></div>
+
+<p>Supported patterns:</p>
+<ul>
+<li><code>ConstructorName arg1 arg2</code> — constructor pattern, binds args by position
+  (e.g. <code>Some n</code>, <code>None</code>, <code>Rect w h</code>)</li>
+<li><code>name</code> — variable binding (catches anything, binds to <code>name</code>)</li>
+<li><code>42</code>, <code>"hi"</code>, <code>true</code>, <code>'c'</code> — literal match (Int, Str, Bool, Char)</li>
+<li><code>_</code> — wildcard</li>
+</ul>
+<h2 id="tag-semantic-labels"><code>tag</code>: semantic labels<a class="headerlink" href="#tag-semantic-labels" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>tag UserId
+tag Email
+tag m
+tag s
+tag kg
+</code></pre></div>
+
+<p>A <code>tag</code> declaration introduces a label with no runtime representation. Applied
+with postfix <code>[Tag]</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">uid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;user-42&quot;</span><span class="o">[</span><span class="n">UserId</span><span class="o">]</span><span class="w">      </span><span class="c1">-- type: Str[UserId]</span>
+<span class="n">dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0</span><span class="o">[</span><span class="n">m</span><span class="o">]</span><span class="w">                </span><span class="c1">-- type: Float[m]</span>
+</code></pre></div>
+
+<p>See <a href="../04-tags-and-units/">04-tags-and-units</a>.</p>
+<h2 id="trait-higher-kinded-type-classes"><code>trait</code>: higher-kinded type classes<a class="headerlink" href="#trait-higher-kinded-type-classes" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="n">trait</span><span class="w"> </span><span class="n">Functor</span><span class="w"> </span><span class="n">F</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="k">map</span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">B</span><span class="p">)(</span><span class="n">fa</span><span class="w"> </span><span class="n">F</span><span class="o">[</span><span class="n">A</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">F</span><span class="o">[</span><span class="n">B</span><span class="o">]</span>
+
+<span class="n">trait</span><span class="w"> </span><span class="n">Monad</span><span class="w"> </span><span class="n">F</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="n">pure</span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="n">F</span><span class="o">[</span><span class="n">A</span><span class="o">]</span>
+<span class="w">  </span><span class="n">bind</span><span class="p">(</span><span class="n">fa</span><span class="w"> </span><span class="n">F</span><span class="o">[</span><span class="n">A</span><span class="o">]</span><span class="p">)(</span><span class="n">f</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">F</span><span class="o">[</span><span class="n">B</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">F</span><span class="o">[</span><span class="n">B</span><span class="o">]</span>
+</code></pre></div>
+
+<p>The trait body is indented and contains method signatures (no bodies, no <code>fn</code>).</p>
+<h2 id="impl-trait-implementations"><code>impl</code>: trait implementations<a class="headerlink" href="#impl-trait-implementations" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="n">impl</span><span class="w"> </span><span class="n">Functor</span><span class="w"> </span><span class="n">Maybe</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="k">map</span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">B</span><span class="p">)(</span><span class="n">fa</span><span class="w"> </span><span class="n">Maybe</span><span class="o">[</span><span class="n">A</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">Maybe</span><span class="o">[</span><span class="n">B</span><span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="ow">Some</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ow">Some</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">None</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">None</span>
+</code></pre></div>
+
+<p>An <code>impl</code> provides concrete function definitions for a trait applied to a
+specific type constructor.</p>
+<p>See <a href="../05-traits/">05-traits</a>.</p>
+<h2 id="external-platform-native-functions"><code>external</code>: platform-native functions<a class="headerlink" href="#external-platform-native-functions" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="o">--</span><span class="w"> </span><span class="nx">Declares</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">function</span><span class="w"> </span><span class="nx">implemented</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">host</span><span class="w"> </span><span class="nx">platform</span><span class="w"> </span><span class="p">(</span><span class="nx">no</span><span class="w"> </span><span class="nx">ll</span><span class="o">-</span><span class="nx">lang</span><span class="w"> </span><span class="nx">body</span><span class="p">).</span>
+<span class="kd">external</span><span class="w"> </span><span class="nx">console_log</span><span class="p">(</span><span class="nx">msg</span><span class="w"> </span><span class="nx">Str</span><span class="p">)</span><span class="w"> </span><span class="nx">Unit</span>
+<span class="kd">external</span><span class="w"> </span><span class="nx">JSON_parse</span><span class="p">(</span><span class="nx">src</span><span class="w"> </span><span class="nx">Str</span><span class="p">)</span><span class="w"> </span><span class="nx">Str</span>
+
+<span class="nx">logGreeting</span><span class="p">(</span><span class="nx">name</span><span class="w"> </span><span class="nx">Str</span><span class="p">)</span><span class="w"> </span><span class="p">=</span>
+<span class="w">  </span><span class="nx">console_log</span><span class="w"> </span><span class="p">(</span><span class="nx">strConcat</span><span class="w"> </span><span class="s">&quot;Hello, &quot;</span><span class="w"> </span><span class="nx">name</span><span class="p">)</span>
+</code></pre></div>
+
+<p><code>external</code> functions are called exactly like regular ll-lang functions.
+The compiler validates that the selected target has a mapping for the name in
+discovered <code>FFI.lll</code> sidecars (SDK and/or vendored packages); if not, it emits
+<strong>E026 UnknownExternalMapping</strong>.</p>
+<p>Pre-mapped names available on all targets: <code>console_log</code>, <code>JSON_parse</code>.</p>
+<h2 id="opaque-platform-native-types"><code>opaque</code>: platform-native types<a class="headerlink" href="#opaque-platform-native-types" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="o">--</span><span class="w"> </span><span class="nx">Declares</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nx">whose</span><span class="w"> </span><span class="nx">internals</span><span class="w"> </span><span class="nx">are</span><span class="w"> </span><span class="nx">managed</span><span class="w"> </span><span class="nx">by</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">host</span><span class="w"> </span><span class="nx">platform</span><span class="p">.</span>
+<span class="nx">opaque</span><span class="w"> </span><span class="nx">HttpClient</span>
+<span class="nx">opaque</span><span class="w"> </span><span class="nx">Buffer</span>
+</code></pre></div>
+
+<p>Opaque types can appear as parameter and return types on both <code>external</code> and
+regular ll-lang functions.</p>
+<h2 id="expression-level-constructs">Expression-level constructs<a class="headerlink" href="#expression-level-constructs" title="Permanent link">&para;</a></h2>
+<h3 id="application-juxtaposition">Application (juxtaposition)<a class="headerlink" href="#application-juxtaposition" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="k">add</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w">           </span><span class="c1">-- == (add 1) 2, left-associative</span>
+<span class="n">getUser</span><span class="w"> </span><span class="ss">&quot;id&quot;</span><span class="o">[</span><span class="n">UserId</span><span class="o">]</span>
+</code></pre></div>
+
+<p>Whitespace between atoms is function application. Left-associative — curried.</p>
+<h3 id="lists">Lists<a class="headerlink" href="#lists" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>xs = [1 2 3]
+ys = [1; 2; 3]
+</code></pre></div>
+
+<p>Both space-separated and <code>;</code>-separated list elements are valid. Commas are not
+list separators (<code>[1, 2]</code> is tuple syntax).</p>
+<h3 id="tuples">Tuples<a class="headerlink" href="#tuples" title="Permanent link">&para;</a></h3>
+<p>Comma-separated inside parens in a grouping context:</p>
+<div class="codehilite"><pre><span></span><code>t = (1, &quot;hi&quot;)
+</code></pre></div>
+
+<h3 id="pipes">Pipes<a class="headerlink" href="#pipes" title="Permanent link">&para;</a></h3>
+<p><code>-&gt;</code> is the pipe operator in expression context:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">s</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">trim</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">len</span><span class="w">    </span><span class="o">--</span><span class="w"> </span><span class="n">equivalent</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="p">(</span><span class="kr">trim</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The type-arrow <code>-&gt;</code> (as in <code>Int -&gt; Bool</code>) only appears in type positions, so
+the two uses do not conflict.</p>
+<h3 id="arithmetic-and-comparison">Arithmetic and comparison<a class="headerlink" href="#arithmetic-and-comparison" title="Permanent link">&para;</a></h3>
+<p>Standard set: <code>+ - * / &lt; &gt; &lt;= &gt;= == !=</code>. Precedence follows math convention:
+<code>*</code> and <code>/</code> bind tighter than <code>+</code> and <code>-</code>, comparisons lower still.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

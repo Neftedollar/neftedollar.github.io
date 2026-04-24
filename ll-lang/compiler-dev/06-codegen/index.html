@@ -1,0 +1,2906 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/06-codegen/">
+      
+      
+        <link rel="prev" href="../05-hm-inference/">
+      
+      
+        <link rel="next" href="../07-testing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Code generation - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#code-generation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Code generation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entry point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-emission-emittype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type emission — emitType
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#literal-emission-emitlit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Literal emission — emitLit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binary-operator-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary operator mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expression-emission-emitexpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expression emission — emitExpr
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-emission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern emission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#declaration-emission-emitdecl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declaration emission — emitDecl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Declaration emission — emitDecl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sum-and-record-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sum and record types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-dependency-grouping-type-and" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type dependency grouping (type ... and ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-and-opaque-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External and opaque declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutual-recursion-grouping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mutual recursion grouping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-level-lets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-level lets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tag-and-trait-decls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag and trait decls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impl-decls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impl decls
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#f-keyword-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F# keyword safety
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#f-prelude-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F# prelude block
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lllc-run-execution-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lllc run execution model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known gaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entry point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-emission-emittype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type emission — emitType
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#literal-emission-emitlit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Literal emission — emitLit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binary-operator-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary operator mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expression-emission-emitexpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expression emission — emitExpr
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pattern-emission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern emission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#declaration-emission-emitdecl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declaration emission — emitDecl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Declaration emission — emitDecl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sum-and-record-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sum and record types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-dependency-grouping-type-and" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type dependency grouping (type ... and ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-and-opaque-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External and opaque declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutual-recursion-grouping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mutual recursion grouping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-level-lets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-level lets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tag-and-trait-decls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag and trait decls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impl-decls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impl decls
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#f-keyword-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F# keyword safety
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#f-prelude-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F# prelude block
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lllc-run-execution-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lllc run execution model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known gaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="code-generation">Code generation<a class="headerlink" href="#code-generation" title="Permanent link">&para;</a></h1>
+<p>File: <code>src/LLLangCompiler/Codegen.fs</code> (~490 lines).</p>
+<p>Walks a <code>TypedModule</code> and produces a single F# source string. No
+intermediate representation — direct AST-to-string emission.</p>
+<h2 id="entry-point">Entry point<a class="headerlink" href="#entry-point" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">emit</span><span class="w"> </span><span class="o">(</span><span class="n">tm</span><span class="o">:</span><span class="w"> </span><span class="n">TypedModule</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emitModule</span><span class="w"> </span><span class="n">tm</span>
+</code></pre></div>
+
+<p><code>emitModule</code> splits declarations into two buckets so the auto-generated
+F# prelude can reference user-declared <code>Maybe</code> / <code>Result</code> types when
+present:</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">module</span><span class="w"> </span><span class="p">&lt;</span><span class="nx">dotted</span><span class="p">.</span><span class="nx">path</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="k">type</span><span class="w"> </span><span class="nx">decls</span><span class="p">&gt;</span><span class="w">           </span><span class="o">--</span><span class="w"> </span><span class="nx">emitted</span><span class="w"> </span><span class="nx">first</span><span class="p">;</span><span class="w"> </span><span class="nx">grouped</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="err">`</span><span class="k">type</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="o">...</span><span class="err">`</span><span class="w"> </span><span class="nx">when</span><span class="w"> </span><span class="nx">needed</span>
+
+<span class="p">&lt;</span><span class="nx">prelude</span><span class="w"> </span><span class="nx">block</span><span class="p">&gt;</span><span class="w">        </span><span class="o">--</span><span class="w"> </span><span class="nx">core</span><span class="w"> </span><span class="nx">stdlib</span><span class="w"> </span><span class="nx">bindings</span><span class="w"> </span><span class="p">(</span><span class="o">+</span><span class="w"> </span><span class="nx">Maybe</span><span class="o">/</span><span class="nx">Result</span><span class="w"> </span><span class="nx">when</span><span class="w"> </span><span class="nx">used</span><span class="p">)</span>
+
+<span class="p">&lt;</span><span class="nx">non</span><span class="o">-</span><span class="k">type</span><span class="w"> </span><span class="nx">decls</span><span class="p">&gt;</span><span class="w">       </span><span class="o">--</span><span class="w"> </span><span class="nx">fns</span><span class="p">,</span><span class="w"> </span><span class="nx">lets</span><span class="p">,</span><span class="w"> </span><span class="nx">impls</span><span class="w"> </span><span class="p">(</span><span class="nx">grouped</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">mutual</span><span class="w"> </span><span class="nx">recursion</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Declarations are joined with double newlines. Empty strings (returned
+for <code>TDTag</code>, <code>TDUnit</code>, <code>TDTrait</code> which emit nothing) are filtered out.</p>
+<h2 id="type-emission-emittype">Type emission — <code>emitType</code><a class="headerlink" href="#type-emission-emittype" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">rec</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">emitType</span><span class="w"> </span><span class="o">(</span><span class="n">t</span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="s">&quot;Int&quot;</span><span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;int64&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="s">&quot;Float&quot;</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;float&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="s">&quot;Str&quot;</span><span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;string&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="s">&quot;Bool&quot;</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;bool&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="s">&quot;Unit&quot;</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;unit&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="s">&quot;Char&quot;</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;char&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">isTypeParamName</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;&#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w">  </span><span class="c1">// single-uppercase A/B/C</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="n">x</span><span class="w">       </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">x</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="n">v</span><span class="w">        </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;&#39;&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyApp</span><span class="o">(</span><span class="n">TyName</span><span class="w"> </span><span class="s">&quot;List&quot;</span><span class="o">,</span><span class="w"> </span><span class="n">a</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">emitType</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; list&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyApp</span><span class="o">(</span><span class="n">f</span><span class="o">,</span><span class="w"> </span><span class="n">a</span><span class="o">)</span><span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">emitType</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">emitType</span><span class="w"> </span><span class="n">f</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyFn</span><span class="o">(</span><span class="n">a</span><span class="o">,</span><span class="w"> </span><span class="n">b</span><span class="o">)</span><span class="w">     </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">emitType</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; -&gt; &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">emitType</span><span class="w"> </span><span class="n">b</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyTagged</span><span class="o">(</span><span class="n">t</span><span class="o">,</span><span class="w"> </span><span class="o">_)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">emitType</span><span class="w"> </span><span class="n">t</span><span class="w">       </span><span class="c1">// tags erase</span>
+</code></pre></div>
+
+<p>Key points:</p>
+<ul>
+<li>ll-lang <code>Int</code> becomes F# <code>int64</code>. Integer literals are suffixed with
+  <code>L</code>. A deliberate choice — ll-lang integers are 64-bit everywhere.</li>
+<li>ll-lang <code>Char</code> becomes F# <code>char</code>.</li>
+<li>Type variables <code>TyVar v</code> become <code>'v</code>. A bare single-uppercase
+  <code>TyName A</code> (treated as a type parameter by the parser / normalizer)
+  also emits as <code>'A</code> via <code>isTypeParamName</code>.</li>
+<li><code>TyApp(TyName "List", a)</code> is special-cased to <code>a list</code>. Other type
+  applications use F# postfix syntax <code>arg Outer</code>.</li>
+<li><code>TyTagged</code> strips the tag entirely — units and newtype labels are
+  compile-time only.</li>
+</ul>
+<h2 id="literal-emission-emitlit">Literal emission — <code>emitLit</code><a class="headerlink" href="#literal-emission-emitlit" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">private</span><span class="w"> </span><span class="n">emitLit</span><span class="w"> </span><span class="o">(</span><span class="n">l</span><span class="o">:</span><span class="w"> </span><span class="n">Literal</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">LInt</span><span class="w"> </span><span class="n">n</span><span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;L&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">LFloat</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="k">let</span><span class="w"> </span><span class="nv">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sprintf</span><span class="w"> </span><span class="s">&quot;%g&quot;</span><span class="w"> </span><span class="n">f</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">s</span><span class="o">.</span><span class="n">Contains</span><span class="o">(</span><span class="sc">&#39;.&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">s</span><span class="o">.</span><span class="n">Contains</span><span class="o">(</span><span class="sc">&#39;e&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">s</span><span class="o">.</span><span class="n">Contains</span><span class="o">(</span><span class="sc">&#39;E&#39;</span><span class="o">)</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;.0&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">LStr</span><span class="w"> </span><span class="n">s</span><span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="c1">// escape \\, &quot;, \n, \r, \t then quote</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">LBool</span><span class="w"> </span><span class="n">b</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">LChar</span><span class="w"> </span><span class="n">c</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="c1">// escape \\, &#39;, \n, \r, \t, \0 then quote</span>
+</code></pre></div>
+
+<p>The float handling appends <code>.0</code> to integer-valued floats so F# doesn't
+treat them as <code>int</code>. Strings and chars are quoted and escape sequences
+are re-applied. <code>LChar</code> uses the F# single-quoted form (<code>'a'</code>,
+<code>'\n'</code>).</p>
+<h2 id="binary-operator-mapping">Binary operator mapping<a class="headerlink" href="#binary-operator-mapping" title="Permanent link">&para;</a></h2>
+<p>Binary operator calls come through inference as
+<code>TEApp(TEApp(TEVar op, a), b)</code>. Codegen detects this shape in the
+<code>TEApp</code> case and renders infix:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">TEApp</span><span class="o">(</span><span class="n">outer</span><span class="o">,</span><span class="w"> </span><span class="n">b</span><span class="o">)</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="o">(</span><span class="k">match</span><span class="w"> </span><span class="n">outer</span><span class="o">.</span><span class="n">Expr</span><span class="w"> </span><span class="k">with</span>
+<span class="w">                        </span><span class="o">|</span><span class="w"> </span><span class="n">TEApp</span><span class="o">(</span><span class="n">inner</span><span class="o">,</span><span class="w"> </span><span class="o">_)</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">                            </span><span class="o">(</span><span class="k">match</span><span class="w"> </span><span class="n">inner</span><span class="o">.</span><span class="n">Expr</span><span class="w"> </span><span class="k">with</span>
+<span class="w">                             </span><span class="o">|</span><span class="w"> </span><span class="n">TEVar</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">binaryOp</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">None</span>
+<span class="w">                             </span><span class="o">|</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">false</span><span class="o">)</span>
+<span class="w">                        </span><span class="o">|</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">false</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="o">...</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fop</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;)&quot;</span>
+</code></pre></div>
+
+<p>The mapping table:</p>
+<table>
+<thead>
+<tr>
+<th>ll-lang</th>
+<th>F#</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>+</code></td>
+<td><code>+</code></td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td><code>-</code></td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td><code>*</code></td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td><code>/</code></td>
+</tr>
+<tr>
+<td><code>==</code></td>
+<td><code>=</code></td>
+</tr>
+<tr>
+<td><code>!=</code></td>
+<td><code>&lt;&gt;</code></td>
+</tr>
+<tr>
+<td><code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></td>
+<td>identical</td>
+</tr>
+</tbody>
+</table>
+<p>Any <code>EVar op</code> with no entry in <code>binaryOp</code> is emitted as a normal
+function call.</p>
+<h2 id="expression-emission-emitexpr">Expression emission — <code>emitExpr</code><a class="headerlink" href="#expression-emission-emitexpr" title="Permanent link">&para;</a></h2>
+<p>Each <code>TypedExprKind</code> maps to a textual form:</p>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TELit l</code></td>
+<td><code>emitLit l</code></td>
+</tr>
+<tr>
+<td><code>TEVar x</code></td>
+<td><code>safeIdent x</code></td>
+</tr>
+<tr>
+<td><code>TECon c</code></td>
+<td><code>safeIdent c</code></td>
+</tr>
+<tr>
+<td><code>TEApp(f, a)</code> (binop)</td>
+<td><code>(a op b)</code></td>
+</tr>
+<tr>
+<td><code>TEApp(f, a)</code> (multi-arg ctor)</td>
+<td><code>(C (a1, a2, ..., aN))</code></td>
+</tr>
+<tr>
+<td><code>TEApp(f, a)</code> (plain)</td>
+<td><code>(f a)</code></td>
+</tr>
+<tr>
+<td><code>TELam(ps, body)</code></td>
+<td><code>(fun p1 p2 -&gt; body)</code></td>
+</tr>
+<tr>
+<td><code>TELet(x, _, e, Some b)</code></td>
+<td><code>(let x = e in b)</code> (single-line form)</td>
+</tr>
+<tr>
+<td><code>TELet(x, _, e, None)</code></td>
+<td><code>(let x = e)</code></td>
+</tr>
+<tr>
+<td><code>TELetPat(tp, e, Some b)</code></td>
+<td><code>(let &lt;pat&gt; = e in b)</code> (single-line)</td>
+</tr>
+<tr>
+<td><code>TELetPat(tp, e, None)</code></td>
+<td><code>(let &lt;pat&gt; = e)</code></td>
+</tr>
+<tr>
+<td><code>TEIf(c, t, e)</code></td>
+<td><code>(if c then t else e)</code></td>
+</tr>
+<tr>
+<td><code>TETagged(e, _)</code></td>
+<td><code>emitExpr e</code> (tag dropped)</td>
+</tr>
+<tr>
+<td><code>TEList es</code></td>
+<td><code>[e1; e2; e3]</code></td>
+</tr>
+<tr>
+<td><code>TETuple es</code></td>
+<td><code>(e1, e2, e3)</code></td>
+</tr>
+<tr>
+<td><code>TECons(h, t)</code></td>
+<td><code>(h :: t)</code></td>
+</tr>
+<tr>
+<td><code>TEPipe(a, b)</code></td>
+<td><code>(b a)</code> — pipe becomes forward application</td>
+</tr>
+<tr>
+<td><code>TEMatch(scrut, brs)</code></td>
+<td>multi-line <code>(match scrut with\n  \| p -&gt; body\n  \| ...)</code></td>
+</tr>
+<tr>
+<td><code>TEMatchOf(scrut, brs)</code></td>
+<td>single-line <code>(match scrut with \| p -&gt; body \| ...)</code></td>
+</tr>
+</tbody>
+</table>
+<p>All emitted expressions are wrapped in parens to sidestep precedence
+surprises in the target F#. The single-line <code>let</code> / <code>let-pat</code> / match
+forms sidestep F# offside-rule issues when the construct is nested inside
+another expression at an arbitrary indentation column.</p>
+<p>Multi-arg ADT constructors are a special case of <code>TEApp</code>: ll-lang
+treats them as curried (<code>MkPair x y</code>) but F# requires a tuple argument
+(<code>MkPair(x, y)</code>), so codegen walks through nested <code>TEApp</code>s to gather
+arguments and emits a single tuple call when the head is a <code>TECon</code>.</p>
+<h2 id="pattern-emission">Pattern emission<a class="headerlink" href="#pattern-emission" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">rec</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">emitPattern</span><span class="w"> </span><span class="o">(</span><span class="n">p</span><span class="o">:</span><span class="w"> </span><span class="n">Pattern</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">PVar</span><span class="w"> </span><span class="n">x</span><span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">safeIdent</span><span class="w"> </span><span class="n">x</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">PWild</span><span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;_&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">PLit</span><span class="w"> </span><span class="n">l</span><span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">emitLit</span><span class="w"> </span><span class="n">l</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">PCon</span><span class="o">(</span><span class="s">&quot;[]&quot;</span><span class="o">,</span><span class="w"> </span><span class="bp">[]</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;[]&quot;</span><span class="w">  </span><span class="c1">// parser&#39;s empty-list sentinel</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">PCon</span><span class="o">(</span><span class="n">c</span><span class="o">,</span><span class="w"> </span><span class="bp">[]</span><span class="o">)</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">safeIdent</span><span class="w"> </span><span class="n">c</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">PCon</span><span class="o">(</span><span class="n">c</span><span class="o">,</span><span class="w"> </span><span class="o">[</span><span class="n">p</span><span class="o">])</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">safeIdent</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">emitPattern</span><span class="w"> </span><span class="n">p</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">PCon</span><span class="o">(</span><span class="n">c</span><span class="o">,</span><span class="w"> </span><span class="n">ps</span><span class="o">)</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">safeIdent</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">(</span><span class="n">ps</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">map</span><span class="w"> </span><span class="n">emitPattern</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">String</span><span class="p">.</span><span class="n">concat</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="o">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;)&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">PTuple</span><span class="w"> </span><span class="n">ps</span><span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">(</span><span class="n">ps</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">map</span><span class="w"> </span><span class="n">emitPattern</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">String</span><span class="p">.</span><span class="n">concat</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="o">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;)&quot;</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">PCons</span><span class="o">(</span><span class="n">h</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="o">)</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">emitPattern</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; :: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">emitPattern</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;)&quot;</span>
+</code></pre></div>
+
+<p>Single-arg constructors go space-separated (<code>Some x</code>); multi-arg use
+parenthesized tuple form (<code>Rect(w, h)</code>), which matches F# DU pattern
+syntax for multi-field cases. <code>PCon("[]", [])</code> is a sentinel emitted by
+the parser for empty-list patterns and must render as F#'s <code>[]</code>
+literal, not as an ordinary ctor reference.</p>
+<h2 id="declaration-emission-emitdecl">Declaration emission — <code>emitDecl</code><a class="headerlink" href="#declaration-emission-emitdecl" title="Permanent link">&para;</a></h2>
+<h3 id="sum-and-record-types">Sum and record types<a class="headerlink" href="#sum-and-record-types" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">TDType</span><span class="o">(</span><span class="n">name</span><span class="o">,</span><span class="w"> </span><span class="n">ps</span><span class="o">,</span><span class="w"> </span><span class="n">body</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">params</span><span class="k">&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emitTypeParams</span><span class="w"> </span><span class="n">ps</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;type &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">params&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; =&quot;</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TBSum</span><span class="w"> </span><span class="n">branches</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="c1">// | Circle of float</span>
+<span class="w">        </span><span class="c1">// | Rect of float * float</span>
+<span class="w">        </span><span class="c1">// | Empty</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TBRecord</span><span class="w"> </span><span class="n">fields</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="c1">// type Point = { x: float; y: float }</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TBWrapped</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="c1">// type Name = | Name of t   (newtype-style single-case DU)</span>
+</code></pre></div>
+
+<p>Type parameters: bare <code>A</code> in ll-lang becomes <code>&lt;'A&gt;</code> in F#. Phantom
+params (<code>[state]</code>) are dropped — they have no F# equivalent and exist
+only for the elaborator/inference to distinguish types.</p>
+<h3 id="type-dependency-grouping-type-and">Type dependency grouping (<code>type ... and ...</code>)<a class="headerlink" href="#type-dependency-grouping-type-and" title="Permanent link">&para;</a></h3>
+<p>F# cannot resolve forward references across separate <code>type</code> declarations.
+Example: <code>JsonField = JField Str JsonValue</code> before <code>JsonValue = ...</code> fails
+unless both are emitted in one recursive type block.</p>
+<p>Codegen computes type-name references inside each <code>TDType</code> body and groups
+consecutive declarations into minimal forward-reference closures:</p>
+<ul>
+<li>no forward ref: emit standalone <code>type Name = ...</code></li>
+<li>forward ref to later decl: emit a single <code>type ... and ...</code> group covering
+  the range</li>
+<li>mutual recursion: same <code>type ... and ...</code> group</li>
+</ul>
+<p>Invariant after grouping: every same-module type reference is either to an
+earlier emitted <code>type</code> or to a sibling inside the same <code>type ... and ...</code>
+block.</p>
+<h3 id="function-declarations">Function declarations<a class="headerlink" href="#function-declarations" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">TDFn</span><span class="o">(</span><span class="n">sig_</span><span class="o">,</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="n">body</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">isMainFn</span><span class="w"> </span><span class="n">sig_</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s">&quot;[&lt;EntryPoint&gt;]</span><span class="se">\n</span><span class="s">let main (argv: string[]) =</span><span class="se">\n</span><span class="s">    &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">bodyStr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">    0&quot;</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">        </span><span class="k">let</span><span class="w"> </span><span class="nv">isRec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">containsVar</span><span class="w"> </span><span class="n">sig_</span><span class="o">.</span><span class="n">Name</span><span class="w"> </span><span class="n">body</span>
+<span class="w">        </span><span class="k">let</span><span class="w"> </span><span class="nv">recKw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">isRec</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="s">&quot;rec &quot;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">        </span><span class="s">&quot;let &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">recKw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">emitFnClause</span><span class="w"> </span><span class="n">sig_</span><span class="w"> </span><span class="n">body</span>
+</code></pre></div>
+
+<h3 id="external-and-opaque-declarations">External and opaque declarations<a class="headerlink" href="#external-and-opaque-declarations" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">TDExternal</span><span class="o">(</span><span class="n">sig_</span><span class="o">,</span><span class="w"> </span><span class="o">_)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">emitExternalDecl</span><span class="w"> </span><span class="n">sig_</span>
+<span class="o">|</span><span class="w"> </span><span class="n">TDOpaque</span><span class="o">(</span><span class="n">name</span><span class="o">,</span><span class="w"> </span><span class="n">ps</span><span class="o">)</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">emitOpaqueDecl</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="n">ps</span>
+</code></pre></div>
+
+<ul>
+<li><code>TDExternal</code> is backend-mapped to platform-native symbols via
+  <code>FFI.lll</code> sidecar maps discovered from active SDK/vendor packages
+  (resolved in <code>Platform.fs</code> via <code>tryGetExternalTarget</code>).</li>
+</ul>
+<p>Current mapping coverage:</p>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>Known external mappings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F# (<code>Codegen.fs</code>)</td>
+<td><code>console_log</code>, <code>JSON_parse</code></td>
+</tr>
+<tr>
+<td>TypeScript (<code>CodegenTS.fs</code>)</td>
+<td><code>console_log</code>, <code>JSON_parse</code>, <code>fetch</code></td>
+</tr>
+<tr>
+<td>Python (<code>CodegenPy.fs</code>)</td>
+<td><code>console_log</code>, <code>JSON_parse</code></td>
+</tr>
+<tr>
+<td>Java (<code>CodegenJava.fs</code>)</td>
+<td><code>console_log</code></td>
+</tr>
+<tr>
+<td>C# (<code>CodegenCSharp.fs</code>)</td>
+<td><code>console_log</code>, <code>JSON_parse</code></td>
+</tr>
+<tr>
+<td>LLVM (<code>CodegenLLVM.fs</code>)</td>
+<td><code>console_log</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Unknown <code>TDExternal</code> names are rejected during compile validation before emit:
+  compilation fails with <code>E026 UnknownExternalMapping target:&lt;target&gt; name:&lt;name&gt;</code>.
+  This is no longer treated as a silent omission.</li>
+<li>Conflicting sidecar mappings for the same <code>(target, externalName)</code> are rejected as
+  platform registry errors (<code>E001 PlatformRegistryError ...</code>), so resolution stays deterministic.</li>
+</ul>
+<p>The emitted helper shape follows each backend's existing calling convention.</p>
+<ul>
+<li><code>TDOpaque</code> emits erased host-side aliases (<code>obj</code>/<code>unknown</code>/language-specific
+  equivalents) so foreign handles stay typed in ll-lang but lightweight at runtime.</li>
+</ul>
+<p>Three decisions:</p>
+<ol>
+<li>A bare <code>main = ...</code> declaration (zero params, value binding) becomes F#'s
+   <code>[&lt;EntryPoint&gt;] let main (argv: string[]) = ...</code> — the program's entry point.</li>
+<li><code>containsVar</code> scans the body for a reference to the function's own
+   name. If found, emit <code>let rec</code>.</li>
+<li>Otherwise: normal <code>let</code> with space-joined parameter names.</li>
+</ol>
+<p><code>containsVar</code> is a structural recursion over <code>TypedExpr</code> that looks
+for <code>TEVar name</code> matching a given name.</p>
+<h3 id="mutual-recursion-grouping">Mutual recursion grouping<a class="headerlink" href="#mutual-recursion-grouping" title="Permanent link">&para;</a></h3>
+<p>Runs of consecutive non-<code>main</code> top-level function decls are passed
+through <code>groupDecls</code>, which partitions them into mutually-recursive
+groups. A group of two or more functions is emitted as a single F#
+<code>let rec &lt;first&gt; ... and &lt;rest&gt;</code> block <strong>iff</strong> at least one function
+in the run references another function from the same run. Runs where
+no cross-reference exists are split back into singletons so existing
+output stays as plain <code>let</code> definitions (no unnecessary <code>rec</code>).</p>
+<p>This is necessary because HMInfer's top-level pass already infers
+mutually-recursive sibling fns together — without the codegen
+grouping, the emitted F# would fail to resolve forward references.</p>
+<h3 id="top-level-lets">Top-level lets<a class="headerlink" href="#top-level-lets" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">TDLet</span><span class="o">(</span><span class="n">x</span><span class="o">,</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="n">e</span><span class="o">)</span><span class="w">        </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;let &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">safeIdent</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; = &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">emitExpr</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">e</span>
+<span class="o">|</span><span class="w"> </span><span class="n">TDLetPat</span><span class="o">(</span><span class="n">tp</span><span class="o">,</span><span class="w"> </span><span class="n">e</span><span class="o">)</span><span class="w">       </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;let &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">emitPattern</span><span class="w"> </span><span class="n">tp</span><span class="o">.</span><span class="n">Pat</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; = &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">emitExpr</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">e</span>
+</code></pre></div>
+
+<h3 id="tag-and-trait-decls">Tag and trait decls<a class="headerlink" href="#tag-and-trait-decls" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">TDTag</span><span class="w"> </span><span class="o">_</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="o">|</span><span class="w"> </span><span class="n">TDUnit</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="o">|</span><span class="w"> </span><span class="n">TDTrait</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+</code></pre></div>
+
+<p>Empty strings. Filtered out when joining decl output. Tags and traits
+are purely compile-time constructs.</p>
+<h3 id="impl-decls">Impl decls<a class="headerlink" href="#impl-decls" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">TDImpl</span><span class="o">(_,</span><span class="w"> </span><span class="n">typeName</span><span class="o">,</span><span class="w"> </span><span class="n">methods</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="n">methods</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">map</span><span class="w"> </span><span class="o">(</span><span class="k">fun</span><span class="w"> </span><span class="o">(</span><span class="n">sig_</span><span class="o">,</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="n">body</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="o">...</span>
+<span class="w">        </span><span class="s">&quot;let &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">recKw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">safeIdent</span><span class="w"> </span><span class="n">typeName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">safeIdent</span><span class="w"> </span><span class="n">sig_</span><span class="o">.</span><span class="n">Name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">paramPart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; = ...&quot;</span>
+<span class="w">    </span><span class="o">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">String</span><span class="p">.</span><span class="n">concat</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span>
+</code></pre></div>
+
+<p>Each impl method becomes a top-level <code>let</code> binding named
+<code>TypeName_methodName</code> (e.g. <code>Maybe_map</code>). This is the mangling that
+parallels the one in <code>HMInfer.fs</code> for environment lookups.</p>
+<h2 id="f-keyword-safety">F# keyword safety<a class="headerlink" href="#f-keyword-safety" title="Permanent link">&para;</a></h2>
+<p><code>safeIdent</code> rewrites ll-lang identifiers that collide with F# keywords
+OR with F#'s "reserved for future use" word list (FS0046 —
+<code>params</code>, <code>object</code>, <code>functor</code>, ...) to a prefixed safe form:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">private</span><span class="w"> </span><span class="n">fsKeywords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Set</span><span class="p">.</span><span class="n">ofList</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s">&quot;abstract&quot;</span><span class="o">;</span><span class="w"> </span><span class="s">&quot;and&quot;</span><span class="o">;</span><span class="w"> </span><span class="s">&quot;as&quot;</span><span class="o">;</span><span class="w"> </span><span class="o">...;</span>
+<span class="w">                                      </span><span class="s">&quot;params&quot;</span><span class="o">;</span><span class="w"> </span><span class="s">&quot;object&quot;</span><span class="o">;</span><span class="w"> </span><span class="s">&quot;functor&quot;</span><span class="o">;</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">]</span>
+
+<span class="k">let</span><span class="w"> </span><span class="nv">private</span><span class="w"> </span><span class="n">safeIdent</span><span class="w"> </span><span class="o">(</span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="o">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nn">Set</span><span class="p">.</span><span class="n">contains</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="n">fsKeywords</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="s">&quot;__ll_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">s</span>
+</code></pre></div>
+
+<p>So a ll-lang parameter called <code>params</code> emits as <code>__ll_params</code> in the
+output. The <code>__ll_</code> prefix is used instead of backtick-quoting because
+backticks do <strong>not</strong> suppress the FS0046 "reserved for future use"
+warning on words like <code>object</code> and <code>params</code>.</p>
+<h2 id="f-prelude-block">F# prelude block<a class="headerlink" href="#f-prelude-block" title="Permanent link">&para;</a></h2>
+<p><code>assemblePrelude</code> emits an auto-generated F# prelude on demand. It has
+three parts:</p>
+<ul>
+<li><code>fsharpPreludeCore</code> — emitted only when core stdlib helpers are
+  referenced. Contains runtime
+  definitions for every stdlib function exposed via <code>builtinEnv</code>
+  that has no dependency on user-declared types (math, list-without-
+  Maybe, str, char, file IO, process, print).</li>
+<li><code>fsharpPreludeMaybe</code> — emitted only when the user module declares
+  <code>type Maybe</code> and references Maybe-dependent helpers. Defines <code>listHead</code>, <code>listTail</code>, <code>maybeMap</code>,
+  <code>maybeBind</code>, <code>maybeWithDefault</code>, <code>strToInt</code>, <code>listAt</code> — all of
+  which return <code>Maybe</code>-shaped values and therefore need the user's
+  <code>Some</code>/<code>None</code> constructors in scope.</li>
+<li><code>fsharpPreludeResult</code> — emitted only when the user module declares
+  <code>type Result</code> and references Result-dependent helpers. Defines
+  <code>resultMap</code>, <code>resultBind</code>, <code>resultMapErr</code>.</li>
+</ul>
+<p>The prelude is emitted AFTER the user's type declarations so that
+<code>Maybe</code>/<code>Result</code>-dependent helpers resolve to the user's own types
+rather than F#'s built-in <code>Option</code> / <code>Result</code>. The core prelude is
+also exposed as <code>Codegen.preludeBlock</code> for tests.</p>
+<h2 id="lllc-run-execution-model"><code>lllc run</code> execution model<a class="headerlink" href="#lllc-run-execution-model" title="Permanent link">&para;</a></h2>
+<p><code>lllc run</code> no longer rewrites emitted source text. The run path now:</p>
+<ol>
+<li>resolves imports (<code>Std.*</code>, <code>vendor/*/src</code>, sibling files),</li>
+<li>compiles to typed modules,</li>
+<li>emits a temporary multi-file F# project (<code>Prelude.fs</code> + module files),</li>
+<li>executes it via <code>dotnet run --project &lt;temp&gt;.fsproj</code>.</li>
+</ol>
+<p>This keeps runtime behavior aligned with normal project builds and
+avoids <code>module</code> / <code>[&lt;EntryPoint&gt;]</code> stripping hacks.</p>
+<h2 id="known-gaps">Known gaps<a class="headerlink" href="#known-gaps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>No closure conversion.</strong> Lambdas emit directly as F# lambdas, which
+  is fine on .NET but won't translate to all future backends.</li>
+<li><strong>No tail-call optimization hint.</strong> F# does its own TCO; we don't
+  insert <code>[&lt;TailCall&gt;]</code> attributes even when it would help.</li>
+<li><strong>Pipe codegen is <code>(b a)</code>, not <code>(a |&gt; b)</code>.</strong> Equivalent at runtime
+  but less idiomatic. Switching to <code>|&gt;</code> would require care with
+  curried multi-arg functions.</li>
+<li><strong>Match scrutinee from <code>EMatch</code> at expression position</strong> emits as a
+  generated lambda <code>fun $scrut -&gt; match $scrut with ...</code>. Works but
+  readable F# would use a direct <code>match</code> expression.</li>
+</ul>
+<h2 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">&para;</a></h2>
+<p><code>tests/LLLangTests/CodegenTests.fs</code> uses the helper:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">private</span><span class="w"> </span><span class="n">codegenSrc</span><span class="w"> </span><span class="o">(</span><span class="n">src</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="nn">LLLang</span><span class="p">.</span><span class="nn">Compiler</span><span class="p">.</span><span class="n">compile</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="n">fs</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">fs</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="n">es</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">failwith</span><span class="w"> </span><span class="o">$</span><span class="s">&quot;codegen failed: {es}&quot;</span>
+</code></pre></div>
+
+<p>Tests assert containment of specific strings (<code>Assert.Contains</code>)
+rather than byte-equality, so small formatting changes don't break
+them.</p>
+<p>Run:</p>
+<div class="codehilite"><pre><span></span><code>dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span>CodegenTests
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

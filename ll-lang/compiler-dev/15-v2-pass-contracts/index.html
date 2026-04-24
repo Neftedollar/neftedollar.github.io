@@ -1,0 +1,2717 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/15-v2-pass-contracts/">
+      
+      
+        <link rel="prev" href="../14-v2-canonical-compiler-boundaries/">
+      
+      
+        <link rel="next" href="../16-v2-project-system-execution/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>v2 Pass Contracts - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v2-pass-contracts" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              v2 Pass Contracts
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#global-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pass-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pass graph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-compilersyntaxlexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Compiler.Syntax.Lexer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-compilersyntaxparser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Compiler.Syntax.Parser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-compilerfrontendelaborator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Compiler.Frontend.Elaborator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-compilertypes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Compiler.Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-compilertyped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Compiler.Typed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-compilerinfer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Compiler.Infer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-compilerlower" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Compiler.Lower
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-compilerbackendtarget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Compiler.Backend.&lt;Target&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-compilerprojectmanifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Compiler.Project.Manifest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-compilerprojectloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Compiler.Project.Loader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-compilercli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Compiler.Cli
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pass-fixture-shapes-m1e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pass fixture shapes (M1.E)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-migration-discipline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required migration discipline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#global-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pass-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pass graph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-compilersyntaxlexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Compiler.Syntax.Lexer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-compilersyntaxparser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Compiler.Syntax.Parser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-compilerfrontendelaborator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Compiler.Frontend.Elaborator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-compilertypes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Compiler.Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-compilertyped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Compiler.Typed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-compilerinfer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Compiler.Infer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-compilerlower" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Compiler.Lower
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-compilerbackendtarget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Compiler.Backend.&lt;Target&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-compilerprojectmanifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Compiler.Project.Manifest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-compilerprojectloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Compiler.Project.Loader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-compilercli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Compiler.Cli
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pass-fixture-shapes-m1e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pass fixture shapes (M1.E)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-migration-discipline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required migration discipline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="v2-pass-contracts">v2 Pass Contracts<a class="headerlink" href="#v2-pass-contracts" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> frozen specification — binding for v2 development<br />
+<strong>Audience:</strong> implementation agents and maintainers<br />
+<strong>Closes:</strong> #50 (M1.E — pass fixtures and invariant enforcement)</p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>This document defines the required pass contracts for the canonical <code>v2</code>
+compiler. It is intentionally operational: each pass has one job, one input
+shape, one output shape, and explicit non-goals. The objective is to stop
+backend emitters and tooling layers from re-deriving semantics ad hoc.</p>
+<h2 id="global-rules">Global rules<a class="headerlink" href="#global-rules" title="Permanent link">&para;</a></h2>
+<p>Every major pass must satisfy all of the following:</p>
+<ul>
+<li>one canonical owner module group</li>
+<li>one explicit input contract</li>
+<li>one explicit output contract</li>
+<li>validation tests at the pass boundary</li>
+<li>documentation updates in the same change when the contract changes</li>
+</ul>
+<p>No pass is allowed to silently absorb responsibilities that belong to another
+phase just because the current implementation makes that convenient.</p>
+<h2 id="pass-graph">Pass graph<a class="headerlink" href="#pass-graph" title="Permanent link">&para;</a></h2>
+<p>The canonical <code>v2</code> graph is:</p>
+<ol>
+<li><code>Compiler.Syntax.Lexer</code></li>
+<li><code>Compiler.Syntax.Parser</code></li>
+<li><code>Compiler.Frontend.Elaborator</code></li>
+<li><code>Compiler.Types</code></li>
+<li><code>Compiler.Typed</code></li>
+<li><code>Compiler.Infer</code></li>
+<li><code>Compiler.Lower</code></li>
+<li><code>Compiler.Backend.&lt;Target&gt;</code></li>
+<li><code>Compiler.Project.Manifest</code></li>
+<li><code>Compiler.Project.Loader</code></li>
+<li><code>Compiler.Cli</code></li>
+</ol>
+<p>Project loading and CLI orchestration wrap the language pipeline but still need
+their own contracts because they determine how the compiler is used in
+practice.</p>
+<h2 id="phase-contracts">Phase contracts<a class="headerlink" href="#phase-contracts" title="Permanent link">&para;</a></h2>
+<h3 id="1-compilersyntaxlexer">1. <code>Compiler.Syntax.Lexer</code><a class="headerlink" href="#1-compilersyntaxlexer" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> raw source text<br />
+<strong>Output:</strong> token stream with source positions and layout tokens<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>lexical classification</li>
+<li>comment stripping</li>
+<li>layout token synthesis</li>
+<li>literal tokenization</li>
+<li>source position tracking at token granularity</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>declaration parsing</li>
+<li>precedence</li>
+<li>type checking</li>
+<li>backend-specific behavior</li>
+</ul>
+<h3 id="2-compilersyntaxparser">2. <code>Compiler.Syntax.Parser</code><a class="headerlink" href="#2-compilersyntaxparser" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> token stream<br />
+<strong>Output:</strong> surface AST plus position map or equivalent source-location mapping<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>declaration parsing</li>
+<li>expression parsing</li>
+<li>precedence and associativity</li>
+<li>pattern parsing</li>
+<li>syntactic sugar expansion only when it is purely syntactic</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>name resolution</li>
+<li>type inference</li>
+<li>target-specific rewriting</li>
+</ul>
+<h3 id="3-compilerfrontendelaborator">3. <code>Compiler.Frontend.Elaborator</code><a class="headerlink" href="#3-compilerfrontendelaborator" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> surface AST<br />
+<strong>Output:</strong> validated surface AST plus symbol/declaration environment and
+frontend diagnostics<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>name resolution</li>
+<li>declared-type consistency checks</li>
+<li>constructor/binder environment construction</li>
+<li>exhaustiveness and frontend structural checks</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>general HM inference</li>
+<li>backend lowering</li>
+<li>project graph logic</li>
+</ul>
+<h3 id="4-compilertypes">4. <code>Compiler.Types</code><a class="headerlink" href="#4-compilertypes" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> type-level declarations and frontend requirements<br />
+<strong>Output:</strong> canonical type representations, substitutions, schemes, utility
+operations<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>type representation</li>
+<li>substitution machinery</li>
+<li>free-variable calculations</li>
+<li>generalization/instantiation support</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>AST walking</li>
+<li>project loading</li>
+<li>backend emission</li>
+</ul>
+<h3 id="5-compilertyped">5. <code>Compiler.Typed</code><a class="headerlink" href="#5-compilertyped" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> typed-core expression and declaration shapes required by inference and
+lowering<br />
+<strong>Output:</strong> canonical typed IR definitions<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>typed expression forms</li>
+<li>typed declaration forms</li>
+<li>expression IDs or equivalent stable identity hooks</li>
+<li>metadata needed by lowering/backends</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>inference algorithm</li>
+<li>backend rendering</li>
+</ul>
+<h3 id="6-compilerinfer">6. <code>Compiler.Infer</code><a class="headerlink" href="#6-compilerinfer" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> elaborated surface AST and type environment<br />
+<strong>Output:</strong> typed IR plus inference diagnostics and evidence tables where
+needed<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>HM inference / unification</li>
+<li>typed-core construction</li>
+<li>operator typing enforcement</li>
+<li>principal-type behavior where intended</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>match lowering</li>
+<li>backend-specific representations</li>
+<li>project-system concerns</li>
+</ul>
+<h3 id="7-compilerlower">7. <code>Compiler.Lower</code><a class="headerlink" href="#7-compilerlower" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> typed IR<br />
+<strong>Output:</strong> backend-neutral lowered IR<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>explicit lowering of pattern matching</li>
+<li>canonicalization of syntactic conveniences</li>
+<li>preparation for backend emission</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>source parsing</li>
+<li>environment construction</li>
+<li>target-specific pretty-printing</li>
+</ul>
+<h3 id="8-compilerbackendtarget">8. <code>Compiler.Backend.&lt;Target&gt;</code><a class="headerlink" href="#8-compilerbackendtarget" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> lowered IR<br />
+<strong>Output:</strong> target artifact text or target-specific intermediate form<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>target syntax rendering</li>
+<li>target runtime/helper mapping</li>
+<li>target naming/stability conventions</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>re-typechecking source constructs</li>
+<li>redoing language-level lowering decisions that should already be explicit in
+  <code>Compiler.Lower</code></li>
+</ul>
+<h3 id="9-compilerprojectmanifest">9. <code>Compiler.Project.Manifest</code><a class="headerlink" href="#9-compilerprojectmanifest" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> manifest text<br />
+<strong>Output:</strong> canonical manifest model<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>manifest parsing</li>
+<li>manifest validation</li>
+<li>dependency declaration decoding</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>filesystem graph walking</li>
+<li>backend codegen</li>
+</ul>
+<h3 id="10-compilerprojectloader">10. <code>Compiler.Project.Loader</code><a class="headerlink" href="#10-compilerprojectloader" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> project root + manifest model<br />
+<strong>Output:</strong> resolved project graph in deterministic load/build order<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>source discovery</li>
+<li>import-to-file resolution</li>
+<li>dependency graph construction</li>
+<li>cycle detection</li>
+<li>topo ordering</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>type inference</li>
+<li>backend emission</li>
+<li>CLI UX policy</li>
+</ul>
+<h3 id="11-compilercli">11. <code>Compiler.Cli</code><a class="headerlink" href="#11-compilercli" title="Permanent link">&para;</a></h3>
+<p><strong>Input:</strong> user command line / MCP request / tool invocation<br />
+<strong>Output:</strong> orchestrated compiler action and stable diagnostics/artifacts<br />
+<strong>Must own:</strong></p>
+<ul>
+<li>command dispatch</li>
+<li>entrypoint selection</li>
+<li>command-mode policy (<code>build</code>, <code>check</code>, <code>run</code>, <code>install</code>, <code>mod *</code>, MCP)</li>
+<li>user-facing output shaping</li>
+</ul>
+<p><strong>Must not own:</strong></p>
+<ul>
+<li>language semantics</li>
+<li>internal backend logic</li>
+<li>ad hoc parsing/typechecking shortcuts outside the canonical pipeline</li>
+</ul>
+<h2 id="pass-fixture-shapes-m1e">Pass fixture shapes (M1.E)<a class="headerlink" href="#pass-fixture-shapes-m1e" title="Permanent link">&para;</a></h2>
+<p>Each pass has a minimal smoke fixture that can be used to validate the boundary in isolation.</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Fixture shape</th>
+<th>Validation command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Compiler.Syntax.Lexer</code></td>
+<td>a <code>.lll</code> source file with at least one of each token class</td>
+<td><code>lllc self check &lt;file&gt;</code> succeeds; token stream matches snapshot</td>
+</tr>
+<tr>
+<td><code>Compiler.Syntax.Parser</code></td>
+<td><code>spec/examples/valid/01-minimal.lll</code> through <code>spec/examples/valid/19-*.lll</code></td>
+<td>xUnit test: parse each valid corpus example without error</td>
+</tr>
+<tr>
+<td><code>Compiler.Frontend.Elaborator</code></td>
+<td>all <code>spec/examples/valid/*.lll</code> corpus examples</td>
+<td><code>dotnet test</code> elaboration tests pass</td>
+</tr>
+<tr>
+<td><code>Compiler.Types</code></td>
+<td>property: <code>applyType (generalize env t) [] == t</code> for closed types</td>
+<td>unit tests on substitution identity, composition, ftv</td>
+</tr>
+<tr>
+<td><code>Compiler.Typed</code></td>
+<td>any <code>TypedModule</code> produced by inference must round-trip through <code>exprId</code> lookup</td>
+<td>xUnit: <code>TypedModule.Dispatch</code> keys are all <code>ExprId</code> values in the typed tree</td>
+</tr>
+<tr>
+<td><code>Compiler.Infer</code></td>
+<td><code>spec/examples/valid/20-bootstrap-compiler.lll</code> infers without error</td>
+<td><code>lllc self check spec/examples/valid/20-bootstrap-compiler.lll</code></td>
+</tr>
+<tr>
+<td><code>Compiler.Lower</code></td>
+<td>a program with nested match and lambda must lower to a form with no <code>EMatch</code> or <code>ELam</code> in the IR</td>
+<td>unit test on lowered IR structure</td>
+</tr>
+<tr>
+<td><code>Compiler.Backend.&lt;Target&gt;</code></td>
+<td><code>spec/examples/valid/*.lll</code> must emit + build successfully for each stable target</td>
+<td><code>dotnet test</code> codegen tests; <code>lllc build --target &lt;t&gt;</code> exits 0</td>
+</tr>
+<tr>
+<td><code>Compiler.Project.Manifest</code></td>
+<td>a valid <code>lll.toml</code> and a malformed one</td>
+<td>unit test: valid parses without error; malformed returns structured error</td>
+</tr>
+<tr>
+<td><code>Compiler.Project.Loader</code></td>
+<td>a two-module project with one import</td>
+<td>integration test: topo order is <code>[dep, importer]</code></td>
+</tr>
+<tr>
+<td><code>Compiler.Cli</code></td>
+<td><code>lllc build</code>, <code>lllc self check</code>, <code>lllc run</code> on a minimal project</td>
+<td>end-to-end: exit 0 and expected output</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Invariants checked at each boundary:</strong></p>
+<ul>
+<li>After lexing: every token has <code>line &gt; 0</code> and <code>col &gt; 0</code>.</li>
+<li>After parsing: <code>PosMap</code> contains an entry for every expression node.</li>
+<li>After elaboration: <code>TypeEnv</code> is non-empty; no unresolved <code>TyVar</code> in declared positions.</li>
+<li>After inference: every <code>ExprId</code> in <code>TypedModule</code> has an entry in <code>Dispatch</code> or a direct type annotation.</li>
+<li>After lowering: no <code>EMatch</code> remains in the IR output.</li>
+<li>After backend: emitted file passes target-language static analysis (e.g., <code>dotnet build</code> for F#, <code>tsc --noEmit</code> for TS).</li>
+</ul>
+<h2 id="required-migration-discipline">Required migration discipline<a class="headerlink" href="#required-migration-discipline" title="Permanent link">&para;</a></h2>
+<p>When moving a subsystem from stage0 to canonical ll-lang ownership:</p>
+<ol>
+<li>define the owner module group</li>
+<li>define the input/output contract</li>
+<li>identify current stage0-only assumptions</li>
+<li>add or update direct tests for the ll-lang-owned path</li>
+<li>update all docs that name the old owner</li>
+</ol>
+<p>If any step is missing, the migration is incomplete.</p>
+<h2 id="validation-targets">Validation targets<a class="headerlink" href="#validation-targets" title="Permanent link">&para;</a></h2>
+<p>Milestone 1 is not done until:</p>
+<ul>
+<li>each phase above has one documented owner</li>
+<li>docs consistently reference the same phase graph</li>
+<li>tests exist at the main pass boundaries</li>
+<li>no major subsystem is “canonical by implication only”</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

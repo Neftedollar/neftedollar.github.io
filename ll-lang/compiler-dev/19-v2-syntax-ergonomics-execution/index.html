@@ -1,0 +1,3267 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/19-v2-syntax-ergonomics-execution/">
+      
+      
+        <link rel="prev" href="../18-v2-compiler-boundaries-execution/">
+      
+      
+        <link rel="next" href="../20-v2-self-host-transition-execution/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>v2 Syntax Ergonomics Execution - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v2-syntax-ergonomics-execution" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              v2 Syntax Ergonomics Execution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-freeze-the-fixed-operator-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — Freeze the fixed operator set
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — Freeze the fixed operator set">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frozen-operator-table-v2-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frozen operator table (v2 — canonical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-freeze-precedence-and-associativity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Freeze precedence and associativity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Freeze precedence and associativity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#precedence-hierarchy-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Precedence hierarchy summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-constructorfunction-passing-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Constructor/function passing rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Constructor/function passing rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructorfunction-passing-rule-v2-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor/function passing rule (v2 — canonical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-trailing-lambda-and-zero-arg-callvalue-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Trailing lambda and zero-arg call/value rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Trailing lambda and zero-arg call/value rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trailing-lambda-rule-v2-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trailing lambda rule (v2 — canonical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-arg-callvalue-rule-v2-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-arg call/value rule (v2 — canonical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-e-proof-of-use-against-compiler-shaped-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package E — Proof-of-use against compiler-shaped code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package E — Proof-of-use against compiler-shaped code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proof-of-use-pointers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proof-of-use pointers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 4
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 4">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operator-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operator questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grammar-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grammar questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typing-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typing questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 4
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-freeze-the-fixed-operator-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — Freeze the fixed operator set
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — Freeze the fixed operator set">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frozen-operator-table-v2-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frozen operator table (v2 — canonical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-freeze-precedence-and-associativity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Freeze precedence and associativity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Freeze precedence and associativity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#precedence-hierarchy-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Precedence hierarchy summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-constructorfunction-passing-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Constructor/function passing rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Constructor/function passing rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructorfunction-passing-rule-v2-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor/function passing rule (v2 — canonical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-trailing-lambda-and-zero-arg-callvalue-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Trailing lambda and zero-arg call/value rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Trailing lambda and zero-arg call/value rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trailing-lambda-rule-v2-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trailing lambda rule (v2 — canonical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-arg-callvalue-rule-v2-canonical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-arg call/value rule (v2 — canonical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-e-proof-of-use-against-compiler-shaped-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package E — Proof-of-use against compiler-shaped code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package E — Proof-of-use against compiler-shaped code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proof-of-use-pointers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proof-of-use pointers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 4
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 4">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operator-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operator questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grammar-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grammar questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typing-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typing questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 4
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="v2-syntax-ergonomics-execution">v2 Syntax Ergonomics Execution<a class="headerlink" href="#v2-syntax-ergonomics-execution" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> doc/policy phase complete — implementation gaps tracked in epic #74
+<strong>Closes:</strong> #76 #78 #80 #81 #83
+<strong>Audience:</strong> implementers of <code>Milestone 4</code><br />
+<strong>Parent docs:</strong> <a href="../13-v2-implementation-roadmap/">v2 implementation roadmap</a>, <a href="../12-v2-language-architecture/">v2 language architecture</a>, <a href="../../spec/v2-type-system.md">v2 type system spec</a>, <a href="../15-v2-pass-contracts/">v2 pass contracts</a></p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p><code>Milestone 4</code> exists to make compiler-heavy code materially shorter without
+making the language harder to parse, type, or explain.</p>
+<p>This milestone is not license to invent a DSL. It is a targeted cleanup pass:</p>
+<ul>
+<li>fixed operators only</li>
+<li>fixed precedence only</li>
+<li>fixed trailing-lambda rules only</li>
+<li>fixed constructor/function passing rules only</li>
+</ul>
+<p>If a syntax idea is powerful but open-ended, it probably belongs after <code>v2</code>.</p>
+<h2 id="status-model">Status model<a class="headerlink" href="#status-model" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>[x]</code> done in current repo and should be preserved</li>
+<li><code>[ ]</code> not done or not yet canonical for <code>v2</code></li>
+</ul>
+<h2 id="current-repo-baseline">Current-repo baseline<a class="headerlink" href="#current-repo-baseline" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] <code>v2</code> architecture already calls for a fixed compact operator layer</li>
+<li>[x] operator goals are named: <code>|&gt;</code>, <code>&gt;&gt;=</code>, <code>&gt;&gt;</code>, <code>&lt;|&gt;</code></li>
+<li>[x] parser parity is already a stated requirement</li>
+</ul>
+<p>Still not done enough for <code>v2</code>:</p>
+<ul>
+<li>[x] precedence/associativity are not frozen as a single product contract</li>
+<li>[x] constructor/function passing is not clearly canonical</li>
+<li>[x] trailing lambda and zero-arg behavior are not fully stabilized</li>
+<li>[x] syntax ergonomics are not yet validated against real compiler-shaped code</li>
+</ul>
+<h2 id="work-package-a-freeze-the-fixed-operator-set">Work package A — Freeze the fixed operator set<a class="headerlink" href="#work-package-a-freeze-the-fixed-operator-set" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> frozen operator table below; doc/policy phase complete (#76).</p>
+<h3 id="goal">Goal<a class="headerlink" href="#goal" title="Permanent link">&para;</a></h3>
+<p>Define the complete <code>v2</code> built-in operator set and stop syntax sprawl before it
+starts.</p>
+<h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Freeze exactly which operators ship in <code>v2</code>.</li>
+<li>[x] Assign each operator one semantic role.</li>
+<li>[x] State explicitly that user-defined operator frameworks are out of scope.</li>
+<li>[x] Remove docs language that implies an open operator surface.</li>
+</ul>
+<h3 id="frozen-operator-table-v2-canonical">Frozen operator table (v2 — canonical)<a class="headerlink" href="#frozen-operator-table-v2-canonical" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>ASCII spelling</th>
+<th>Role</th>
+<th>Associativity</th>
+<th>Precedence level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>choice</td>
+<td><code>&lt;\|&gt;</code></td>
+<td>applicative/parser choice</td>
+<td>left</td>
+<td>1 (lowest)</td>
+</tr>
+<tr>
+<td>bind</td>
+<td><code>&gt;&gt;=</code></td>
+<td>monadic sequencing</td>
+<td>left</td>
+<td>2</td>
+</tr>
+<tr>
+<td>sequence</td>
+<td><code>&gt;&gt;</code></td>
+<td>discard-result sequencing</td>
+<td>left</td>
+<td>2</td>
+</tr>
+<tr>
+<td>pipe</td>
+<td><code>|&gt;</code> / <code>-&gt;</code></td>
+<td>left-to-right function application</td>
+<td>left</td>
+<td>3</td>
+</tr>
+<tr>
+<td>compare</td>
+<td><code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code> <code>==</code> <code>!=</code></td>
+<td>ordered/equality comparison</td>
+<td>left</td>
+<td>4</td>
+</tr>
+<tr>
+<td>cons</td>
+<td><code>::</code></td>
+<td>list cons</td>
+<td>right</td>
+<td>5</td>
+</tr>
+<tr>
+<td>add</td>
+<td><code>+</code></td>
+<td>integer/float addition</td>
+<td>left</td>
+<td>6</td>
+</tr>
+<tr>
+<td>subtract</td>
+<td><code>-</code></td>
+<td>integer/float subtraction</td>
+<td>left</td>
+<td>6</td>
+</tr>
+<tr>
+<td>multiply</td>
+<td><code>*</code></td>
+<td>integer/float multiplication</td>
+<td>left</td>
+<td>7</td>
+</tr>
+<tr>
+<td>divide</td>
+<td><code>/</code></td>
+<td>integer/float division</td>
+<td>left</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<p><strong>User-defined operator frameworks are out of scope for <code>v2</code>.</strong> No new symbolic
+operators may be added without a spec change targeting a later milestone.</p>
+<h3 id="exit-criteria">Exit criteria<a class="headerlink" href="#exit-criteria" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The built-in operator set is short, fixed, and memorable.</li>
+<li>No implementer can reasonably add another symbolic operator without a spec change.</li>
+</ul>
+<h2 id="work-package-b-freeze-precedence-and-associativity">Work package B — Freeze precedence and associativity<a class="headerlink" href="#work-package-b-freeze-precedence-and-associativity" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> precedence/associativity table in work package A above; this is
+the single canonical source of truth (#78).</p>
+<h3 id="goal_1">Goal<a class="headerlink" href="#goal_1" title="Permanent link">&para;</a></h3>
+<p>Make parser behavior and codegen behavior mechanically aligned.</p>
+<h3 id="tasks_1">Tasks<a class="headerlink" href="#tasks_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define one precedence table in canonical docs.</li>
+<li>[x] Define associativity for every built-in operator.</li>
+<li>[x] Require both parser implementations to follow the same table.</li>
+<li>[x] Require backends to preserve semantics without leaking raw symbolic names.</li>
+</ul>
+<h3 id="precedence-hierarchy-summary">Precedence hierarchy summary<a class="headerlink" href="#precedence-hierarchy-summary" title="Permanent link">&para;</a></h3>
+<p>Higher number = tighter binding.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Operators</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>&lt;\|&gt;</code></td>
+<td>loosest; choice chains at the top level</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>&gt;&gt;=</code> <code>&gt;&gt;</code></td>
+<td>monadic/sequencing forms</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>|&gt;</code> <code>-&gt;</code></td>
+<td>pipeline forms (<code>-&gt;</code> retained as alias in expr context)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code> <code>==</code> <code>!=</code></td>
+<td>comparisons</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>::</code></td>
+<td>right-associative list cons</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>+</code> <code>-</code></td>
+<td>additive arithmetic</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>*</code> <code>/</code></td>
+<td>multiplicative arithmetic</td>
+</tr>
+<tr>
+<td>8</td>
+<td>juxtaposition</td>
+<td>function application (tightest)</td>
+</tr>
+</tbody>
+</table>
+<p>All backends must map operator semantics to host-language equivalents without
+exposing the symbolic operator names in generated code.</p>
+<h3 id="exit-criteria_1">Exit criteria<a class="headerlink" href="#exit-criteria_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>There is exactly one precedence source of truth.</li>
+<li>Parser parity tests and backend expectations can point to one table.</li>
+</ul>
+<h2 id="work-package-c-constructorfunction-passing-rules">Work package C — Constructor/function passing rules<a class="headerlink" href="#work-package-c-constructorfunction-passing-rules" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> constructor/function passing rule documented below (#80).</p>
+<h3 id="goal_2">Goal<a class="headerlink" href="#goal_2" title="Permanent link">&para;</a></h3>
+<p>Reduce wrapper noise in compiler-style code while keeping typing predictable.</p>
+<h3 id="tasks_2">Tasks<a class="headerlink" href="#tasks_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Decide where constructors are canonically passable as functions.</li>
+<li>[x] Document any cases where eta-expansion remains required.</li>
+<li>[x] Keep the rule small enough that diagnostics stay understandable.</li>
+</ul>
+<h3 id="constructorfunction-passing-rule-v2-canonical">Constructor/function passing rule (v2 — canonical)<a class="headerlink" href="#constructorfunction-passing-rule-v2-canonical" title="Permanent link">&para;</a></h3>
+<p><strong>Rule:</strong> Every constructor <code>Ctor</code> with arity <code>n</code> is passable as a curried
+function of type <code>A₁ -&gt; A₂ -&gt; ... -&gt; Aₙ -&gt; T</code> wherever a function value of
+that type is expected. No explicit <code>\x. Ctor x</code> wrapper is needed.</p>
+<div class="codehilite"><pre><span></span><code><span class="o">--</span><span class="w"> </span><span class="n">Before</span><span class="w"> </span><span class="p">(</span><span class="n">eta</span><span class="o">-</span><span class="n">expansion</span><span class="w"> </span><span class="n">wrapper</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">longer</span><span class="w"> </span><span class="n">required</span><span class="p">):</span>
+<span class="n">mapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listMap</span><span class="w"> </span><span class="p">(</span>\<span class="n">x</span><span class="o">.</span><span class="w"> </span><span class="n">Some</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">xs</span>
+
+<span class="o">--</span><span class="w"> </span><span class="n">After</span><span class="w"> </span><span class="p">(</span><span class="n">constructor</span><span class="w"> </span><span class="n">passed</span><span class="w"> </span><span class="n">directly</span><span class="p">):</span>
+<span class="n">mapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listMap</span><span class="w"> </span><span class="n">Some</span><span class="w"> </span><span class="n">xs</span>
+</code></pre></div>
+
+<p><strong>Eta-expansion remains required only when:</strong></p>
+<ol>
+<li>The constructor is used in a position where its full arity cannot be
+   inferred from context (e.g., a wildcard type variable without a surrounding
+   annotation). In that case wrap it: <code>\x. Ctor x</code>.</li>
+<li>The constructor is partially applied to fewer arguments than its arity and
+   the partial application site has no type annotation. Add a type annotation
+   or wrap it.</li>
+</ol>
+<p><strong>Diagnostics:</strong> when constructor passing fails to type-check, the error must
+name the constructor and state the expected vs. inferred arity — never emit a
+generic "type mismatch".</p>
+<h3 id="exit-criteria_2">Exit criteria<a class="headerlink" href="#exit-criteria_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Common compiler/library code no longer needs avoidable <code>\x. Ctor x</code> wrappers.</li>
+<li>The rule is teachable in a few lines of spec text.</li>
+</ul>
+<h2 id="work-package-d-trailing-lambda-and-zero-arg-callvalue-rules">Work package D — Trailing lambda and zero-arg call/value rules<a class="headerlink" href="#work-package-d-trailing-lambda-and-zero-arg-callvalue-rules" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> trailing lambda and zero-arg rules documented below (#81).</p>
+<h3 id="goal_3">Goal<a class="headerlink" href="#goal_3" title="Permanent link">&para;</a></h3>
+<p>Remove ambiguity around the two syntax areas that most directly affect
+combinator-heavy code.</p>
+<h3 id="tasks_3">Tasks<a class="headerlink" href="#tasks_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Freeze trailing-lambda grammar and canonical style.</li>
+<li>[x] Freeze zero-arg function/value/call behavior.</li>
+<li>[x] Ensure these rules do not conflict with parser combinator usage.</li>
+<li>[x] Ensure docs show one preferred idiom.</li>
+</ul>
+<h3 id="trailing-lambda-rule-v2-canonical">Trailing lambda rule (v2 — canonical)<a class="headerlink" href="#trailing-lambda-rule-v2-canonical" title="Permanent link">&para;</a></h3>
+<p>A trailing lambda is a lambda expression that appears as the last argument of a
+function call, written without extra parentheses:</p>
+<div class="codehilite"><pre><span></span><code>-- Trailing lambda sugar:
+parseBind parseInt \n.
+  parsePure (n + 1)
+
+-- Equivalent explicit form:
+parseBind parseInt (\n. parsePure (n + 1))
+</code></pre></div>
+
+<p><strong>Grammar rule:</strong> <code>app-expr</code> may end with a bare <code>lambda-expr</code> in place of a
+parenthesised atom. This is purely syntactic sugar — the parser desugars it
+immediately. The lambda body extends to the next <code>DEDENT</code> or statement
+boundary.</p>
+<p><strong>Canonical style:</strong> use trailing lambda when the lambda body is
+multi-line. Use parenthesized lambda for single-line inline forms. Never mix
+both forms for the same call.</p>
+<p><strong>No conflict with parser combinators:</strong> <code>parseBind</code>, <code>parseMany</code>, <code>parseMap</code>
+etc. accept a trailing lambda because they are ordinary functions with
+function-typed last parameters. There is no special grammar for them.</p>
+<h3 id="zero-arg-callvalue-rule-v2-canonical">Zero-arg call/value rule (v2 — canonical)<a class="headerlink" href="#zero-arg-callvalue-rule-v2-canonical" title="Permanent link">&para;</a></h3>
+<p>In ll-lang there are no zero-argument function calls at the call site. A name
+applied to no arguments is a <strong>value reference</strong>, not a call:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- `stateGet` used as a value — NOT called:</span>
+<span class="n">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stateGet</span>
+
+<span class="c1">-- `stateGet seed` — called with one argument:</span>
+<span class="n">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stateGet</span><span class="w"> </span><span class="n">seed</span>
+</code></pre></div>
+
+<p><strong>Rules:</strong></p>
+<ol>
+<li>A function-typed binding referenced by name alone produces the function
+   value, not an application.</li>
+<li>To "call" a nullary effect (e.g. a <code>State</code> or <code>IO</code> action), pass a unit
+   argument <code>()</code> or a seed argument as required by the type.</li>
+<li>Polymorphic top-level values whose type contains a free type variable must
+   be eta-expanded or annotated — they cannot be inferred as zero-arg calls by
+   the type system.</li>
+<li><code>stateGet</code> is currently seed-argument based (see <code>Std.State</code> docs) because
+   of this rule; it will be reduced to a plain value once zero-arg polymorphic
+   inference stabilises.</li>
+</ol>
+<p><strong>LLM guidance:</strong> when generating ll-lang code, never add <code>()</code> to call a
+function that takes arguments. Always apply the actual arguments. <code>()</code> is not
+a call trigger — it is the unit literal.</p>
+<h3 id="exit-criteria_3">Exit criteria<a class="headerlink" href="#exit-criteria_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implementers can write combinator-heavy code without second-guessing call syntax.</li>
+<li>Zero-arg rules are predictable enough for both humans and LLMs.</li>
+</ul>
+<h2 id="work-package-e-proof-of-use-against-compiler-shaped-code">Work package E — Proof-of-use against compiler-shaped code<a class="headerlink" href="#work-package-e-proof-of-use-against-compiler-shaped-code" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> compiler pipeline proof-of-use in <code>docs/stdlib-reference.md</code>
+(<code>Std.Compiler</code>, <code>Std.Codegen</code>, <code>Std.Parser</code>, <code>Std.Parsec</code> sections); those
+entries show real combinator-heavy usage of trailing lambdas, pipe chains, and
+constructor passing against actual parser/state/result use-sites (#83).</p>
+<h3 id="goal_4">Goal<a class="headerlink" href="#goal_4" title="Permanent link">&para;</a></h3>
+<p>Validate syntax changes against the actual kinds of code <code>v2</code> cares about.</p>
+<h3 id="tasks_4">Tasks<a class="headerlink" href="#tasks_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Evaluate candidate syntax against parser, state, result, and lazy use-sites.</li>
+<li>[x] Reject syntax that only looks shorter in micro-examples.</li>
+<li>[x] Feed real proof-of-use examples back into docs and tests.</li>
+</ul>
+<h3 id="proof-of-use-pointers">Proof-of-use pointers<a class="headerlink" href="#proof-of-use-pointers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Use-site</th>
+<th>Module</th>
+<th>What it proves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parser combinator chains</td>
+<td><code>Std.Parsec</code> (stdlib-reference.md)</td>
+<td>trailing lambda, pipe, <code>parseBind</code></td>
+</tr>
+<tr>
+<td>State threading</td>
+<td><code>Std.State</code> (stdlib-reference.md)</td>
+<td>zero-arg rules, <code>stateBind</code></td>
+</tr>
+<tr>
+<td>Result/Maybe pipelines</td>
+<td>Prelude section (stdlib-reference.md)</td>
+<td>constructor passing (<code>Some</code>), pipe operator</td>
+</tr>
+<tr>
+<td>Full compiler pipeline</td>
+<td><code>Std.Compiler</code> (stdlib-reference.md)</td>
+<td>end-to-end multi-operator usage</td>
+</tr>
+<tr>
+<td>Lazy evaluation</td>
+<td><code>Std.Lazy</code> (stdlib-reference.md)</td>
+<td><code>lazyBind</code>, combinator form</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exit-criteria_4">Exit criteria<a class="headerlink" href="#exit-criteria_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Syntax ergonomics are justified by real compiler-shaped examples.</li>
+<li>No shipped syntax convenience exists solely because it looked elegant in isolation.</li>
+</ul>
+<h2 id="recommended-implementation-order">Recommended implementation order<a class="headerlink" href="#recommended-implementation-order" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Work package A — fixed operator set</li>
+<li>Work package B — precedence and associativity</li>
+<li>Work package C — constructor/function passing</li>
+<li>Work package D — trailing lambda and zero-arg rules</li>
+<li>Work package E — proof-of-use</li>
+</ol>
+<h2 id="definition-of-done-for-milestone-4">Definition of done for Milestone 4<a class="headerlink" href="#definition-of-done-for-milestone-4" title="Permanent link">&para;</a></h2>
+<p><code>Milestone 4</code> is done only when all of the following are true:</p>
+<ul>
+<li>the fixed operator set is frozen</li>
+<li>precedence and associativity are specified once</li>
+<li>constructor/function passing rules are canonical</li>
+<li>trailing lambda and zero-arg rules are canonical</li>
+<li>both parsers and all relevant backends align with those rules</li>
+<li>compiler-shaped examples prove the syntax actually helps</li>
+</ul>
+<h2 id="questions-to-clarify-after-milestone-4">Questions to clarify after Milestone 4<a class="headerlink" href="#questions-to-clarify-after-milestone-4" title="Permanent link">&para;</a></h2>
+<h3 id="operator-questions">Operator questions<a class="headerlink" href="#operator-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Is the four-operator set enough, or is one more sequencing/composition form still materially justified?</li>
+<li>Do any operators remain underused enough that they should be removed before <code>v2</code> freezes?</li>
+</ul>
+<h3 id="grammar-questions">Grammar questions<a class="headerlink" href="#grammar-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Are trailing lambdas sufficiently unambiguous in the presence of parser-combinator code?</li>
+<li>Do zero-arg rules still create accidental ambiguity between value and call forms?</li>
+</ul>
+<h3 id="typing-questions">Typing questions<a class="headerlink" href="#typing-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Does constructor/function passing require any limited bidirectional typing support, or is the existing model enough?</li>
+<li>Are there any syntax conveniences whose type errors become too opaque in practice?</li>
+</ul>
+<h2 id="non-goals-for-milestone-4">Non-goals for Milestone 4<a class="headerlink" href="#non-goals-for-milestone-4" title="Permanent link">&para;</a></h2>
+<ul>
+<li>user-defined operators</li>
+<li>macro syntax</li>
+<li>general syntactic extensibility framework</li>
+<li>grammar experiments unrelated to compiler-heavy code</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2850 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/superpowers/specs/2026-04-10-ll-lang-platform-sdk/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Platform.*.SDK Package Architecture — Design Spec - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#platformsdk-package-architecture-design-spec" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Platform.*.SDK Package Architecture — Design Spec
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-what-a-platform-sdk-contains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. What a Platform SDK Contains
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. What a Platform SDK Contains">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-llltoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 lll.toml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-srccodegenlll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 src/Codegen.lll
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 runtime/
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-metatoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 meta.toml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-llltoml-format-for-platform-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. lll.toml Format for Platform Selection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. lll.toml Format for Platform Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-user-project-manifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 User project manifest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-resolution-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Resolution rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-built-in-vs-external-sdks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Built-in vs external SDKs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ffi-interop-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. FFI / Interop Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. FFI / Interop Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-external-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 External declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-name-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Name mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-grammar-addition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Grammar addition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-type-bridging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Type bridging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-opaque-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Opaque types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-multi-target-build-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Multi-Target Build Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Multi-Target Build Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-shared-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Shared compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-output-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Output directory structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-what-needs-to-change-in-the-compiler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. What Needs to Change in the Compiler
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. What Needs to Change in the Compiler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-now-can-implement-today" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 NOW (can implement today)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-next-after-project-system-is-stable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 NEXT (after project system is stable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-later-requires-interpreter-or-self-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 LATER (requires interpreter or self-hosting)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-concrete-file-layout-platformfsharpsdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Concrete File Layout: Platform.FSharp.SDK
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Concrete File Layout: Platform.FSharp.SDK">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-llltoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 lll.toml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-metatoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 meta.toml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-what-moves-where" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 What moves where
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-platformtypescriptsdk-sketch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Platform.TypeScript.SDK (sketch)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-a-multi-target-dispatch-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase A: Multi-target dispatch (NOW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-b-sdk-package-loading-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase B: SDK package loading (NEXT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-c-ffi-declarations-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase C: FFI declarations (NEXT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-d-self-hosted-codegen-later" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase D: Self-hosted codegen (LATER)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Design Decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="platformsdk-package-architecture-design-spec">Platform.*.SDK Package Architecture — Design Spec<a class="headerlink" href="#platformsdk-package-architecture-design-spec" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Non-normative design document.</strong> This is forward-looking architecture. Implemented platform behavior and CLI contracts are defined by current code and user docs, not this draft.</p>
+</blockquote>
+<p><strong>Date:</strong> 2026-04-10
+<strong>Status:</strong> Draft
+<strong>Depends on:</strong> Phase 8 project system (2026-04-09-ll-lang-project-system.md)</p>
+<h2 id="1-problem">1. Problem<a class="headerlink" href="#1-problem" title="Permanent link">&para;</a></h2>
+<p>ll-lang has four codegen backends (F#, TS, Python, Java) hardcoded into the
+compiler. Adding a new target means editing Compiler.fs, adding another
+<code>CodegenFoo.fs</code>, and recompiling <code>lllc</code>. The codegen modules already exist in
+ll-lang itself (<code>stdlib/src/Codegen.lll</code>, <code>CodegenTS.lll</code>, etc.) but are not
+used by the compiler — they're proof-of-concept.</p>
+<p>Goal: each target becomes an installable <strong>Platform SDK package</strong> that carries
+its own codegen, runtime helpers, and FFI declarations. The compiler discovers
+and dispatches to them through the package system. New targets (WASM, CLR IL,
+LLVM) can be added without modifying the compiler.</p>
+<h2 id="2-what-a-platform-sdk-contains">2. What a Platform SDK Contains<a class="headerlink" href="#2-what-a-platform-sdk-contains" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="nx">platform</span><span class="o">-</span><span class="nx">fsharp</span><span class="o">/</span>
+<span class="w">  </span><span class="nx">lll</span><span class="p">.</span><span class="nx">toml</span>
+<span class="w">  </span><span class="nx">src</span><span class="o">/</span>
+<span class="w">    </span><span class="nx">Codegen</span><span class="p">.</span><span class="nx">lll</span><span class="w">          </span><span class="o">--</span><span class="w"> </span><span class="nx">AST</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="nx">F</span><span class="err">#</span><span class="w"> </span><span class="nx">source</span><span class="w"> </span><span class="nx">emitter</span>
+<span class="w">    </span><span class="nx">Runtime</span><span class="p">.</span><span class="nx">lll</span><span class="w">          </span><span class="o">--</span><span class="w"> </span><span class="nx">runtime</span><span class="w"> </span><span class="nx">helper</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nx">declarations</span>
+<span class="w">    </span><span class="nx">FFI</span><span class="p">.</span><span class="nx">lll</span><span class="w">              </span><span class="o">--</span><span class="w"> </span><span class="nx">FFI</span><span class="w"> </span><span class="nx">bridge</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nx">declarations</span>
+<span class="w">    </span><span class="nx">Keywords</span><span class="p">.</span><span class="nx">lll</span><span class="w">         </span><span class="o">--</span><span class="w"> </span><span class="nx">keyword</span><span class="o">/</span><span class="nx">reserved</span><span class="o">-</span><span class="nx">word</span><span class="w"> </span><span class="nx">table</span>
+<span class="w">  </span><span class="nx">runtime</span><span class="o">/</span>
+<span class="w">    </span><span class="nx">prelude</span><span class="p">.</span><span class="nx">fs</span><span class="w">           </span><span class="o">--</span><span class="w"> </span><span class="nx">F</span><span class="err">#</span><span class="w"> </span><span class="nx">prelude</span><span class="w"> </span><span class="p">(</span><span class="nx">listMap</span><span class="p">,</span><span class="w"> </span><span class="nx">strConcat</span><span class="p">,</span><span class="w"> </span><span class="nx">etc</span><span class="p">.)</span>
+<span class="w">  </span><span class="nx">meta</span><span class="p">.</span><span class="nx">toml</span><span class="w">              </span><span class="o">--</span><span class="w"> </span><span class="nx">target</span><span class="w"> </span><span class="nx">metadata</span><span class="w"> </span><span class="p">(</span><span class="nx">extensions</span><span class="p">,</span><span class="w"> </span><span class="nx">build</span><span class="w"> </span><span class="nx">commands</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="21-llltoml">2.1 <code>lll.toml</code><a class="headerlink" href="#21-llltoml" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-fsharp&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>
+
+<span class="k">[sdk]</span>
+<span class="n">target</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fsharp&quot;</span><span class="w">              </span><span class="c1"># canonical target name</span>
+<span class="n">aliases</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;fs&quot;</span><span class="p">]</span><span class="w">                </span><span class="c1"># CLI shorthand</span>
+<span class="n">ext</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;.fs&quot;</span><span class="w">                 </span><span class="c1"># output file extension</span>
+<span class="n">host-ext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;.fsproj&quot;</span><span class="w">             </span><span class="c1"># project file extension (optional)</span>
+</code></pre></div>
+
+<p>The <code>[sdk]</code> table is what distinguishes a platform package from a regular
+library. When <code>lllc</code> loads a dep whose <code>lll.toml</code> has <code>[sdk]</code>, it registers that
+package as a platform provider rather than treating it as source code to compile.</p>
+<h3 id="22-srccodegenlll">2.2 <code>src/Codegen.lll</code><a class="headerlink" href="#22-srccodegenlll" title="Permanent link">&para;</a></h3>
+<p>Already exists for all four targets. The emitter must export a function with
+the signature:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">emitModule</span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="n">Module</span><span class="p">)</span><span class="w"> </span><span class="n">Str</span>
+</code></pre></div>
+
+<p>The compiler calls this function to produce target source code from a TypedModule.
+Until ll-lang can run its own code (self-hosting), the F#-side codegen
+(<code>Codegen.fs</code>, <code>CodegenTS.fs</code>, etc.) remains the actual emitter. The <code>.lll</code>
+versions serve as the specification and will become the real emitters once the
+interpreter or self-hosted compiler is ready.</p>
+<h3 id="23-runtime">2.3 <code>runtime/</code><a class="headerlink" href="#23-runtime" title="Permanent link">&para;</a></h3>
+<p>Static files copied or referenced during build. For F#, this is the prelude
+block (stdlib bindings). For TypeScript, the runtime helpers. For Python, the
+dataclass/typing imports and stdlib lambdas.</p>
+<p>These are <strong>not</strong> <code>.lll</code> files — they are target-language source that the
+generated code depends on at runtime. The SDK ships them as-is.</p>
+<h3 id="24-metatoml">2.4 <code>meta.toml</code><a class="headerlink" href="#24-metatoml" title="Permanent link">&para;</a></h3>
+<p>Target-specific build metadata:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[build]</span>
+<span class="c1"># Command to compile the emitted output (optional)</span>
+<span class="n">compile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dotnet build {project_file} -c Release&quot;</span>
+<span class="c1"># Command to run the compiled output (optional)</span>
+<span class="n">run</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dotnet run --project {project_file}&quot;</span>
+<span class="c1"># Template for the project file (optional, inline or path)</span>
+<span class="n">project-template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;templates/project.fsproj.tmpl&quot;</span>
+</code></pre></div>
+
+<p>This replaces the hardcoded <code>.fsproj</code> generation in <code>Program.fs</code> line 68-77.</p>
+<h2 id="3-llltoml-format-for-platform-selection">3. <code>lll.toml</code> Format for Platform Selection<a class="headerlink" href="#3-llltoml-format-for-platform-selection" title="Permanent link">&para;</a></h2>
+<h3 id="31-user-project-manifest">3.1 User project manifest<a class="headerlink" href="#31-user-project-manifest" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myapp&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>
+
+<span class="k">[deps]</span>
+<span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/user/ll-json#v1.0.0&quot;</span>
+
+<span class="k">[platform]</span>
+<span class="n">use</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;fsharp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;typescript&quot;</span><span class="p">]</span>
+
+<span class="k">[platform.fsharp]</span>
+<span class="n">sdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/ll-lang/platform-fsharp#v1.0.0&quot;</span>
+
+<span class="k">[platform.typescript]</span>
+<span class="n">sdk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/ll-lang/platform-typescript#v1.0.0&quot;</span>
+</code></pre></div>
+
+<h3 id="32-resolution-rules">3.2 Resolution rules<a class="headerlink" href="#32-resolution-rules" title="Permanent link">&para;</a></h3>
+<ol>
+<li><code>[platform] use</code> lists target names (matching <code>[sdk] target</code> or <code>aliases</code>).</li>
+<li>Each target listed in <code>use</code> must have either:</li>
+<li>A corresponding <code>[platform.&lt;target&gt;]</code> section with an <code>sdk</code> URL, OR</li>
+<li>A built-in SDK bundled with the compiler (for bootstrap targets).</li>
+<li>If no <code>[platform]</code> section exists, default is <code>use = ["fsharp"]</code> with the
+   built-in F# codegen.</li>
+</ol>
+<h3 id="33-built-in-vs-external-sdks">3.3 Built-in vs external SDKs<a class="headerlink" href="#33-built-in-vs-external-sdks" title="Permanent link">&para;</a></h3>
+<p>For the initial implementation, all four existing targets remain <strong>built-in</strong>.
+The compiler ships with <code>Codegen.fs</code>, <code>CodegenTS.fs</code>, <code>CodegenPy.fs</code>,
+<code>CodegenJava.fs</code> as it does today. The <code>[platform] use</code> list controls which
+targets <code>lllc build</code> emits for, but the codegen is still hardcoded.</p>
+<p>External SDKs become possible once ll-lang can evaluate <code>.lll</code> code at compile
+time (interpreter or self-hosting). At that point the compiler loads the SDK's
+<code>Codegen.lll</code> and calls <code>emitModule</code> directly.</p>
+<p><strong>Migration path:</strong>
+1. NOW: <code>[platform] use</code> controls multi-target dispatch, built-in codegens.
+2. NEXT: SDKs installed as deps, compiler loads <code>meta.toml</code> for build commands.
+3. LATER: compiler evaluates SDK's <code>Codegen.lll</code> instead of built-in F# codegen.</p>
+<h2 id="4-ffi-interop-design">4. FFI / Interop Design<a class="headerlink" href="#4-ffi-interop-design" title="Permanent link">&para;</a></h2>
+<h3 id="41-external-declarations">4.1 External declarations<a class="headerlink" href="#41-external-declarations" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyApp</span><span class="o">.</span><span class="n">Main</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Platform.TypeScript.FFI</span>
+
+<span class="o">--</span> <span class="n">Declare</span> <span class="n">an</span> <span class="n">external</span> <span class="n">function</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">target</span> <span class="n">environment</span>
+<span class="n">external</span> <span class="n">console_log</span><span class="p">(</span><span class="n">msg</span> <span class="n">Str</span><span class="p">)</span> <span class="n">Unit</span>
+<span class="n">external</span> <span class="n">fetch</span><span class="p">(</span><span class="n">url</span> <span class="n">Str</span><span class="p">)</span> <span class="n">Promise</span><span class="p">[</span><span class="n">Response</span><span class="p">]</span>
+<span class="n">external</span> <span class="n">JSON_parse</span><span class="p">(</span><span class="n">s</span> <span class="n">Str</span><span class="p">)</span> <span class="n">Any</span>
+</code></pre></div>
+
+<p><code>external</code> declares a function that exists in the target runtime but has no
+ll-lang body. The codegen emits a binding that references the native name.</p>
+<h3 id="42-name-mapping">4.2 Name mapping<a class="headerlink" href="#42-name-mapping" title="Permanent link">&para;</a></h3>
+<p>External names use underscores; the codegen maps them to the target's naming
+convention:</p>
+<table>
+<thead>
+<tr>
+<th>ll-lang declaration</th>
+<th>F# emit</th>
+<th>TS emit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>external console_log</code></td>
+<td><code>Console.WriteLine</code></td>
+<td><code>console.log</code></td>
+</tr>
+<tr>
+<td><code>external JSON_parse</code></td>
+<td><code>System.Text.Json...</code></td>
+<td><code>JSON.parse</code></td>
+</tr>
+</tbody>
+</table>
+<p>The mapping is defined in the SDK's <code>FFI.lll</code> as a table:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">module</span> <span class="n">Platform</span>.<span class="n">TypeScript</span>.<span class="n">FFI</span>
+
+-- <span class="n">FFI</span> <span class="nb">name</span> <span class="n">mapping</span> <span class="n">table</span>
+<span class="n">ffiMap</span> = [
+  (<span class="s">&quot;console_log&quot;</span>, <span class="s">&quot;console.log&quot;</span>),
+  (<span class="s">&quot;JSON_parse&quot;</span>, <span class="s">&quot;JSON.parse&quot;</span>),
+  (<span class="s">&quot;fetch&quot;</span>, <span class="s">&quot;fetch&quot;</span>)
+]
+</code></pre></div>
+
+<h3 id="43-grammar-addition">4.3 Grammar addition<a class="headerlink" href="#43-grammar-addition" title="Permanent link">&para;</a></h3>
+<p>One new declaration form:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">ExternalDecl</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="s">&quot;external&quot;</span><span class="w"> </span><span class="n">Ident</span><span class="w"> </span><span class="n">ParamList</span><span class="o">*</span><span class="w"> </span><span class="n">TypeExpr</span>
+</code></pre></div>
+
+<p>The elaborator records these as type signatures without bodies. The codegen
+consults the SDK's FFI map to emit the correct native call. Unmatched externals
+are emitted as-is (passthrough).</p>
+<h3 id="44-type-bridging">4.4 Type bridging<a class="headerlink" href="#44-type-bridging" title="Permanent link">&para;</a></h3>
+<p>Each SDK defines how ll-lang types map to target types. This already exists
+implicitly in each <code>emitType</code> function. Making it explicit:</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">module</span><span class="w"> </span><span class="nx">Platform</span><span class="p">.</span><span class="nx">TypeScript</span><span class="p">.</span><span class="nx">Types</span>
+
+<span class="nx">typeMap</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">(</span><span class="s">&quot;Int&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;number&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="s">&quot;Float&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;number&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="s">&quot;Str&quot;</span><span class="p">,</span><span class="w">   </span><span class="s">&quot;string&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="s">&quot;Bool&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;boolean&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="s">&quot;Char&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;string&quot;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="s">&quot;Unit&quot;</span><span class="p">,</span><span class="w">  </span><span class="s">&quot;void&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+</code></pre></div>
+
+<h3 id="45-opaque-types">4.5 Opaque types<a class="headerlink" href="#45-opaque-types" title="Permanent link">&para;</a></h3>
+<p>For target-specific types with no ll-lang equivalent:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- Opaque type: exists in the target, not in ll-lang</span>
+<span class="n">opaque</span><span class="w"> </span><span class="n">Promise</span><span class="o">[</span><span class="n">A</span><span class="o">]</span>
+<span class="n">opaque</span><span class="w"> </span><span class="n">Response</span>
+<span class="n">opaque</span><span class="w"> </span><span class="ow">Any</span>
+</code></pre></div>
+
+<p>Opaque types can be passed around and returned but not constructed or
+destructured in ll-lang. The codegen emits the target's native type name.</p>
+<h2 id="5-multi-target-build-flow">5. Multi-Target Build Flow<a class="headerlink" href="#5-multi-target-build-flow" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="n">lllc</span><span class="w"> </span><span class="n">build</span>
+<span class="w">  </span><span class="mf">1.</span><span class="w"> </span><span class="k">Read</span><span class="w"> </span><span class="n">lll</span><span class="p">.</span><span class="n">toml</span>
+<span class="w">  </span><span class="mf">2.</span><span class="w"> </span><span class="nf">Parse</span><span class="w"> </span><span class="o">[</span><span class="n">platform</span><span class="o">]</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;fsharp&quot;, &quot;typescript&quot;</span><span class="o">]</span>
+<span class="w">  </span><span class="mf">3.</span><span class="w"> </span><span class="k">For</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="nl">target</span><span class="p">:</span>
+<span class="w">     </span><span class="n">a</span><span class="p">.</span><span class="w"> </span><span class="n">Resolve</span><span class="w"> </span><span class="n">SDK</span><span class="w"> </span><span class="p">(</span><span class="n">built</span><span class="o">-</span><span class="ow">in</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="p">.</span><span class="n">ll</span><span class="o">-</span><span class="n">deps</span><span class="o">/</span><span class="p">)</span>
+<span class="w">     </span><span class="n">b</span><span class="p">.</span><span class="w"> </span><span class="k">Load</span><span class="w"> </span><span class="n">runtime</span><span class="w"> </span><span class="n">prelude</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">SDK</span>
+<span class="w">     </span><span class="n">c</span><span class="p">.</span><span class="w"> </span><span class="n">Compile</span><span class="w"> </span><span class="ow">all</span><span class="w"> </span><span class="p">.</span><span class="n">lll</span><span class="w"> </span><span class="n">files</span><span class="w"> </span><span class="p">(</span><span class="n">lex</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="nf">parse</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">elaborate</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">infer</span><span class="p">)</span>
+<span class="w">        </span><span class="o">-</span><span class="w"> </span><span class="n">Step</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">shared</span><span class="w"> </span><span class="n">across</span><span class="w"> </span><span class="n">targets</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">TypedModule</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">target</span><span class="o">-</span><span class="n">agnostic</span>
+<span class="w">     </span><span class="n">d</span><span class="p">.</span><span class="w"> </span><span class="n">Run</span><span class="w"> </span><span class="n">target</span><span class="o">-</span><span class="k">specific</span><span class="w"> </span><span class="n">codegen</span><span class="w"> </span><span class="p">(</span><span class="n">emitModule</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">emitProjectModules</span><span class="p">)</span>
+<span class="w">     </span><span class="n">e</span><span class="p">.</span><span class="w"> </span><span class="k">Write</span><span class="w"> </span><span class="k">output</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">bin</span><span class="o">/&lt;</span><span class="n">target</span><span class="o">&gt;/</span>
+<span class="w">  </span><span class="mf">4.</span><span class="w"> </span><span class="k">If</span><span class="w"> </span><span class="n">SDK</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="o">[</span><span class="n">build</span><span class="o">]</span><span class="w"> </span><span class="n">compile</span><span class="w"> </span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="n">optionally</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">it</span>
+
+<span class="k">Result</span><span class="err">:</span>
+<span class="w">  </span><span class="n">bin</span><span class="o">/</span>
+<span class="w">    </span><span class="n">fsharp</span><span class="o">/</span>
+<span class="w">      </span><span class="n">myapp</span><span class="p">.</span><span class="n">fs</span>
+<span class="w">      </span><span class="n">myapp</span><span class="p">.</span><span class="n">fsproj</span>
+<span class="w">    </span><span class="n">typescript</span><span class="o">/</span>
+<span class="w">      </span><span class="n">myapp</span><span class="p">.</span><span class="n">ts</span>
+<span class="w">      </span><span class="n">package</span><span class="p">.</span><span class="n">json</span><span class="w">       </span><span class="p">(</span><span class="k">from</span><span class="w"> </span><span class="n">SDK</span><span class="w"> </span><span class="n">template</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="51-shared-compilation">5.1 Shared compilation<a class="headerlink" href="#51-shared-compilation" title="Permanent link">&para;</a></h3>
+<p>Steps 1-3c (lex through inference) produce <code>TypedModule</code> values that are
+<strong>target-independent</strong>. The same TypedModules are fed to every codegen.
+This is the key architectural insight: the front-end runs once, codegens
+fan out.</p>
+<h3 id="52-output-directory-structure">5.2 Output directory structure<a class="headerlink" href="#52-output-directory-structure" title="Permanent link">&para;</a></h3>
+<p>Single-target (current behavior, backward compatible):</p>
+<div class="codehilite"><pre><span></span><code>bin/myapp.fs
+bin/myapp.fsproj
+</code></pre></div>
+
+<p>Multi-target:</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">bin</span><span class="o">/</span><span class="nx">fsharp</span><span class="o">/</span><span class="nx">myapp</span><span class="p">.</span><span class="nx">fs</span>
+<span class="nx">bin</span><span class="o">/</span><span class="nx">fsharp</span><span class="o">/</span><span class="nx">myapp</span><span class="p">.</span><span class="nx">fsproj</span>
+<span class="nx">bin</span><span class="o">/</span><span class="nx">typescript</span><span class="o">/</span><span class="nx">myapp</span><span class="p">.</span><span class="nx">ts</span>
+<span class="nx">bin</span><span class="o">/</span><span class="nx">typescript</span><span class="o">/</span><span class="kn">package</span><span class="p">.</span><span class="nx">json</span>
+</code></pre></div>
+
+<p>When <code>[platform] use</code> has exactly one entry, output goes directly into <code>bin/</code>
+(no subdirectory) for backward compatibility.</p>
+<h2 id="6-what-needs-to-change-in-the-compiler">6. What Needs to Change in the Compiler<a class="headerlink" href="#6-what-needs-to-change-in-the-compiler" title="Permanent link">&para;</a></h2>
+<h3 id="61-now-can-implement-today">6.1 NOW (can implement today)<a class="headerlink" href="#61-now-can-implement-today" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Change</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Manifest.fs</code></td>
+<td>Parse <code>[sdk]</code> table in lll.toml</td>
+<td>Small</td>
+</tr>
+<tr>
+<td><code>Compiler.fs</code></td>
+<td><code>compileProjectTarget(proj, target)</code> dispatching to the right emitter</td>
+<td>Small</td>
+</tr>
+<tr>
+<td><code>Program.fs</code></td>
+<td><code>cmdBuildProject</code> reads <code>[platform] use</code>, loops over targets</td>
+<td>Small</td>
+</tr>
+<tr>
+<td><code>Program.fs</code></td>
+<td>Multi-target output directory (<code>bin/&lt;target&gt;/</code>)</td>
+<td>Small</td>
+</tr>
+<tr>
+<td><code>Codegen*.fs</code></td>
+<td>Add <code>emitProjectModules</code> to TS/Py/Java backends (only F# has it)</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<p>Total: straightforward. The compiler already has <code>compileTarget</code> for single
+files; extending <code>compileProject</code> to accept a target is mechanical.</p>
+<h3 id="62-next-after-project-system-is-stable">6.2 NEXT (after project system is stable)<a class="headerlink" href="#62-next-after-project-system-is-stable" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Change</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Manifest.fs</code></td>
+<td>Parse <code>[platform.&lt;target&gt;]</code> sub-tables</td>
+<td>Small</td>
+</tr>
+<tr>
+<td><code>ProjectLoader.fs</code></td>
+<td>Load SDK packages from <code>.ll-deps/</code></td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><code>AST.fs</code> + <code>Parser.fs</code></td>
+<td>Add <code>external</code> and <code>opaque</code> declaration forms</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><code>Elaborator.fs</code></td>
+<td>Handle external decls (type-only, no body)</td>
+<td>Small</td>
+</tr>
+<tr>
+<td><code>HMInfer.fs</code></td>
+<td>Infer external decls as given type schemes</td>
+<td>Small</td>
+</tr>
+<tr>
+<td><code>Codegen*.fs</code></td>
+<td>Emit external calls using FFI map</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Build templates</td>
+<td><code>.fsproj.tmpl</code>, <code>package.json.tmpl</code>, etc. in SDK packages</td>
+<td>Small</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-later-requires-interpreter-or-self-hosting">6.3 LATER (requires interpreter or self-hosting)<a class="headerlink" href="#63-later-requires-interpreter-or-self-hosting" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Change</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Compiler.fs</code></td>
+<td>Load and evaluate SDK <code>Codegen.lll</code> at compile time</td>
+<td>Large</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td>ll-lang interpreter for compile-time evaluation</td>
+<td>Large</td>
+</tr>
+<tr>
+<td>All SDKs</td>
+<td>Extract codegens from compiler into standalone packages</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-concrete-file-layout-platformfsharpsdk">7. Concrete File Layout: Platform.FSharp.SDK<a class="headerlink" href="#7-concrete-file-layout-platformfsharpsdk" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="nx">platform</span><span class="o">-</span><span class="nx">fsharp</span><span class="o">/</span>
+<span class="w">  </span><span class="nx">lll</span><span class="p">.</span><span class="nx">toml</span>
+<span class="w">  </span><span class="nx">meta</span><span class="p">.</span><span class="nx">toml</span>
+<span class="w">  </span><span class="nx">src</span><span class="o">/</span>
+<span class="w">    </span><span class="nx">Codegen</span><span class="p">.</span><span class="nx">lll</span><span class="w">              </span><span class="err">#</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="nx">already</span><span class="w"> </span><span class="nx">exists</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nx">stdlib</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">Codegen</span><span class="p">.</span><span class="nx">lll</span>
+<span class="w">    </span><span class="nx">Keywords</span><span class="p">.</span><span class="nx">lll</span><span class="w">             </span><span class="err">#</span><span class="w"> </span><span class="nx">isFsKeyword</span><span class="p">,</span><span class="w"> </span><span class="nx">safeIdent</span>
+<span class="w">    </span><span class="nx">Runtime</span><span class="p">.</span><span class="nx">lll</span><span class="w">              </span><span class="err">#</span><span class="w"> </span><span class="nx">prelude</span><span class="w"> </span><span class="nx">function</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nx">declarations</span>
+<span class="w">    </span><span class="nx">FFI</span><span class="p">.</span><span class="nx">lll</span><span class="w">                  </span><span class="err">#</span><span class="w"> </span><span class="nx">FFI</span><span class="w"> </span><span class="nx">name</span><span class="w"> </span><span class="nx">mappings</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">.</span><span class="nx">NET</span><span class="w"> </span><span class="nx">interop</span>
+<span class="w">    </span><span class="nx">Types</span><span class="p">.</span><span class="nx">lll</span><span class="w">                </span><span class="err">#</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nx">mapping</span><span class="w"> </span><span class="nx">table</span><span class="w"> </span><span class="p">(</span><span class="nx">Int</span><span class="err">→</span><span class="nx">int64</span><span class="p">,</span><span class="w"> </span><span class="nx">etc</span><span class="p">.)</span>
+<span class="w">  </span><span class="nx">runtime</span><span class="o">/</span>
+<span class="w">    </span><span class="nx">prelude</span><span class="p">.</span><span class="nx">fs</span><span class="w">               </span><span class="err">#</span><span class="w"> </span><span class="nx">F</span><span class="err">#</span><span class="w"> </span><span class="nx">prelude</span><span class="w"> </span><span class="nx">block</span><span class="w"> </span><span class="p">(</span><span class="nx">currently</span><span class="w"> </span><span class="nx">inline</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nx">Codegen</span><span class="p">.</span><span class="nx">fs</span><span class="p">)</span>
+<span class="w">  </span><span class="nx">templates</span><span class="o">/</span>
+<span class="w">    </span><span class="nx">project</span><span class="p">.</span><span class="nx">fsproj</span><span class="p">.</span><span class="nx">tmpl</span><span class="w">      </span><span class="err">#</span><span class="w"> </span><span class="p">.</span><span class="nx">fsproj</span><span class="w"> </span><span class="nx">template</span><span class="w"> </span><span class="p">(</span><span class="nx">currently</span><span class="w"> </span><span class="nx">inline</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nx">Program</span><span class="p">.</span><span class="nx">fs</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="71-llltoml">7.1 <code>lll.toml</code><a class="headerlink" href="#71-llltoml" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-fsharp&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>
+
+<span class="k">[sdk]</span>
+<span class="n">target</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fsharp&quot;</span>
+<span class="n">aliases</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;fs&quot;</span><span class="p">]</span>
+<span class="n">ext</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;.fs&quot;</span>
+<span class="n">host-ext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;.fsproj&quot;</span>
+</code></pre></div>
+
+<h3 id="72-metatoml">7.2 <code>meta.toml</code><a class="headerlink" href="#72-metatoml" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="k">[build]</span>
+<span class="n">compile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dotnet build {project_file} -c Release&quot;</span>
+<span class="n">run</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dotnet run --project {project_file}&quot;</span>
+<span class="n">project-template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;templates/project.fsproj.tmpl&quot;</span>
+
+<span class="k">[runtime]</span>
+<span class="n">prelude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;runtime/prelude.fs&quot;</span>
+</code></pre></div>
+
+<h3 id="73-what-moves-where">7.3 What moves where<a class="headerlink" href="#73-what-moves-where" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Currently in</th>
+<th>Moves to SDK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Codegen.fs</code> lines 405-460 (<code>fsharpPreludeCore/Maybe/Result</code>)</td>
+<td><code>runtime/prelude.fs</code></td>
+</tr>
+<tr>
+<td><code>Codegen.fs</code> lines 21-39 (<code>fsKeywords</code>)</td>
+<td><code>src/Keywords.lll</code></td>
+</tr>
+<tr>
+<td><code>Program.fs</code> lines 68-77 (<code>.fsproj</code> template)</td>
+<td><code>templates/project.fsproj.tmpl</code></td>
+</tr>
+<tr>
+<td><code>stdlib/src/Codegen.lll</code></td>
+<td><code>src/Codegen.lll</code> (same content)</td>
+</tr>
+</tbody>
+</table>
+<p>The F# compiler-side <code>Codegen.fs</code> stays as-is until self-hosting. The SDK
+package is the <strong>source of truth</strong> for what the codegen should do; the F#
+implementation is the <strong>executable reality</strong> until we can run <code>.lll</code> at
+compile time.</p>
+<h2 id="8-platformtypescriptsdk-sketch">8. Platform.TypeScript.SDK (sketch)<a class="headerlink" href="#8-platformtypescriptsdk-sketch" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="n">platform</span><span class="o">-</span><span class="n">typescript</span><span class="o">/</span>
+<span class="w">  </span><span class="n">lll</span><span class="p">.</span><span class="n">toml</span><span class="w">                    </span><span class="err">#</span><span class="w"> </span><span class="o">[</span><span class="n">sdk</span><span class="o">]</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;typescript&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">&quot;ts&quot;</span><span class="o">]</span>
+<span class="w">  </span><span class="n">meta</span><span class="p">.</span><span class="n">toml</span><span class="w">                  </span><span class="err">#</span><span class="w"> </span><span class="n">compile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;tsc&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">project</span><span class="o">-</span><span class="n">template</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">tsconfig</span>
+<span class="w">  </span><span class="n">src</span><span class="o">/</span>
+<span class="w">    </span><span class="n">Codegen</span><span class="p">.</span><span class="n">lll</span><span class="w">              </span><span class="err">#</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="n">stdlib</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">CodegenTS</span><span class="p">.</span><span class="n">lll</span>
+<span class="w">    </span><span class="n">Keywords</span><span class="p">.</span><span class="n">lll</span><span class="w">             </span><span class="err">#</span><span class="w"> </span><span class="n">isTsKeyword</span><span class="p">,</span><span class="w"> </span><span class="n">safeIdent</span>
+<span class="w">    </span><span class="n">Runtime</span><span class="p">.</span><span class="n">lll</span><span class="w">              </span><span class="err">#</span><span class="w"> </span><span class="n">prelude</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">types</span>
+<span class="w">    </span><span class="n">FFI</span><span class="p">.</span><span class="n">lll</span><span class="w">                  </span><span class="err">#</span><span class="w"> </span><span class="n">console</span><span class="p">.</span><span class="nf">log</span><span class="p">,</span><span class="w"> </span><span class="k">fetch</span><span class="p">,</span><span class="w"> </span><span class="n">etc</span><span class="p">.</span>
+<span class="w">    </span><span class="n">Types</span><span class="p">.</span><span class="n">lll</span><span class="w">                </span><span class="err">#</span><span class="w"> </span><span class="nc">Int</span><span class="err">→</span><span class="n">number</span><span class="p">,</span><span class="w"> </span><span class="nf">Str</span><span class="err">→</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">etc</span><span class="p">.</span>
+<span class="w">  </span><span class="n">runtime</span><span class="o">/</span>
+<span class="w">    </span><span class="n">prelude</span><span class="p">.</span><span class="n">ts</span><span class="w">               </span><span class="err">#</span><span class="w"> </span><span class="n">TS</span><span class="w"> </span><span class="n">runtime</span><span class="w"> </span><span class="n">helpers</span>
+<span class="w">  </span><span class="n">templates</span><span class="o">/</span>
+<span class="w">    </span><span class="n">tsconfig</span><span class="p">.</span><span class="n">json</span><span class="p">.</span><span class="n">tmpl</span><span class="w">       </span><span class="err">#</span><span class="w"> </span><span class="n">tsconfig</span><span class="w"> </span><span class="n">template</span>
+<span class="w">    </span><span class="n">package</span><span class="p">.</span><span class="n">json</span><span class="p">.</span><span class="n">tmpl</span><span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="n">package</span><span class="p">.</span><span class="n">json</span><span class="w"> </span><span class="n">template</span>
+</code></pre></div>
+
+<h2 id="9-implementation-plan">9. Implementation Plan<a class="headerlink" href="#9-implementation-plan" title="Permanent link">&para;</a></h2>
+<h3 id="phase-a-multi-target-dispatch-now">Phase A: Multi-target dispatch (NOW)<a class="headerlink" href="#phase-a-multi-target-dispatch-now" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Extend <code>Manifest.fs</code> to parse <code>[sdk]</code> table (forward-compatible, ignored if absent).</li>
+<li>Add <code>emitProjectModules</code> to <code>CodegenTS.fs</code>, <code>CodegenPy.fs</code>, <code>CodegenJava.fs</code>.</li>
+<li>Add <code>compileProjectTarget : LLProject -&gt; Target -&gt; Result&lt;string, LLError list&gt;</code>.</li>
+<li>Update <code>cmdBuildProject</code> to loop over <code>[platform] use</code> entries.</li>
+<li>Multi-target output: <code>bin/&lt;target&gt;/</code> when &gt;1 target.</li>
+<li>Tests: project with <code>use = ["fsharp", "typescript"]</code> produces both outputs.</li>
+</ol>
+<h3 id="phase-b-sdk-package-loading-next">Phase B: SDK package loading (NEXT)<a class="headerlink" href="#phase-b-sdk-package-loading-next" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Define SDK package conventions (<code>[sdk]</code> table, <code>meta.toml</code>, <code>runtime/</code>).</li>
+<li>Load SDK metadata from <code>.ll-deps/platform-*/meta.toml</code>.</li>
+<li>Use SDK's runtime prelude instead of hardcoded prelude strings.</li>
+<li>Use SDK's build templates instead of hardcoded <code>.fsproj</code> generation.</li>
+<li>Scaffold <code>platform-fsharp</code> and <code>platform-typescript</code> as packages.</li>
+</ol>
+<h3 id="phase-c-ffi-declarations-next">Phase C: FFI declarations (NEXT)<a class="headerlink" href="#phase-c-ffi-declarations-next" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Add <code>external</code> keyword to lexer/parser.</li>
+<li>Add <code>opaque</code> keyword to lexer/parser.</li>
+<li>Elaborator: external decls recorded as type-only.</li>
+<li>HMInfer: external decls as given type schemes.</li>
+<li>Codegen: emit external calls, consult FFI map.</li>
+</ol>
+<h3 id="phase-d-self-hosted-codegen-later">Phase D: Self-hosted codegen (LATER)<a class="headerlink" href="#phase-d-self-hosted-codegen-later" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Build ll-lang interpreter (eval TypedExpr).</li>
+<li>Load SDK <code>Codegen.lll</code>, evaluate <code>emitModule</code>.</li>
+<li>Remove hardcoded <code>Codegen.fs</code> etc. from compiler.</li>
+<li>SDKs become truly external packages.</li>
+</ol>
+<h2 id="10-design-decisions">10. Design Decisions<a class="headerlink" href="#10-design-decisions" title="Permanent link">&para;</a></h2>
+<p><strong>Why not make SDKs plugins/DLLs?</strong> Plugin loading (.NET Assembly.LoadFrom) adds
+complexity, versioning pain, and platform-specific headaches. ll-lang packages
+are source-distributed. The SDK's codegen is ll-lang source that the compiler
+evaluates — same as any other code.</p>
+<p><strong>Why keep built-in codegens?</strong> Bootstrap. The compiler is written in F# and
+cannot evaluate ll-lang code yet. Built-in codegens are the bridge. Once
+self-hosting works, they can be removed. The SDK packages are written in
+parallel as the source-of-truth specification.</p>
+<p><strong>Why <code>meta.toml</code> separate from <code>lll.toml</code>?</strong> <code>lll.toml</code> is the standard
+manifest that all ll-lang packages share. <code>meta.toml</code> carries SDK-specific
+build metadata that a regular library would never have. Keeping them separate
+means the manifest parser stays simple and SDK awareness is opt-in.</p>
+<p><strong>Why not target-specific ll-lang syntax?</strong> No <code>#if typescript</code> conditionals.
+ll-lang source is target-agnostic. Target-specific behavior comes from:
+(a) the SDK's codegen mapping types/patterns differently, (b) <code>external</code>
+declarations for target-native APIs, (c) conditional deps in <code>lll.toml</code> (future).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

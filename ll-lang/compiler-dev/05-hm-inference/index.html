@@ -1,0 +1,2623 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/05-hm-inference/">
+      
+      
+        <link rel="prev" href="../04-elaborator/">
+      
+      
+        <link rel="next" href="../06-codegen/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>H-M inference - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#h-m-inference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              H-M inference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#type-variable-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type variable convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subst-and-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subst and compose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        unify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fresh-variable-supply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fresh variable supply
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generalize-instantiate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generalize / instantiate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inferexpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inferExpr
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="inferExpr">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evar-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EVar x
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eappf-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EApp(f, a)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eletx-e1-some-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ELet(x, e1, Some body)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ematchbranches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EMatch(branches)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etaggede-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ETagged(e, tag)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inferdecl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inferDecl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="inferDecl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dfn-function-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DFn — function declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dimpl-trait-implementations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DImpl — trait implementations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trait-dispatch-traitindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trait dispatch (TraitIndex)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-emission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error emission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#type-variable-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type variable convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subst-and-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subst and compose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        unify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fresh-variable-supply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fresh variable supply
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generalize-instantiate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generalize / instantiate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inferexpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inferExpr
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="inferExpr">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evar-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EVar x
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eappf-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EApp(f, a)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eletx-e1-some-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ELet(x, e1, Some body)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ematchbranches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EMatch(branches)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etaggede-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ETagged(e, tag)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inferdecl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inferDecl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="inferDecl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dfn-function-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DFn — function declarations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dimpl-trait-implementations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DImpl — trait implementations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trait-dispatch-traitindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trait dispatch (TraitIndex)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-emission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error emission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="h-m-inference">H-M inference<a class="headerlink" href="#h-m-inference" title="Permanent link">&para;</a></h1>
+<p>Files:
+- <code>src/LLLangCompiler/Types.fs</code> — <code>TypeScheme</code>, <code>Subst</code>, <code>applyType</code>, <code>compose</code>, <code>ftvType</code>, <code>generalize</code>, <code>instantiate</code>.
+- <code>src/LLLangCompiler/TypedAST.fs</code> — typed AST node types.
+- <code>src/LLLangCompiler/HMInfer.fs</code> — <code>unify</code>, <code>inferExpr</code>, <code>inferDecl</code>, top-level <code>infer</code>.</p>
+<p>Textbook Algorithm W with a few twists dictated by the ll-lang surface
+syntax (tags, unit algebra, trait constraints).</p>
+<h2 id="type-variable-convention">Type variable convention<a class="headerlink" href="#type-variable-convention" title="Permanent link">&para;</a></h2>
+<p>The critical distinction:</p>
+<ul>
+<li><strong>Rigid</strong> vars — no <code>$</code> prefix. Example: <code>TyVar "A"</code>. These come from
+  user-declared type parameters (<code>type Maybe A</code>, <code>fn id(x A) A = x</code>).
+  They're treated as quantifiers in <code>TypeScheme.Vars</code> and are never
+  substituted by unification.</li>
+<li><strong>Flex</strong> vars — <code>$</code>-prefixed. Example: <code>TyVar "$0"</code>. Fresh unification
+  variables generated during inference by <code>freshVar</code>. Only flex vars
+  appear in <code>Subst</code> keys.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">private</span><span class="w"> </span><span class="n">isFlex</span><span class="w"> </span><span class="o">(</span><span class="n">v</span><span class="o">:</span><span class="w"> </span><span class="n">Ident</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="o">.</span><span class="n">Length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">v</span><span class="o">.[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;$&#39;</span>
+</code></pre></div>
+
+<p>The rule is enforced in <code>applyType</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">rec</span><span class="w"> </span><span class="n">applyType</span><span class="w"> </span><span class="o">(</span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="n">Subst</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">t</span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">isFlex</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="c1">// may substitute</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">t</span><span class="w">                 </span><span class="c1">// rigid — unchanged</span>
+<span class="w">    </span><span class="o">...</span>
+</code></pre></div>
+
+<p>And in <code>unify</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="n">v</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">isFlex</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">...</span><span class="w">     </span><span class="c1">// solve flex</span>
+<span class="o">|</span><span class="w"> </span><span class="n">t</span><span class="o">,</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">isFlex</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">...</span>
+<span class="o">|</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">(</span><span class="n">e001</span><span class="w"> </span><span class="o">...)</span><span class="w">  </span><span class="c1">// rigid != anything else</span>
+</code></pre></div>
+
+<p>A rigid var against anything non-identical is a type error.</p>
+<h2 id="subst-and-compose"><code>Subst</code> and <code>compose</code><a class="headerlink" href="#subst-and-compose" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="nc">Subst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Ident</span><span class="o">,</span><span class="w"> </span><span class="n">TypeExpr</span><span class="o">&gt;</span><span class="w">   </span><span class="c1">// always flex-var domain</span>
+
+<span class="k">let</span><span class="w"> </span><span class="nv">compose</span><span class="w"> </span><span class="o">(</span><span class="n">s1</span><span class="o">:</span><span class="w"> </span><span class="n">Subst</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">s2</span><span class="o">:</span><span class="w"> </span><span class="n">Subst</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Subst</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">s2Applied</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Map</span><span class="p">.</span><span class="n">map</span><span class="w"> </span><span class="o">(</span><span class="k">fun</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">applyType</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">t</span><span class="o">)</span><span class="w"> </span><span class="n">s2</span>
+<span class="w">    </span><span class="nn">Map</span><span class="p">.</span><span class="n">fold</span><span class="w"> </span><span class="o">(</span><span class="k">fun</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nn">Map</span><span class="p">.</span><span class="n">add</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">acc</span><span class="o">)</span><span class="w"> </span><span class="n">s2Applied</span><span class="w"> </span><span class="n">s1</span>
+</code></pre></div>
+
+<p>Order matters: <code>compose s2 s1</code> applies <code>s1</code> first, then <code>s2</code>. This is
+standard H-M composition.</p>
+<h2 id="unify"><code>unify</code><a class="headerlink" href="#unify" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">rec</span><span class="w"> </span><span class="n">unify</span><span class="w"> </span><span class="o">(</span><span class="n">t1</span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">t2</span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Result</span><span class="o">&lt;</span><span class="n">Subst</span><span class="o">,</span><span class="w"> </span><span class="n">LLError</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">t1</span><span class="o">,</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="n">a</span><span class="o">,</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="n">empty</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="n">v</span><span class="o">,</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">isFlex</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">occurs</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">(</span><span class="n">e008</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">t</span><span class="o">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="o">(</span><span class="n">singleton</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">t</span><span class="o">)</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">t</span><span class="o">,</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">isFlex</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">occurs</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">(</span><span class="n">e008</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">t</span><span class="o">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="o">(</span><span class="n">singleton</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">t</span><span class="o">)</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="n">TyVar</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">(</span><span class="n">e001</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">t2</span><span class="o">)</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="n">a</span><span class="o">,</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="n">empty</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="n">TyName</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">(</span><span class="n">e001</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">t2</span><span class="o">)</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyFn</span><span class="o">(</span><span class="n">a1</span><span class="o">,</span><span class="w"> </span><span class="n">r1</span><span class="o">),</span><span class="w"> </span><span class="n">TyFn</span><span class="o">(</span><span class="n">a2</span><span class="o">,</span><span class="w"> </span><span class="n">r2</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">...</span><span class="w">  </span><span class="c1">// unify args + recurse</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyApp</span><span class="o">(</span><span class="n">f1</span><span class="o">,</span><span class="w"> </span><span class="n">a1</span><span class="o">),</span><span class="w"> </span><span class="n">TyApp</span><span class="o">(</span><span class="n">f2</span><span class="o">,</span><span class="w"> </span><span class="n">a2</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">...</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyTagged</span><span class="o">(</span><span class="n">b1</span><span class="o">,</span><span class="w"> </span><span class="n">u1</span><span class="o">),</span><span class="w"> </span><span class="n">TyTagged</span><span class="o">(</span><span class="n">b2</span><span class="o">,</span><span class="w"> </span><span class="n">u2</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u2</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="n">unify</span><span class="w"> </span><span class="n">b1</span><span class="w"> </span><span class="n">b2</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">(</span><span class="n">e004</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">t2</span><span class="o">)</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TyTagged</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">_,</span><span class="w"> </span><span class="n">TyTagged</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">(</span><span class="n">e005</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">t2</span><span class="o">)</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="o">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">(</span><span class="n">e001</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">t2</span><span class="o">)</span>
+</code></pre></div>
+
+<p>Notes:</p>
+<ul>
+<li><code>occurs v t</code> is the occurs check — prevents <code>a = List[a]</code>. Failure
+  emits <code>E008 OccursCheck</code>.</li>
+<li><code>TyTagged</code> unification requires <code>u1 = u2</code> (exact unit equality). A
+  mismatch emits <code>E004 UnitMismatch</code>.</li>
+<li>One side tagged, the other not: <code>E005 TagViolation</code>.</li>
+<li>Everything else: <code>E001 TypeMismatch</code>.</li>
+</ul>
+<h2 id="fresh-variable-supply">Fresh variable supply<a class="headerlink" href="#fresh-variable-supply" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="nc">FreshState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="k">mutable</span><span class="w"> </span><span class="n">Next</span><span class="o">:</span><span class="w"> </span><span class="n">int</span><span class="w"> </span><span class="o">}</span>
+
+<span class="k">let</span><span class="w"> </span><span class="nv">freshVar</span><span class="w"> </span><span class="o">(</span><span class="n">fs</span><span class="o">:</span><span class="w"> </span><span class="n">FreshState</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs</span><span class="o">.</span><span class="n">Next</span>
+<span class="w">    </span><span class="n">fs</span><span class="o">.</span><span class="n">Next</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">TyVar</span><span class="w"> </span><span class="o">$</span><span class="s">&quot;${n}&quot;</span>
+</code></pre></div>
+
+<p>Monotonically numbered flex vars. Reset per-compilation.</p>
+<h2 id="generalize-instantiate">Generalize / instantiate<a class="headerlink" href="#generalize-instantiate" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">generalize</span><span class="w"> </span><span class="o">(</span><span class="n">env</span><span class="o">:</span><span class="w"> </span><span class="n">Env</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">ty</span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">TypeScheme</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">envFtv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ftvEnv</span><span class="w"> </span><span class="n">env</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">toQuant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Set</span><span class="p">.</span><span class="n">difference</span><span class="w"> </span><span class="o">(</span><span class="n">ftvType</span><span class="w"> </span><span class="n">ty</span><span class="o">)</span><span class="w"> </span><span class="n">envFtv</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">Set</span><span class="p">.</span><span class="n">toList</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">sort</span>
+<span class="w">    </span><span class="o">{</span><span class="w"> </span><span class="n">Vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">toQuant</span><span class="o">;</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ty</span><span class="w"> </span><span class="o">}</span>
+
+<span class="k">let</span><span class="w"> </span><span class="nv">instantiate</span><span class="w"> </span><span class="o">(</span><span class="n">fs</span><span class="o">:</span><span class="w"> </span><span class="n">FreshState</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">sch</span><span class="o">:</span><span class="w"> </span><span class="n">TypeScheme</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">subst</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">sch</span><span class="o">.</span><span class="n">Vars</span>
+<span class="w">        </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">map</span><span class="w"> </span><span class="o">(</span><span class="k">fun</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">v</span><span class="o">,</span><span class="w"> </span><span class="n">freshVar</span><span class="w"> </span><span class="n">fs</span><span class="o">)</span>
+<span class="w">        </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">Map</span><span class="p">.</span><span class="n">ofList</span>
+<span class="w">    </span><span class="n">applyTypeAll</span><span class="w"> </span><span class="n">subst</span><span class="w"> </span><span class="n">sch</span><span class="o">.</span><span class="n">Body</span>
+</code></pre></div>
+
+<ul>
+<li><code>generalize</code> closes over flex vars that aren't also free in the
+  environment (standard let-generalization).</li>
+<li><code>instantiate</code> replaces every quantified var (rigid or flex) with a
+  fresh flex var. This is the only place rigid vars get rewritten —
+  and it uses a separate <code>applyTypeAll</code> that does not restrict to
+  flex-var domain.</li>
+</ul>
+<h2 id="inferexpr"><code>inferExpr</code><a class="headerlink" href="#inferexpr" title="Permanent link">&para;</a></h2>
+<p>Walks an <code>Expr</code> and returns <code>(Subst, TypeExpr, TypedExpr)</code>. Canonical
+cases:</p>
+<h3 id="evar-x"><code>EVar x</code><a class="headerlink" href="#evar-x" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">EVar</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="nn">Map</span><span class="p">.</span><span class="n">tryFind</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">None</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="c1">// emit E002, return fresh</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Some</span><span class="w"> </span><span class="n">sch</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="k">let</span><span class="w"> </span><span class="nv">ty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">instantiate</span><span class="w"> </span><span class="n">st</span><span class="o">.</span><span class="n">Fresh</span><span class="w"> </span><span class="n">sch</span>
+<span class="w">        </span><span class="o">(</span><span class="n">empty</span><span class="o">,</span><span class="w"> </span><span class="n">ty</span><span class="o">,</span><span class="w"> </span><span class="n">mkTyped</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">(</span><span class="n">TEVar</span><span class="w"> </span><span class="n">x</span><span class="o">)</span><span class="w"> </span><span class="n">ty</span><span class="o">)</span>
+</code></pre></div>
+
+<p>Variable lookups always instantiate — a polymorphic <code>id</code> can be used
+at <code>Int</code> and <code>Str</code> in the same scope.</p>
+<h3 id="eappf-a"><code>EApp(f, a)</code><a class="headerlink" href="#eappf-a" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">|</span><span class="w"> </span><span class="n">EApp</span><span class="o">(</span><span class="n">f</span><span class="o">,</span><span class="w"> </span><span class="n">a</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="o">(</span><span class="n">s1</span><span class="o">,</span><span class="w"> </span><span class="n">tauF</span><span class="o">,</span><span class="w"> </span><span class="n">teF</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inferExpr</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="n">f</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">env1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">applyEnv</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">env</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="o">(</span><span class="n">s2</span><span class="o">,</span><span class="w"> </span><span class="n">tauA</span><span class="o">,</span><span class="w"> </span><span class="n">teA</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inferExpr</span><span class="w"> </span><span class="n">env1</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="n">a</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">beta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">freshVar</span><span class="w"> </span><span class="n">st</span><span class="o">.</span><span class="n">Fresh</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">s3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">unifyS</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">(</span><span class="n">applyType</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="n">tauF</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">TyFn</span><span class="o">(</span><span class="n">tauA</span><span class="o">,</span><span class="w"> </span><span class="n">beta</span><span class="o">))</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">sAll</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compose</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="o">(</span><span class="n">compose</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="n">s1</span><span class="o">)</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">retTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">applyType</span><span class="w"> </span><span class="n">sAll</span><span class="w"> </span><span class="n">beta</span>
+<span class="w">    </span><span class="o">...</span>
+</code></pre></div>
+
+<p>This is the Algorithm W APP rule verbatim: infer <code>f</code>, then <code>a</code>, then
+unify <code>f</code>'s type with <code>arg -&gt; β</code>, yielding <code>β</code> as the result.</p>
+<h3 id="eletx-e1-some-body"><code>ELet(x, e1, Some body)</code><a class="headerlink" href="#eletx-e1-some-body" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="o">(</span><span class="n">s1</span><span class="o">,</span><span class="w"> </span><span class="n">tau1</span><span class="o">,</span><span class="w"> </span><span class="n">te1</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inferExpr</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="n">e1</span>
+<span class="k">let</span><span class="w"> </span><span class="nv">env1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">applyEnv</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">env</span>
+<span class="k">let</span><span class="w"> </span><span class="nv">sch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">generalize</span><span class="w"> </span><span class="n">env1</span><span class="w"> </span><span class="n">tau1</span><span class="w">       </span><span class="c1">// let-generalization</span>
+<span class="k">let</span><span class="w"> </span><span class="nv">env2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Map</span><span class="p">.</span><span class="n">add</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">sch</span><span class="w"> </span><span class="n">env1</span>
+<span class="k">let</span><span class="w"> </span><span class="o">(</span><span class="n">s2</span><span class="o">,</span><span class="w"> </span><span class="n">tau2</span><span class="o">,</span><span class="w"> </span><span class="n">te2</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inferExpr</span><span class="w"> </span><span class="n">env2</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="n">body</span>
+</code></pre></div>
+
+<h3 id="ematchbranches"><code>EMatch(branches)</code><a class="headerlink" href="#ematchbranches" title="Permanent link">&para;</a></h3>
+<p>Match is inferred as a lambda from scrutinee to result. Fresh flex vars
+<code>alpha</code> (scrutinee type) and <code>beta</code> (result type) are allocated; each
+branch unifies its pattern against <code>alpha</code> and its body against <code>beta</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">freshVar</span><span class="w"> </span><span class="n">st</span><span class="o">.</span><span class="n">Fresh</span>
+<span class="k">let</span><span class="w"> </span><span class="nv">beta</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">freshVar</span><span class="w"> </span><span class="n">st</span><span class="o">.</span><span class="n">Fresh</span>
+<span class="c1">// fold each branch: unify pattern type with alpha, body type with beta</span>
+<span class="k">let</span><span class="w"> </span><span class="nv">lamTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TyFn</span><span class="o">(</span><span class="n">scrutTy</span><span class="o">,</span><span class="w"> </span><span class="n">retTy</span><span class="o">)</span>
+<span class="o">(</span><span class="n">sAll</span><span class="o">,</span><span class="w"> </span><span class="n">lamTy</span><span class="o">,</span><span class="w"> </span><span class="n">mkTyped</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">(</span><span class="n">TELam</span><span class="o">([</span><span class="n">scrutName</span><span class="o">,</span><span class="w"> </span><span class="n">scrutTy</span><span class="o">],</span><span class="w"> </span><span class="n">matchTE</span><span class="o">))</span><span class="w"> </span><span class="n">lamTy</span><span class="o">)</span>
+</code></pre></div>
+
+<h3 id="etaggede-tag"><code>ETagged(e, tag)</code><a class="headerlink" href="#etaggede-tag" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="o">(</span><span class="n">s</span><span class="o">,</span><span class="w"> </span><span class="n">tau</span><span class="o">,</span><span class="w"> </span><span class="n">te</span><span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inferExpr</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="n">e</span>
+<span class="k">let</span><span class="w"> </span><span class="nv">ty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TyTagged</span><span class="o">(</span><span class="n">tau</span><span class="o">,</span><span class="w"> </span><span class="n">UName</span><span class="w"> </span><span class="n">tag</span><span class="o">)</span>
+</code></pre></div>
+
+<p>Just wraps whatever type the inner expression has with a <code>UName</code> tag.</p>
+<h2 id="inferdecl"><code>inferDecl</code><a class="headerlink" href="#inferdecl" title="Permanent link">&para;</a></h2>
+<h3 id="dfn-function-declarations"><code>DFn</code> — function declarations<a class="headerlink" href="#dfn-function-declarations" title="Permanent link">&para;</a></h3>
+<p>The trickiest case because ll-lang has:</p>
+<ol>
+<li>Type parameters declared in param/return types (rigid vars via
+   <code>normalizeTy</code> that converts single-uppercase <code>TyName A</code> to
+   <code>TyVar A</code>).</li>
+<li>Optional return type annotations.</li>
+<li>Match-body special-case: when the body is <code>EMatch</code> and the function
+   has at least one param, the <em>last</em> param is treated as the
+   scrutinee, so patterns unify against it rather than against a fresh
+   dummy.</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">declaredTyVars</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">paramVars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">normParams</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">collect</span><span class="w"> </span><span class="o">(</span><span class="k">fun</span><span class="w"> </span><span class="o">(_,</span><span class="w"> </span><span class="n">ty</span><span class="o">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">collectRigidVars</span><span class="w"> </span><span class="n">ty</span><span class="o">)</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="nv">retVars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">normRet</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">Option</span><span class="p">.</span><span class="n">map</span><span class="w"> </span><span class="n">collectRigidVars</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">Option</span><span class="p">.</span><span class="n">defaultValue</span><span class="w"> </span><span class="bp">[]</span>
+<span class="w">    </span><span class="o">(</span><span class="n">paramVars</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">retVars</span><span class="o">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">distinct</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">sort</span>
+</code></pre></div>
+
+<p>After inference, the rigid type vars from the signature are added to
+the generalized scheme's <code>Vars</code> list so they remain quantified:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">baseSch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">generalize</span><span class="w"> </span><span class="o">(</span><span class="n">applyEnv</span><span class="w"> </span><span class="n">sAll</span><span class="w"> </span><span class="n">env</span><span class="o">)</span><span class="w"> </span><span class="n">fnTy</span>
+<span class="k">let</span><span class="w"> </span><span class="nv">sch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">baseSch</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">Vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">(</span><span class="n">declaredTyVars</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">baseSch</span><span class="o">.</span><span class="n">Vars</span><span class="o">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">distinct</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nn">List</span><span class="p">.</span><span class="n">sort</span><span class="w"> </span><span class="o">}</span>
+</code></pre></div>
+
+<h3 id="dimpl-trait-implementations"><code>DImpl</code> — trait implementations<a class="headerlink" href="#dimpl-trait-implementations" title="Permanent link">&para;</a></h3>
+<p>Each impl method is inferred like a <code>DFn</code> but stored under a mangled
+name <code>methodName_implType</code> in the environment. Example: <code>map</code> in
+<code>impl Functor Maybe</code> becomes <code>map_Maybe</code> in the H-M environment and in
+the Codegen output.</p>
+<p>The mangling trick is how ll-lang currently dispatches without needing
+a dictionary-passing transform: at call sites, you write the original
+name and the compiler selects the right mangled entry based on the
+instantiated type. (In the current phase, this resolution is manual
+via constrained generics rather than fully automatic.)</p>
+<h2 id="trait-dispatch-traitindex">Trait dispatch (<code>TraitIndex</code>)<a class="headerlink" href="#trait-dispatch-traitindex" title="Permanent link">&para;</a></h2>
+<p><code>TypedModule.Dispatch : Map&lt;ExprId, DispatchInfo&gt;</code> is the dispatch
+table. Each entry records <code>(TraitName, ImplType, ResolvedName)</code> for a
+trait-method call site.</p>
+<p>In the current phase, <code>st.Dispatch</code> is initialized empty and populated
+when trait method calls are resolved during inference. The machinery
+is in place but the automatic resolution for <code>map xs</code> where <code>xs :
+Maybe[Int]</code> is not yet wired — the user writes <code>map_Maybe</code> or uses a
+constrained generic <code>[F: Functor]</code> that passes the impl through.</p>
+<p>Completing automatic resolution is on the backlog.</p>
+<h2 id="error-emission">Error emission<a class="headerlink" href="#error-emission" title="Permanent link">&para;</a></h2>
+<p>All errors go through <code>InferState.Errors : LLError list</code>. Inference
+never throws — <code>unifyS</code> catches failed unifications:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">private</span><span class="w"> </span><span class="n">unifyS</span><span class="w"> </span><span class="o">(</span><span class="n">st</span><span class="o">:</span><span class="w"> </span><span class="n">InferState</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">t1</span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">t2</span><span class="o">:</span><span class="w"> </span><span class="n">TypeExpr</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Subst</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">unify</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Ok</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">s</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">st</span><span class="o">.</span><span class="n">Errors</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st</span><span class="o">.</span><span class="n">Errors</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="o">[</span><span class="n">e</span><span class="o">];</span><span class="w"> </span><span class="n">empty</span>
+</code></pre></div>
+
+<p>Returning an empty substitution on failure means the tree walk
+continues, so a single file can surface multiple errors in one pass.</p>
+<h2 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">&para;</a></h2>
+<p><code>tests/LLLangTests/HMInferTests.fs</code> has dedicated helpers:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">let</span><span class="w"> </span><span class="nv">private</span><span class="w"> </span><span class="n">inferOk</span><span class="w"> </span><span class="o">(</span><span class="n">src</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">TypedModule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">...</span>
+<span class="k">let</span><span class="w"> </span><span class="nv">private</span><span class="w"> </span><span class="n">inferErrs</span><span class="w"> </span><span class="o">(</span><span class="n">src</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">LLError</span><span class="w"> </span><span class="kt">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">...</span>
+<span class="k">let</span><span class="w"> </span><span class="nv">private</span><span class="w"> </span><span class="n">schemeOf</span><span class="w"> </span><span class="o">(</span><span class="n">tm</span><span class="o">:</span><span class="w"> </span><span class="n">TypedModule</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">TypeScheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">...</span>
+</code></pre></div>
+
+<p>Use <code>inferOk</code> to assert a program type-checks. Use <code>inferErrs</code> to
+assert a specific error code fires. Use <code>schemeOf tm "functionName"</code>
+to pin a function's inferred polymorphic scheme. Tests include every
+operator and error code.</p>
+<p>Run:</p>
+<div class="codehilite"><pre><span></span><code>dotnet<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span>HMInferTests
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2701 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/release/launch-sequence-5-day/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>5-Day Launch Sequence - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#5-day-launch-sequence" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5-Day Launch Sequence
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compiler-dev/22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unblock-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unblock Evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#narrative-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Narrative Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tracking-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tracking Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#day-by-day-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day-by-Day Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#day-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Day 1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1300-utc-show-hn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13:00 UTC: Show HN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-1-2h-lobsters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 1 + 2h: Lobste.rs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#day-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Day 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rprogramminglanguages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        r/ProgrammingLanguages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rfsharp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        r/fsharp
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#day-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 3
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Day 3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#x-thread" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        X thread
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#devto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dev.to
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#day-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 4
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Day 4">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rlocalllama" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        r/LocalLLaMA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hashnode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hashnode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#day-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 5
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comment-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comment Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measurement-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measurement Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#immediate-next-action-once-unblocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Immediate Next Action Once Unblocked
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="5-day-launch-sequence">5-Day Launch Sequence<a class="headerlink" href="#5-day-launch-sequence" title="Permanent link">&para;</a></h1>
+<p>Launch owner: CMO (<code>AGE-8</code>)
+Project: <code>ll-lang</code>
+Target window: Tue/Wed/Thu start only, <code>13:00 UTC</code>
+Status: blocked until <code>AGE-5</code>, <code>AGE-7</code>, and <code>AGE-9</code> are <code>done</code></p>
+<h2 id="goal">Goal<a class="headerlink" href="#goal" title="Permanent link">&para;</a></h2>
+<p>Run a 5-day organic launch sequence that turns existing technical proof into public credibility and early adoption.</p>
+<p>Primary launch KPI:
+- Reach <code>15</code> GitHub stars during launch week</p>
+<p>Secondary launch KPI:
+- Identify the highest-converting channel for week-2 follow-up
+- Capture which angle performs best: <code>self-hosting</code>, <code>LLM tooling</code>, or <code>token-efficient syntax</code></p>
+<h2 id="current-gate">Current Gate<a class="headerlink" href="#current-gate" title="Permanent link">&para;</a></h2>
+<p>Do not start Day 1 until every item below is green.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Owner</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LICENSE</code> in repo root</td>
+<td><code>AGE-5</code></td>
+<td>Pending <code>AGE-5</code> completion; file is present in shared workspace but not yet closed</td>
+</tr>
+<tr>
+<td>Landing page live</td>
+<td><code>AGE-7</code></td>
+<td>Pending <code>AGE-7</code> completion</td>
+</tr>
+<tr>
+<td>Hero GIF/video on landing page and README</td>
+<td><code>AGE-7</code></td>
+<td>Pending <code>AGE-7</code> completion</td>
+</tr>
+<tr>
+<td>OG image renders correctly</td>
+<td><code>AGE-7</code></td>
+<td>Pending <code>AGE-7</code> completion</td>
+</tr>
+<tr>
+<td>Long-form DevRel article published</td>
+<td><code>AGE-9</code></td>
+<td>Pending <code>AGE-9</code> completion</td>
+</tr>
+</tbody>
+</table>
+<p>Go/no-go owner: CMO</p>
+<h2 id="unblock-evidence">Unblock Evidence<a class="headerlink" href="#unblock-evidence" title="Permanent link">&para;</a></h2>
+<p>The launch can only resume when each blocker issue is not just <code>done</code>, but closed with the evidence below linked in its final update or thread.</p>
+<table>
+<thead>
+<tr>
+<th>Blocker</th>
+<th>Owner</th>
+<th>Required evidence to unblock launch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AGE-5</code></td>
+<td>Trust artifacts owner</td>
+<td>Repo links or merged-file proof for <code>LICENSE</code>, <code>CONTRIBUTING</code>, and <code>CODE_OF_CONDUCT</code>, plus the initial <code>good first issue</code> triage set</td>
+</tr>
+<tr>
+<td><code>AGE-7</code></td>
+<td>Landing page owner</td>
+<td>Public landing-page URL, proof that the hero GIF/video is live on the landing page and README, and an OG preview/screenshot confirming the social card renders correctly</td>
+</tr>
+<tr>
+<td><code>AGE-9</code></td>
+<td>DevRel owner</td>
+<td>Canonical long-form article URL or publication-ready draft, final X thread copy with media references, and the MCP walkthrough link or checked-in asset path</td>
+</tr>
+</tbody>
+</table>
+<p>Once all three are <code>done</code>, the CMO's first action is:
+- run the go/no-go check against the evidence above
+- lock the first launch day to the next Tue/Wed/Thu <code>13:00 UTC</code> slot
+- post the Day 1 Show HN from the approved draft with final links swapped in</p>
+<h2 id="narrative-map">Narrative Map<a class="headerlink" href="#narrative-map" title="Permanent link">&para;</a></h2>
+<p>Use one project, but change the lead angle by audience.</p>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>Lead angle</th>
+<th>Proof point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hacker News</td>
+<td>New language for LLM code generation</td>
+<td>static types, compact syntax, machine-readable errors</td>
+</tr>
+<tr>
+<td>Lobste.rs</td>
+<td>Self-host bootstrap fixpoint</td>
+<td><code>compiler₁.fs == compiler₂.fs</code>, 2900+ line self-hosted compiler</td>
+</tr>
+<tr>
+<td>r/ProgrammingLanguages</td>
+<td>Language design and compiler architecture</td>
+<td>HM inference, module system, multi-target backend</td>
+</tr>
+<tr>
+<td>r/fsharp</td>
+<td>F# adjacency and codegen relevance</td>
+<td>F# backend, compiler architecture, typed functional style</td>
+</tr>
+<tr>
+<td>X</td>
+<td>Fast visual proof</td>
+<td>code screenshots, hero GIF, short evidence chain</td>
+</tr>
+<tr>
+<td>dev.to</td>
+<td>Full story</td>
+<td>problem, design choices, self-hosting, MCP workflow</td>
+</tr>
+<tr>
+<td>r/LocalLLaMA</td>
+<td>MCP for coding agents</td>
+<td>structured tools, machine-readable diagnostics, compile-check loop</td>
+</tr>
+<tr>
+<td>Hashnode</td>
+<td>Developer distribution</td>
+<td>canonical article cross-post with repo + landing page CTA</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tracking-setup">Tracking Setup<a class="headerlink" href="#tracking-setup" title="Permanent link">&para;</a></h2>
+<p>Use consistent UTM tags on landing page links and any short links that point to the repo.</p>
+<p>Pattern:</p>
+<div class="codehilite"><pre><span></span><code>utm_source={channel}
+utm_medium=organic
+utm_campaign=launch_week_1
+utm_content={angle}
+</code></pre></div>
+
+<p>Examples:
+- <code>utm_source=hn&amp;utm_content=llm_code_generation</code>
+- <code>utm_source=lobsters&amp;utm_content=self_host_fixpoint</code>
+- <code>utm_source=reddit_programminglanguages&amp;utm_content=compiler_architecture</code>
+- <code>utm_source=x&amp;utm_content=thread</code></p>
+<p>Record before launch:
+- GitHub stars at <code>T-15m</code>
+- GitHub traffic referrers at <code>T0</code>
+- Landing page sessions baseline at <code>T0</code></p>
+<p>Record after each day:
+- Post URL
+- Stars delta
+- Sessions
+- Referrers
+- Comments worth answering tomorrow</p>
+<h2 id="day-by-day-sequence">Day-by-Day Sequence<a class="headerlink" href="#day-by-day-sequence" title="Permanent link">&para;</a></h2>
+<h2 id="day-1">Day 1<a class="headerlink" href="#day-1" title="Permanent link">&para;</a></h2>
+<p>Day 1 feedback destination for all posts:
+- beta feedback: <code>https://github.com/Neftedollar/ll-lang/discussions</code>
+- use the GitHub Discussions root, not an issue template or issue-form deep link</p>
+<h3 id="1300-utc-show-hn">13:00 UTC: Show HN<a class="headerlink" href="#1300-utc-show-hn" title="Permanent link">&para;</a></h3>
+<p>Use only Tue/Wed/Thu. Author must post from a real builder account. No coordinated upvote behavior.</p>
+<p>Recommended title:</p>
+<p><code>Show HN: ll-lang — a statically-typed functional language designed for LLM code generation</code></p>
+<p>Launch text:</p>
+<div class="codehilite"><pre><span></span><code>Hi HN — I’ve been building ll-lang, a statically typed functional language aimed at one specific use case: LLMs writing correct code with tighter feedback loops.
+
+The main ideas:
+- compact syntax to spend tokens on logic instead of punctuation
+- HM type inference and compile-time checks instead of runtime surprises
+- machine-readable error codes for agent workflows
+- built-in MCP server so tools can compile/check/query projects directly
+
+The compiler is now self-hosted: the bootstrap compiler reaches a fixpoint (`compiler₁.fs == compiler₂.fs`), and the current release line is 1.0.0.
+
+Repo: https://github.com/Neftedollar/ll-lang
+Landing page: https://neftedollar.github.io/ll-lang/
+Beta feedback: https://github.com/Neftedollar/ll-lang/discussions
+
+Happy to answer questions about the syntax, self-hosting path, MCP tooling, or why I think “compiled = works” matters for LLM-generated code.
+</code></pre></div>
+
+<p>First-comment reserve:</p>
+<div class="codehilite"><pre><span></span><code>Quick technical proof points:
+- self-hosted compiler with bootstrap fixpoint
+- multi-target codegen: F#, TypeScript, Python, Java, C#
+- built-in MCP server with structured compile/check/diagnostic tools
+- token-efficiency benchmarks against F#/TS/Python/Java in the repo
+</code></pre></div>
+
+<p>Team support rule:
+- Reply only with substantive technical answers
+- No praise-only comments
+- No “just upvoting for visibility” behavior anywhere</p>
+<h3 id="day-1-2h-lobsters">Day 1 + 2h: Lobste.rs<a class="headerlink" href="#day-1-2h-lobsters" title="Permanent link">&para;</a></h3>
+<p>Recommended title:</p>
+<p><code>ll-lang reached a self-host bootstrap fixpoint</code></p>
+<p>Submission text:</p>
+<div class="codehilite"><pre><span></span><code>ll-lang is a statically typed functional language built for LLM code generation, but the part I think Lobsters may care more about is the bootstrap result: the compiler now compiles itself and reaches a byte-stable fixpoint (`compiler₁.fs == compiler₂.fs`).
+
+The self-hosted compiler is roughly 2900+ lines, with a stdlib covering parser, type inference, codegen, and supporting data structures. It also emits to multiple targets and ships an MCP server, but this post is mostly about the self-hosting milestone and implementation tradeoffs.
+
+Repo: https://github.com/Neftedollar/ll-lang
+Landing page: https://neftedollar.github.io/ll-lang/
+Beta feedback: https://github.com/Neftedollar/ll-lang/discussions
+</code></pre></div>
+
+<p>What to emphasize in comments:
+- why self-hosting mattered technically
+- what parts are still experimental
+- exact boundaries of the LLVM backend</p>
+<h2 id="day-2">Day 2<a class="headerlink" href="#day-2" title="Permanent link">&para;</a></h2>
+<h3 id="rprogramminglanguages">r/ProgrammingLanguages<a class="headerlink" href="#rprogramminglanguages" title="Permanent link">&para;</a></h3>
+<p>Recommended title:</p>
+<p><code>ll-lang: a statically typed functional language for LLM code generation</code></p>
+<p>Body:</p>
+<div class="codehilite"><pre><span></span><code>I’m sharing ll-lang, a small functional language aimed at LLM-driven coding workflows.
+
+What may be interesting here:
+- compact syntax intended to reduce token overhead
+- Hindley-Milner inference and compile-time checks
+- machine-readable error format for agent/tooling loops
+- self-hosted compiler milestone
+- multi-target codegen to F#, TypeScript, Python, Java, and C#
+
+I’d especially value feedback on the language design tradeoffs and where this should stay narrow versus becoming more general-purpose.
+</code></pre></div>
+
+<h3 id="rfsharp">r/fsharp<a class="headerlink" href="#rfsharp" title="Permanent link">&para;</a></h3>
+<p>Recommended title:</p>
+<p><code>Built a small self-hosted language that currently emits F# among other targets</code></p>
+<p>Body:</p>
+<div class="codehilite"><pre><span></span><code>I’ve been building ll-lang, a statically typed functional language focused on LLM code generation. One of the backend targets is F#, and the project has leaned a lot on typed functional compiler design ideas that may be familiar to this community.
+
+The project recently hit a self-host bootstrap fixpoint and now ships a built-in MCP server for structured compile/check tooling.
+
+I’d love feedback specifically on the F# backend ergonomics and where the generated output should feel more idiomatic.
+</code></pre></div>
+
+<p>Moderation rule:
+- Customize each subreddit post
+- Do not cross-post identical copy</p>
+<h2 id="day-3">Day 3<a class="headerlink" href="#day-3" title="Permanent link">&para;</a></h2>
+<h3 id="x-thread">X thread<a class="headerlink" href="#x-thread" title="Permanent link">&para;</a></h3>
+<p>Thread length: <code>8</code> to <code>12</code> posts
+Media required:
+- hero GIF from <code>AGE-7</code>
+- one syntax screenshot
+- one self-host or compiler pipeline screenshot</p>
+<p>Thread outline:</p>
+<ol>
+<li>Hook: <code>We built a statically typed functional language for LLM code generation.</code></li>
+<li>Problem: mainstream languages waste tokens and surface errors too late.</li>
+<li>Syntax: show compact ll-lang snippet.</li>
+<li>Safety: <code>compiled = works</code> and machine-readable errors.</li>
+<li>Tooling: built-in MCP server for agents.</li>
+<li>Credibility: self-host bootstrap fixpoint.</li>
+<li>Multi-target output: F#/TS/Python/Java/C#.</li>
+<li>CTA: repo + landing page.</li>
+</ol>
+<p>Draft thread:</p>
+<div class="codehilite"><pre><span></span><code>1/ We built ll-lang: a statically typed functional language designed for LLM code generation.
+
+Why? Most agent code loops still waste tokens on syntax and find mistakes only at runtime.
+
+2/ ll-lang is built around four constraints:
+- token-efficient syntax
+- static types with inference
+- machine-readable compiler errors
+- direct MCP integration for tools/agents
+
+3/ Example:
+
+module Hello
+
+Hello = printfn &quot;Hello, ll-lang!&quot;
+
+No braces. No semicolons. Minimal ceremony.
+
+4/ The goal is simple: if an agent writes code, it should get useful feedback before execution.
+
+`E001 12:5 TypeMismatch ...`
+is a much better loop than “run app, read stack trace, try again”.
+
+5/ ll-lang ships a built-in MCP server, so Claude Code / Cursor / Zed can compile, check, inspect symbols, and explain errors through structured tools.
+
+6/ The compiler is now self-hosted.
+
+Bootstrap fixpoint:
+`compiler₁.fs == compiler₂.fs`
+
+That means the language is expressive enough to build and maintain its own compiler pipeline.
+
+7/ It also emits to multiple targets: F#, TypeScript, Python, Java, and C#.
+
+Write once, keep the feedback loop strict, then target the runtime you need.
+
+8/ If you’re interested in compilers, LLM tooling, or typed language design, take a look:
+
+Repo: https://github.com/Neftedollar/ll-lang
+Landing page: https://neftedollar.github.io/ll-lang/
+</code></pre></div>
+
+<h3 id="devto">dev.to<a class="headerlink" href="#devto" title="Permanent link">&para;</a></h3>
+<p>Use the canonical long-form article from <code>AGE-9</code>.</p>
+<p>Recommended title:</p>
+<p><code>Why we built ll-lang: a statically typed language for LLM code generation</code></p>
+<p>Required CTA block at bottom:</p>
+<div class="codehilite"><pre><span></span><code>If you want the short version:
+- repo: https://github.com/Neftedollar/ll-lang
+- landing page: https://neftedollar.github.io/ll-lang/
+- try the MCP workflow: &lt;docs or landing page deep link&gt;
+</code></pre></div>
+
+<h2 id="day-4">Day 4<a class="headerlink" href="#day-4" title="Permanent link">&para;</a></h2>
+<h3 id="rlocalllama">r/LocalLLaMA<a class="headerlink" href="#rlocalllama" title="Permanent link">&para;</a></h3>
+<p>Recommended title:</p>
+<p><code>ll-lang ships an MCP server so coding agents can compile/check code with structured diagnostics</code></p>
+<p>Body:</p>
+<div class="codehilite"><pre><span></span><code>Sharing ll-lang here because the part likely most relevant to this sub is not “new language” in general, but the agent tooling loop.
+
+The project includes an MCP server that lets coding agents compile, check, inspect symbols, explain error codes, and query project structure without scraping shell output.
+
+The language itself is statically typed and intentionally compact, so the feedback loop for generated code is tighter than in typical runtime-first stacks.
+</code></pre></div>
+
+<p>Angle discipline:
+- lead with agent workflow, not language purity
+- show one concrete MCP tool result screenshot if available</p>
+<h3 id="hashnode">Hashnode<a class="headerlink" href="#hashnode" title="Permanent link">&para;</a></h3>
+<p>Use a shortened adaptation of the dev.to article with a stronger builder CTA.</p>
+<p>Recommended title:</p>
+<p><code>ll-lang and the case for compile-first workflows in LLM coding</code></p>
+<h2 id="day-5">Day 5<a class="headerlink" href="#day-5" title="Permanent link">&para;</a></h2>
+<p>Only use if Day 1 missed meaningful HN traction. Do not resubmit identical framing.</p>
+<p>Alternative HN titles:
+- <code>Show HN: We wrote a compiler that compiles itself in 2900 lines</code>
+- <code>Show HN: A self-hosted functional language built for LLM code generation</code>
+- <code>Show HN: Machine-readable compiler errors for LLM coding workflows</code></p>
+<p>Alternative HN angle:</p>
+<div class="codehilite"><pre><span></span><code>Instead of leading with “new language”, lead with the self-hosting milestone and the machine-readable diagnostics loop. The post should read like a compiler/tooling build story, not a positioning piece.
+</code></pre></div>
+
+<h2 id="comment-handling">Comment Handling<a class="headerlink" href="#comment-handling" title="Permanent link">&para;</a></h2>
+<p>Answer fast in the first <code>3</code> hours after every post.</p>
+<p>Priority response order:
+1. Questions about why a new language should exist
+2. Questions about self-hosting proof and limitations
+3. Questions about MCP integration and real workflows
+4. Skepticism about benchmarks or “LLM-first” framing</p>
+<p>Do not argue about:
+- whether AI should write code at all
+- whether every language should support MCP
+- broad AGI discourse</p>
+<p>Bridge back to proof:
+- self-host fixpoint
+- release contract
+- multi-target support
+- structured diagnostics</p>
+<h2 id="measurement-table">Measurement Table<a class="headerlink" href="#measurement-table" title="Permanent link">&para;</a></h2>
+<p>Fill this in during launch week and paste the final numbers into <code>AGE-8</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Channel</th>
+<th>URL</th>
+<th>Lead angle</th>
+<th>Stars before</th>
+<th>Stars after</th>
+<th>Sessions</th>
+<th>Best comment/question</th>
+<th>Follow-up needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Show HN</td>
+<td></td>
+<td>LLM code generation</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Lobste.rs</td>
+<td></td>
+<td>Self-host fixpoint</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>r/ProgrammingLanguages</td>
+<td></td>
+<td>Language design</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>r/fsharp</td>
+<td></td>
+<td>F# backend</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>X</td>
+<td></td>
+<td>Visual proof</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>dev.to</td>
+<td></td>
+<td>Full story</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>r/LocalLLaMA</td>
+<td></td>
+<td>MCP workflow</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Hashnode</td>
+<td></td>
+<td>Cross-post</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>HN fallback</td>
+<td></td>
+<td>Different angle</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="immediate-next-action-once-unblocked">Immediate Next Action Once Unblocked<a class="headerlink" href="#immediate-next-action-once-unblocked" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Verify <code>LICENSE</code>, landing page, hero media, OG image, and dev.to post are live.</li>
+<li>Pick the next Tue/Wed/Thu <code>13:00 UTC</code> slot.</li>
+<li>Capture pre-launch star and traffic baselines.</li>
+<li>Prepare author accounts and media assets.</li>
+<li>Execute Day 1 and comment the live URLs back into <code>AGE-8</code>.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,5663 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/stdlib-reference/">
+      
+      
+        <link rel="prev" href="../language-spec/">
+      
+      
+        <link rel="next" href="../compiler-dev/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Standard Library Reference - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#standard-library-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Standard Library Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-groups-frozen-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module groups (frozen for v2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module groups (frozen for v2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group-1-reusable-foundation-stdlib-std" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group 1 — Reusable foundation stdlib (Std.*)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-2-compiler-implementation-compiler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group 2 — Compiler implementation (Compiler.*)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prelude-always-in-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prelude (always in scope)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prelude (always in scope)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        String operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numeric-conversions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric conversions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#character-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Character operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maybe-and-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maybe and Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File I/O
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-core-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category: Core Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category: Core Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdmaybe-optional-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Maybe — Optional values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdresult-error-or-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Result — Error-or-value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdmonad-compact-monadic-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Monad — compact monadic adapters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdlist-extended-list-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.List — Extended list operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdstr-extended-string-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Str — Extended string operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdlazy-explicit-laziness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Lazy — Explicit laziness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-data-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category: Data Structures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category: Data Structures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdmap-ordered-map-red-black-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Map — Ordered map (red-black tree)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-parsing-and-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category: Parsing and Config
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category: Parsing and Config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdtoml-toml-config-parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Toml — TOML config parser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdjson-json-parser-and-serializer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Json — JSON parser and serializer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdmcpprotocol-json-rpc-mcp-envelope-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.McpProtocol — JSON-RPC / MCP envelope helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdreverse-self-host-reverse-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Reverse — self-host reverse foundation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdstate-stateful-computation-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.State — stateful computation primitives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdtest-unit-test-harness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Test — unit test harness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdparsec-parser-combinator-toolkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Parsec — parser combinator toolkit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdlazy-explicit-laziness-on-top-of-strict-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Lazy — explicit laziness on top of strict evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdlexer-ll-lang-tokenizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Lexer — ll-lang tokenizer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdparser-ll-lang-recursive-descent-parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Parser — ll-lang recursive-descent parser
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-code-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category: Code Generation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category: Code Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdelaborator-name-resolver-type-checker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Elaborator — name resolver / type checker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegen-f-code-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Codegen — F# code emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegents-typescript-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CodegenTS — TypeScript emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegenpy-python-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CodegenPy — Python emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegenjava-java-21-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CodegenJava — Java 21 emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegencsharp-c-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CodegenCSharp — C# emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompilertypes-hm-type-representations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CompilerTypes — HM type representations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompilertyped-typed-ir-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CompilerTyped — typed IR shapes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompilerinfer-hm-algorithm-w-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CompilerInfer — HM Algorithm W inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompilerlower-backend-neutral-lowering-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CompilerLower — backend-neutral lowering pass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompiler-full-pipeline-source-f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Compiler — full pipeline (source → F#)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-index-by-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module index by category
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-implementation-modules-vs-reusable-stdlib" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiler implementation modules vs reusable stdlib
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-on-self-hosted-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes on self-hosted modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention-frozen-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming convention (frozen for v2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prelude-boundary-rule-frozen-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prelude boundary rule (frozen for v2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-facing-proof-of-use-m3h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiler-facing proof-of-use (M3.H)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compiler-dev/22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-groups-frozen-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module groups (frozen for v2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module groups (frozen for v2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group-1-reusable-foundation-stdlib-std" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group 1 — Reusable foundation stdlib (Std.*)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-2-compiler-implementation-compiler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group 2 — Compiler implementation (Compiler.*)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prelude-always-in-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prelude (always in scope)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prelude (always in scope)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        String operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numeric-conversions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric conversions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#character-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Character operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maybe-and-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maybe and Result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File I/O
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-core-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category: Core Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category: Core Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdmaybe-optional-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Maybe — Optional values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdresult-error-or-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Result — Error-or-value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdmonad-compact-monadic-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Monad — compact monadic adapters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdlist-extended-list-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.List — Extended list operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdstr-extended-string-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Str — Extended string operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdlazy-explicit-laziness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Lazy — Explicit laziness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-data-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category: Data Structures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category: Data Structures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdmap-ordered-map-red-black-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Map — Ordered map (red-black tree)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-parsing-and-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category: Parsing and Config
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category: Parsing and Config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdtoml-toml-config-parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Toml — TOML config parser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdjson-json-parser-and-serializer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Json — JSON parser and serializer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdmcpprotocol-json-rpc-mcp-envelope-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.McpProtocol — JSON-RPC / MCP envelope helpers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdreverse-self-host-reverse-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Reverse — self-host reverse foundation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdstate-stateful-computation-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.State — stateful computation primitives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdtest-unit-test-harness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Test — unit test harness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdparsec-parser-combinator-toolkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Parsec — parser combinator toolkit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdlazy-explicit-laziness-on-top-of-strict-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Lazy — explicit laziness on top of strict evaluation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdlexer-ll-lang-tokenizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Lexer — ll-lang tokenizer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdparser-ll-lang-recursive-descent-parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Parser — ll-lang recursive-descent parser
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#category-code-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category: Code Generation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Category: Code Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stdelaborator-name-resolver-type-checker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Elaborator — name resolver / type checker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegen-f-code-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Codegen — F# code emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegents-typescript-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CodegenTS — TypeScript emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegenpy-python-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CodegenPy — Python emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegenjava-java-21-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CodegenJava — Java 21 emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcodegencsharp-c-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CodegenCSharp — C# emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompilertypes-hm-type-representations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CompilerTypes — HM type representations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompilertyped-typed-ir-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CompilerTyped — typed IR shapes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompilerinfer-hm-algorithm-w-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CompilerInfer — HM Algorithm W inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompilerlower-backend-neutral-lowering-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.CompilerLower — backend-neutral lowering pass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdcompiler-full-pipeline-source-f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Std.Compiler — full pipeline (source → F#)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-index-by-category" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module index by category
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-implementation-modules-vs-reusable-stdlib" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiler implementation modules vs reusable stdlib
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes-on-self-hosted-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes on self-hosted modules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention-frozen-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming convention (frozen for v2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prelude-boundary-rule-frozen-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prelude boundary rule (frozen for v2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-facing-proof-of-use-m3h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiler-facing proof-of-use (M3.H)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="standard-library-reference">Standard Library Reference<a class="headerlink" href="#standard-library-reference" title="Permanent link">&para;</a></h1>
+<p>ll-lang ships two layers of stdlib:</p>
+<ol>
+<li><strong>Prelude</strong> — ~50 builtin functions always in scope. No <code>import</code> needed.</li>
+<li><strong>Self-hosted modules</strong> — modules written in ll-lang under <code>stdlib/src</code>. Import with <code>import Std.X</code>.</li>
+</ol>
+<h2 id="module-groups-frozen-for-v2">Module groups (frozen for v2)<a class="headerlink" href="#module-groups-frozen-for-v2" title="Permanent link">&para;</a></h2>
+<p>The self-hosted modules fall into two <strong>distinct, non-overlapping groups</strong>:</p>
+<h3 id="group-1-reusable-foundation-stdlib-std">Group 1 — Reusable foundation stdlib (<code>Std.*</code>)<a class="headerlink" href="#group-1-reusable-foundation-stdlib-std" title="Permanent link">&para;</a></h3>
+<p>These are general-purpose library modules. Import them in any ll-lang program.</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Import</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Std.List</code></td>
+<td><code>import Std.List</code></td>
+<td>list operations</td>
+</tr>
+<tr>
+<td><code>Std.Maybe</code></td>
+<td><code>import Std.Maybe</code></td>
+<td>optional values</td>
+</tr>
+<tr>
+<td><code>Std.Result</code></td>
+<td><code>import Std.Result</code></td>
+<td>error-or-value</td>
+</tr>
+<tr>
+<td><code>Std.Monad</code></td>
+<td><code>import Std.Monad</code></td>
+<td>monad trait + adapters</td>
+</tr>
+<tr>
+<td><code>Std.Map</code></td>
+<td><code>import Std.Map</code></td>
+<td>Okasaki RB-tree map</td>
+</tr>
+<tr>
+<td><code>Std.Str</code></td>
+<td><code>import Std.Str</code></td>
+<td>string utilities</td>
+</tr>
+<tr>
+<td><code>Std.State</code></td>
+<td><code>import Std.State</code></td>
+<td>stateful computation</td>
+</tr>
+<tr>
+<td><code>Std.Parsec</code></td>
+<td><code>import Std.Parsec</code></td>
+<td>parser combinators</td>
+</tr>
+<tr>
+<td><code>Std.Lazy</code></td>
+<td><code>import Std.Lazy</code></td>
+<td>explicit laziness</td>
+</tr>
+<tr>
+<td><code>Std.Json</code></td>
+<td><code>import Std.Json</code></td>
+<td>JSON codec</td>
+</tr>
+<tr>
+<td><code>Std.McpProtocol</code></td>
+<td><code>import Std.McpProtocol</code></td>
+<td>JSON-RPC/MCP envelope helpers</td>
+</tr>
+<tr>
+<td><code>Std.Reverse</code></td>
+<td><code>import Std.Reverse</code></td>
+<td>self-host reverse foundation</td>
+</tr>
+<tr>
+<td><code>Std.Toml</code></td>
+<td><code>import Std.Toml</code></td>
+<td>TOML subset parser</td>
+</tr>
+<tr>
+<td><code>Std.Test</code></td>
+<td><code>import Std.Test</code></td>
+<td>unit test harness</td>
+</tr>
+</tbody>
+</table>
+<h3 id="group-2-compiler-implementation-compiler">Group 2 — Compiler implementation (<code>Compiler.*</code>)<a class="headerlink" href="#group-2-compiler-implementation-compiler" title="Permanent link">&para;</a></h3>
+<p>These modules implement the self-hosted compiler. They live under <code>stdlib/src/</code> today but are
+<strong>not general-purpose stdlib</strong>. Their canonical namespace is <code>Compiler.*</code> (see
+<a href="../compiler-dev/14-v2-canonical-compiler-boundaries/">14-v2-canonical-compiler-boundaries.md</a>).</p>
+<table>
+<thead>
+<tr>
+<th>Current file</th>
+<th>Canonical v2 module</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stdlib/src/Lexer.lll</code></td>
+<td><code>Compiler.Syntax.Lexer</code></td>
+<td>tokenizer</td>
+</tr>
+<tr>
+<td><code>stdlib/src/Parser.lll</code></td>
+<td><code>Compiler.Syntax.Parser</code></td>
+<td>recursive-descent parser</td>
+</tr>
+<tr>
+<td><code>stdlib/src/Elaborator.lll</code></td>
+<td><code>Compiler.Frontend.Elaborator</code></td>
+<td>name resolution + declared-type checks</td>
+</tr>
+<tr>
+<td><code>stdlib/src/Codegen.lll</code></td>
+<td><code>Compiler.Backend.FSharp</code></td>
+<td>F# emitter</td>
+</tr>
+<tr>
+<td><code>stdlib/src/CodegenTS.lll</code></td>
+<td><code>Compiler.Backend.TypeScript</code></td>
+<td>TypeScript emitter</td>
+</tr>
+<tr>
+<td><code>stdlib/src/CodegenPy.lll</code></td>
+<td><code>Compiler.Backend.Python</code></td>
+<td>Python emitter</td>
+</tr>
+<tr>
+<td><code>stdlib/src/CodegenJava.lll</code></td>
+<td><code>Compiler.Backend.Java</code></td>
+<td>Java emitter</td>
+</tr>
+<tr>
+<td><code>stdlib/src/CodegenLLVM.lll</code></td>
+<td><code>Compiler.Backend.LLVM</code></td>
+<td>LLVM IR emitter (experimental)</td>
+</tr>
+<tr>
+<td><code>stdlib/src/CodegenCSharp.lll</code></td>
+<td><code>Compiler.Backend.CSharp</code></td>
+<td>C# emitter</td>
+</tr>
+<tr>
+<td><code>stdlib/src/Compiler.lll</code></td>
+<td><code>Compiler.Main</code></td>
+<td>pipeline entrypoint</td>
+</tr>
+<tr>
+<td><code>stdlib/src/Render.lll</code></td>
+<td><code>Compiler.Render</code></td>
+<td>diagnostic/output rendering</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Do not <code>import</code> compiler implementation modules from user programs.</strong> They are internal to the
+compiler toolchain.</p>
+<hr />
+<h2 id="prelude-always-in-scope">Prelude (always in scope)<a class="headerlink" href="#prelude-always-in-scope" title="Permanent link">&para;</a></h2>
+<h3 id="output">Output<a class="headerlink" href="#output" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>printfn</code></td>
+<td><code>Str -&gt; Unit</code></td>
+<td>Print string with newline</td>
+</tr>
+<tr>
+<td><code>print</code></td>
+<td><code>Str -&gt; Unit</code></td>
+<td>Print string without newline</td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code>main() =
+  <span class="ge">_ = printfn &quot;line one&quot;</span>
+<span class="ge">  _</span> = print &quot;no newline&quot;
+  0
+</code></pre></div>
+
+<h3 id="list-operations">List operations<a class="headerlink" href="#list-operations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listMap</code></td>
+<td><code>(A -&gt; B) -&gt; List[A] -&gt; List[B]</code></td>
+<td>Transform each element</td>
+</tr>
+<tr>
+<td><code>listFold</code></td>
+<td><code>(B -&gt; A -&gt; B) -&gt; B -&gt; List[A] -&gt; B</code></td>
+<td>Reduce left-to-right</td>
+</tr>
+<tr>
+<td><code>listFilter</code></td>
+<td><code>(A -&gt; Bool) -&gt; List[A] -&gt; List[A]</code></td>
+<td>Keep matching elements</td>
+</tr>
+<tr>
+<td><code>listLen</code></td>
+<td><code>List[A] -&gt; Int</code></td>
+<td>Number of elements</td>
+</tr>
+<tr>
+<td><code>listAppend</code></td>
+<td><code>List[A] -&gt; List[A] -&gt; List[A]</code></td>
+<td>Concatenate two lists</td>
+</tr>
+<tr>
+<td><code>listAt</code></td>
+<td><code>List[A] -&gt; Int -&gt; Maybe[A]</code></td>
+<td>Element at index (0-based)</td>
+</tr>
+<tr>
+<td><code>listHead</code></td>
+<td><code>List[A] -&gt; Maybe[A]</code></td>
+<td>First element</td>
+</tr>
+<tr>
+<td><code>listTail</code></td>
+<td><code>List[A] -&gt; Maybe[List[A]]</code></td>
+<td>All but first element</td>
+</tr>
+<tr>
+<td><code>listReverse</code></td>
+<td><code>List[A] -&gt; List[A]</code></td>
+<td>Reverse a list</td>
+</tr>
+<tr>
+<td><code>listConcat</code></td>
+<td><code>List[List[A]] -&gt; List[A]</code></td>
+<td>Flatten one level</td>
+</tr>
+<tr>
+<td><code>listRange</code></td>
+<td><code>Int -&gt; Int -&gt; List[Int]</code></td>
+<td><code>listRange 1 5</code> → <code>[1 2 3 4 5]</code></td>
+</tr>
+<tr>
+<td><code>listSum</code></td>
+<td><code>List[Int] -&gt; Int</code></td>
+<td>Sum of integer list</td>
+</tr>
+<tr>
+<td><code>listJoin</code></td>
+<td><code>Str -&gt; List[Str] -&gt; Str</code></td>
+<td>Join strings with separator</td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- double all even numbers</span>
+<span class="n">evensDoubled</span><span class="p">(</span><span class="n">xs</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Int</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="n">xs</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">listFilter</span><span class="w"> </span><span class="p">(</span><span class="err">\</span><span class="n">x</span><span class="p">.</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">listMap</span><span class="w"> </span><span class="p">(</span><span class="err">\</span><span class="n">x</span><span class="p">.</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1">-- sum with fold</span>
+<span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listFold</span><span class="w"> </span><span class="p">(</span><span class="err">\</span><span class="n">acc</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">[</span><span class="n">1 2 3 4 5</span><span class="o">]</span>
+</code></pre></div>
+
+<h3 id="string-operations">String operations<a class="headerlink" href="#string-operations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strConcat</code></td>
+<td><code>Str -&gt; Str -&gt; Str</code></td>
+<td>Concatenate two strings</td>
+</tr>
+<tr>
+<td><code>strLen</code></td>
+<td><code>Str -&gt; Int</code></td>
+<td>Length in characters</td>
+</tr>
+<tr>
+<td><code>strSplit</code></td>
+<td><code>Str -&gt; Str -&gt; List[Str]</code></td>
+<td>Split on separator</td>
+</tr>
+<tr>
+<td><code>strTrim</code></td>
+<td><code>Str -&gt; Str</code></td>
+<td>Strip leading/trailing whitespace</td>
+</tr>
+<tr>
+<td><code>strContains</code></td>
+<td><code>Str -&gt; Str -&gt; Bool</code></td>
+<td>Substring test</td>
+</tr>
+<tr>
+<td><code>strStartsWith</code></td>
+<td><code>Str -&gt; Str -&gt; Bool</code></td>
+<td>Prefix test</td>
+</tr>
+<tr>
+<td><code>strEndsWith</code></td>
+<td><code>Str -&gt; Str -&gt; Bool</code></td>
+<td>Suffix test</td>
+</tr>
+<tr>
+<td><code>strSlice</code></td>
+<td><code>Str -&gt; Int -&gt; Int -&gt; Str</code></td>
+<td>Extract substring</td>
+</tr>
+<tr>
+<td><code>strReplace</code></td>
+<td><code>Str -&gt; Str -&gt; Str -&gt; Str</code></td>
+<td>Replace all occurrences</td>
+</tr>
+<tr>
+<td><code>strToUpper</code></td>
+<td><code>Str -&gt; Str</code></td>
+<td>Uppercase</td>
+</tr>
+<tr>
+<td><code>strToLower</code></td>
+<td><code>Str -&gt; Str</code></td>
+<td>Lowercase</td>
+</tr>
+<tr>
+<td><code>strToChars</code></td>
+<td><code>Str -&gt; List[Char]</code></td>
+<td>Explode to character list</td>
+</tr>
+<tr>
+<td><code>charsToStr</code></td>
+<td><code>List[Char] -&gt; Str</code></td>
+<td>Assemble from characters</td>
+</tr>
+<tr>
+<td><code>strToInt</code></td>
+<td><code>Str -&gt; Maybe[Int]</code></td>
+<td>Parse integer</td>
+</tr>
+<tr>
+<td><code>strToFloat</code></td>
+<td><code>Str -&gt; Maybe[Float]</code></td>
+<td>Parse float</td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code><span class="nv">words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">strSplit</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="s2">&quot;hello world foo&quot;</span><span class="w">  </span><span class="o">--</span><span class="w"> </span>[<span class="s2">&quot;hello&quot;</span><span class="w"> </span><span class="s2">&quot;world&quot;</span><span class="w"> </span><span class="s2">&quot;foo&quot;</span>]
+<span class="nv">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">strToUpper</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w">              </span><span class="o">--</span><span class="w"> </span><span class="s2">&quot;HELLO&quot;</span>
+<span class="nv">joined</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">listJoin</span><span class="w"> </span><span class="s2">&quot;, &quot;</span><span class="w"> </span>[<span class="s2">&quot;a&quot;</span><span class="w"> </span><span class="s2">&quot;b&quot;</span><span class="w"> </span><span class="s2">&quot;c&quot;</span>]<span class="w">   </span><span class="o">--</span><span class="w"> </span><span class="s2">&quot;a, b, c&quot;</span>
+</code></pre></div>
+
+<h3 id="numeric-conversions">Numeric conversions<a class="headerlink" href="#numeric-conversions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>intToStr</code></td>
+<td><code>Int -&gt; Str</code></td>
+<td>Integer to string</td>
+</tr>
+<tr>
+<td><code>floatToStr</code></td>
+<td><code>Float -&gt; Str</code></td>
+<td>Float to string</td>
+</tr>
+<tr>
+<td><code>intToFloat</code></td>
+<td><code>Int -&gt; Float</code></td>
+<td>Widen integer</td>
+</tr>
+<tr>
+<td><code>floatToInt</code></td>
+<td><code>Float -&gt; Int</code></td>
+<td>Truncate to integer</td>
+</tr>
+<tr>
+<td><code>abs</code></td>
+<td><code>Int -&gt; Int</code></td>
+<td>Absolute value</td>
+</tr>
+<tr>
+<td><code>absFloat</code></td>
+<td><code>Float -&gt; Float</code></td>
+<td>Absolute value (float)</td>
+</tr>
+<tr>
+<td><code>min</code></td>
+<td><code>Int -&gt; Int -&gt; Int</code></td>
+<td>Minimum</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td><code>Int -&gt; Int -&gt; Int</code></td>
+<td>Maximum</td>
+</tr>
+</tbody>
+</table>
+<h3 id="character-operations">Character operations<a class="headerlink" href="#character-operations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>charToInt</code></td>
+<td><code>Char -&gt; Int</code></td>
+<td>Character code point</td>
+</tr>
+<tr>
+<td><code>intToChar</code></td>
+<td><code>Int -&gt; Char</code></td>
+<td>Code point to character</td>
+</tr>
+<tr>
+<td><code>charIsDigit</code></td>
+<td><code>Char -&gt; Bool</code></td>
+<td><code>'0'</code>–<code>'9'</code></td>
+</tr>
+<tr>
+<td><code>charIsAlpha</code></td>
+<td><code>Char -&gt; Bool</code></td>
+<td><code>a</code>–<code>z</code>, <code>A</code>–<code>Z</code></td>
+</tr>
+<tr>
+<td><code>charIsSpace</code></td>
+<td><code>Char -&gt; Bool</code></td>
+<td>Whitespace</td>
+</tr>
+<tr>
+<td><code>charIsUpper</code></td>
+<td><code>Char -&gt; Bool</code></td>
+<td>Uppercase letter</td>
+</tr>
+<tr>
+<td><code>charIsLower</code></td>
+<td><code>Char -&gt; Bool</code></td>
+<td>Lowercase letter</td>
+</tr>
+</tbody>
+</table>
+<h3 id="maybe-and-result">Maybe and Result<a class="headerlink" href="#maybe-and-result" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>maybeMap</code></td>
+<td><code>(A -&gt; B) -&gt; Maybe[A] -&gt; Maybe[B]</code></td>
+<td>Transform the value if present</td>
+</tr>
+<tr>
+<td><code>maybeWithDefault</code></td>
+<td><code>A -&gt; Maybe[A] -&gt; A</code></td>
+<td>Unwrap with a fallback</td>
+</tr>
+<tr>
+<td><code>maybeDefault</code></td>
+<td><code>A -&gt; Maybe[A] -&gt; A</code></td>
+<td>Alias for <code>maybeWithDefault</code></td>
+</tr>
+<tr>
+<td><code>maybeBind</code></td>
+<td><code>(A -&gt; Maybe[B]) -&gt; Maybe[A] -&gt; Maybe[B]</code></td>
+<td>Chain Maybe operations</td>
+</tr>
+<tr>
+<td><code>maybeToList</code></td>
+<td><code>Maybe[A] -&gt; List[A]</code></td>
+<td><code>None</code> → <code>[]</code>, <code>Some x</code> → <code>[x]</code></td>
+</tr>
+<tr>
+<td><code>resultMap</code></td>
+<td><code>(A -&gt; B) -&gt; Result[A][E] -&gt; Result[B][E]</code></td>
+<td>Transform Ok value</td>
+</tr>
+<tr>
+<td><code>resultBind</code></td>
+<td><code>(A -&gt; Result[B][E]) -&gt; Result[A][E] -&gt; Result[B][E]</code></td>
+<td>Chain Result operations</td>
+</tr>
+<tr>
+<td><code>resultMapErr</code></td>
+<td><code>(E -&gt; F) -&gt; Result[A][E] -&gt; Result[A][F]</code></td>
+<td>Transform Err value</td>
+</tr>
+<tr>
+<td><code>resultToMaybe</code></td>
+<td><code>Result[A][E] -&gt; Maybe[A]</code></td>
+<td>Discard error</td>
+</tr>
+<tr>
+<td><code>isOk</code></td>
+<td><code>Result[A][E] -&gt; Bool</code></td>
+<td>Test for Ok</td>
+</tr>
+<tr>
+<td><code>isErr</code></td>
+<td><code>Result[A][E] -&gt; Bool</code></td>
+<td>Test for Err</td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code><span class="o">--</span><span class="w"> </span><span class="n">chain</span><span class="w"> </span><span class="n">operations</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">might</span><span class="w"> </span><span class="kr">fail</span>
+<span class="n">parseAndDouble</span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="n">Str</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="n">s</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">strToInt</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">maybeMap</span><span class="w"> </span><span class="p">(</span><span class="err">\</span><span class="n">n</span><span class="p">.</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+
+<span class="o">--</span><span class="w"> </span><span class="n">unwrap</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">default</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">maybeWithDefault</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="n">strToInt</span><span class="w"> </span><span class="s">&quot;42&quot;</span><span class="p">)</span><span class="w">  </span><span class="o">--</span><span class="w"> </span><span class="mi">42</span>
+<span class="n">missing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">maybeWithDefault</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="n">strToInt</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="mi">0</span>
+</code></pre></div>
+
+<h3 id="file-io">File I/O<a class="headerlink" href="#file-io" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>readFile</code></td>
+<td><code>Str -&gt; Str</code></td>
+<td>Read entire file as string</td>
+</tr>
+<tr>
+<td><code>writeFile</code></td>
+<td><code>Str -&gt; Str -&gt; Unit</code></td>
+<td>Write string to file</td>
+</tr>
+<tr>
+<td><code>fileExists</code></td>
+<td><code>Str -&gt; Bool</code></td>
+<td>Test path existence</td>
+</tr>
+</tbody>
+</table>
+<h3 id="process">Process<a class="headerlink" href="#process" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getArgs</code></td>
+<td><code>List[Str]</code></td>
+<td>Command-line arguments</td>
+</tr>
+<tr>
+<td><code>exit</code></td>
+<td><code>Int -&gt; Unit</code></td>
+<td>Exit with code</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="category-core-types">Category: Core Types<a class="headerlink" href="#category-core-types" title="Permanent link">&para;</a></h2>
+<h3 id="stdmaybe-optional-values"><code>Std.Maybe</code> — Optional values<a class="headerlink" href="#stdmaybe-optional-values" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Maybe</code><br />
+<strong>Self-tests:</strong> 6/6 (isSome/isNone/pattern-match tests; maybeMap/maybeBind tested via F# backend target only — C# prelude type-inference limitation)<br />
+<strong>Description:</strong> Canonical optional type with predicate helpers. Core <code>maybeMap</code>/<code>maybeBind</code>/<code>maybeWithDefault</code> are also available as prelude builtins without an import.</p>
+<p><strong>Type:</strong></p>
+<div class="codehilite"><pre><span></span><code>Maybe A = Some A | None
+</code></pre></div>
+
+<p><strong>Functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isSome</code></td>
+<td><code>Maybe[A] -&gt; Bool</code></td>
+<td>True if Some</td>
+</tr>
+<tr>
+<td><code>isNone</code></td>
+<td><code>Maybe[A] -&gt; Bool</code></td>
+<td>True if None</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdresult-error-or-value"><code>Std.Result</code> — Error-or-value<a class="headerlink" href="#stdresult-error-or-value" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Result</code><br />
+<strong>Self-tests:</strong> 20/20<br />
+<strong>Description:</strong> Canonical Result type for recoverable errors. Never throw; propagate with <code>resultBind</code>. Integrates with <code>Std.Maybe</code> via <code>resultFromMaybe</code>/<code>resultToMaybe</code>.</p>
+<p><strong>Type:</strong></p>
+<div class="codehilite"><pre><span></span><code>Result A E = Ok A | Err E
+</code></pre></div>
+
+<p><strong>Functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resultWithDefault</code></td>
+<td><code>A -&gt; Result[A][E] -&gt; A</code></td>
+<td>Unwrap Ok or return default</td>
+</tr>
+<tr>
+<td><code>resultMap</code></td>
+<td><code>(A -&gt; B) -&gt; Result[A][E] -&gt; Result[B][E]</code></td>
+<td>Transform Ok value</td>
+</tr>
+<tr>
+<td><code>resultMapErr</code></td>
+<td><code>(E -&gt; F) -&gt; Result[A][E] -&gt; Result[A][F]</code></td>
+<td>Transform Err value</td>
+</tr>
+<tr>
+<td><code>resultBind</code></td>
+<td><code>Result[A][E] -&gt; (A -&gt; Result[B][E]) -&gt; Result[B][E]</code></td>
+<td>Chain fallible computations</td>
+</tr>
+<tr>
+<td><code>resultFold</code></td>
+<td><code>(A -&gt; C) -&gt; (E -&gt; C) -&gt; Result[A][E] -&gt; C</code></td>
+<td>Fold over both branches</td>
+</tr>
+<tr>
+<td><code>resultOrElse</code></td>
+<td><code>(E -&gt; Result[A][E]) -&gt; Result[A][E] -&gt; Result[A][E]</code></td>
+<td>Recover from Err</td>
+</tr>
+<tr>
+<td><code>resultIsOk</code></td>
+<td><code>Result[A][E] -&gt; Bool</code></td>
+<td>Test for Ok</td>
+</tr>
+<tr>
+<td><code>resultIsErr</code></td>
+<td><code>Result[A][E] -&gt; Bool</code></td>
+<td>Test for Err</td>
+</tr>
+<tr>
+<td><code>resultFromMaybe</code></td>
+<td><code>E -&gt; Maybe[A] -&gt; Result[A][E]</code></td>
+<td>Lift Maybe; use errValue on None</td>
+</tr>
+<tr>
+<td><code>resultToMaybe</code></td>
+<td><code>Result[A][E] -&gt; Maybe[A]</code></td>
+<td>Discard error</td>
+</tr>
+<tr>
+<td><code>resultSequence</code></td>
+<td><code>List[Result[A][E]] -&gt; Result[List[A]][E]</code></td>
+<td>Collect Ok or short-circuit</td>
+</tr>
+<tr>
+<td><code>resultTraverse</code></td>
+<td><code>(A -&gt; Result[B][E]) -&gt; List[A] -&gt; Result[List[B]][E]</code></td>
+<td>Map+sequence</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">Std.Result</span>
+
+<span class="n">failIfZero</span><span class="p">(</span><span class="n">n</span> <span class="n">Int</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">Err</span> <span class="s2">&quot;zero&quot;</span>
+  <span class="k">else</span> <span class="n">Ok</span> <span class="n">n</span>
+
+<span class="n">pipeline</span><span class="p">(</span><span class="n">s</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="n">resultBind</span> <span class="p">(</span><span class="n">resultFromMaybe</span> <span class="s2">&quot;not a number&quot;</span> <span class="p">(</span><span class="n">strToInt</span> <span class="n">s</span><span class="p">))</span> <span class="n">failIfZero</span>
+</code></pre></div>
+
+<hr />
+<h3 id="stdmonad-compact-monadic-adapters"><code>Std.Monad</code> — compact monadic adapters<a class="headerlink" href="#stdmonad-compact-monadic-adapters" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Monad</code><br />
+<strong>Self-tests:</strong> covered via host smoke (<code>StdlibStateParsecTests</code>)<br />
+<strong>Description:</strong> Canonical compact monadic surface for <code>Maybe</code>, <code>Result</code>, and <code>State</code>. Keeps parser/compiler-heavy code short without adding new language features.</p>
+<p><strong>Functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>maybePure</code></td>
+<td><code>A -&gt; Maybe[A]</code></td>
+<td>Maybe constructor via trait</td>
+</tr>
+<tr>
+<td><code>maybeBindM</code></td>
+<td><code>Maybe[A] -&gt; (A -&gt; Maybe[B]) -&gt; Maybe[B]</code></td>
+<td>Maybe bind adapter</td>
+</tr>
+<tr>
+<td><code>maybeMapM</code></td>
+<td><code>Maybe[A] -&gt; (A -&gt; B) -&gt; Maybe[B]</code></td>
+<td>Maybe map adapter</td>
+</tr>
+<tr>
+<td><code>maybeJoinM</code></td>
+<td><code>Maybe[Maybe[A]] -&gt; Maybe[A]</code></td>
+<td>Flatten nested Maybe</td>
+</tr>
+<tr>
+<td><code>maybeThenM</code></td>
+<td><code>Maybe[A] -&gt; Maybe[B] -&gt; Maybe[B]</code></td>
+<td>Sequence and keep RHS</td>
+</tr>
+<tr>
+<td><code>resultPure</code></td>
+<td><code>A -&gt; Result[A][E]</code></td>
+<td>Result constructor adapter</td>
+</tr>
+<tr>
+<td><code>resultBindM</code></td>
+<td><code>Result[A][E] -&gt; (A -&gt; Result[B][E]) -&gt; Result[B][E]</code></td>
+<td>Result bind adapter</td>
+</tr>
+<tr>
+<td><code>resultMapM</code></td>
+<td><code>Result[A][E] -&gt; (A -&gt; B) -&gt; Result[B][E]</code></td>
+<td>Result map adapter</td>
+</tr>
+<tr>
+<td><code>resultJoinM</code></td>
+<td><code>Result[Result[A][E]][E] -&gt; Result[A][E]</code></td>
+<td>Flatten nested Result</td>
+</tr>
+<tr>
+<td><code>resultThenM</code></td>
+<td><code>Result[A][E] -&gt; Result[B][E] -&gt; Result[B][E]</code></td>
+<td>Sequence and keep RHS</td>
+</tr>
+<tr>
+<td><code>statePureM</code></td>
+<td><code>A -&gt; State[S][A]</code></td>
+<td>State constructor adapter</td>
+</tr>
+<tr>
+<td><code>stateBindM</code></td>
+<td><code>State[S][A] -&gt; (A -&gt; State[S][B]) -&gt; State[S][B]</code></td>
+<td>State bind adapter</td>
+</tr>
+<tr>
+<td><code>stateMapM</code></td>
+<td><code>State[S][A] -&gt; (A -&gt; B) -&gt; State[S][B]</code></td>
+<td>State map adapter</td>
+</tr>
+<tr>
+<td><code>stateJoinM</code></td>
+<td><code>State[S][State[S][A]] -&gt; State[S][A]</code></td>
+<td>Flatten nested State</td>
+</tr>
+<tr>
+<td><code>stateThenM</code></td>
+<td><code>State[S][A] -&gt; State[S][B] -&gt; State[S][B]</code></td>
+<td>Sequence and keep RHS</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong></p>
+<p><code>Std.Monad</code> is intentionally adapter-first for current self-hosted typing/runtime stability. Trait-based generic <code>pure</code>/<code>bind</code> dispatch remains tracked in <code>TODO(selfhost:typing)</code> and can be layered back without API break in call sites using these adapters.</p>
+<hr />
+<h3 id="stdlist-extended-list-operations"><code>Std.List</code> — Extended list operations<a class="headerlink" href="#stdlist-extended-list-operations" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.List</code><br />
+<strong>Self-tests:</strong> 16/16<br />
+<strong>Description:</strong> Extended list operations beyond the prelude. Import adds <code>listTake</code>, <code>listDrop</code>, <code>listFlatMap</code>, <code>listAny</code>, <code>listAll</code>, <code>listFind</code>, <code>listFindIndex</code>, and <code>listPartition</code>.</p>
+<p><strong>Functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listTake</code></td>
+<td><code>Int -&gt; List[A] -&gt; List[A]</code></td>
+<td>First N elements</td>
+</tr>
+<tr>
+<td><code>listDrop</code></td>
+<td><code>Int -&gt; List[A] -&gt; List[A]</code></td>
+<td>Skip first N elements</td>
+</tr>
+<tr>
+<td><code>listFlatMap</code></td>
+<td><code>(A -&gt; List[B]) -&gt; List[A] -&gt; List[B]</code></td>
+<td>Map then flatten</td>
+</tr>
+<tr>
+<td><code>listAny</code></td>
+<td><code>(A -&gt; Bool) -&gt; List[A] -&gt; Bool</code></td>
+<td>Any element satisfies predicate</td>
+</tr>
+<tr>
+<td><code>listAll</code></td>
+<td><code>(A -&gt; Bool) -&gt; List[A] -&gt; Bool</code></td>
+<td>All elements satisfy predicate</td>
+</tr>
+<tr>
+<td><code>listFind</code></td>
+<td><code>(A -&gt; Bool) -&gt; List[A] -&gt; Maybe[A]</code></td>
+<td>First matching element</td>
+</tr>
+<tr>
+<td><code>listFindIndex</code></td>
+<td><code>(A -&gt; Bool) -&gt; List[A] -&gt; Maybe[Int]</code></td>
+<td>Index of first match</td>
+</tr>
+<tr>
+<td><code>listPartition</code></td>
+<td><code>(A -&gt; Bool) -&gt; List[A] -&gt; (List[A], List[A])</code></td>
+<td>Split into passing/failing</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdstr-extended-string-operations"><code>Std.Str</code> — Extended string operations<a class="headerlink" href="#stdstr-extended-string-operations" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Str</code><br />
+<strong>Self-tests:</strong> 14/14<br />
+<strong>Description:</strong> String utility functions beyond the prelude. Adds <code>isEmpty</code>, <code>startsWith</code>/<code>endsWith</code>, <code>take</code>/<code>drop</code>, <code>repeat</code>, <code>padLeft</code>/<code>padRight</code>.</p>
+<p><strong>Functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strIsEmpty</code></td>
+<td><code>Str -&gt; Bool</code></td>
+<td>True if length is 0</td>
+</tr>
+<tr>
+<td><code>strStartsWith</code></td>
+<td><code>Str -&gt; Str -&gt; Bool</code></td>
+<td>Prefix test</td>
+</tr>
+<tr>
+<td><code>strEndsWith</code></td>
+<td><code>Str -&gt; Str -&gt; Bool</code></td>
+<td>Suffix test</td>
+</tr>
+<tr>
+<td><code>strTake</code></td>
+<td><code>Int -&gt; Str -&gt; Str</code></td>
+<td>First N characters</td>
+</tr>
+<tr>
+<td><code>strDrop</code></td>
+<td><code>Int -&gt; Str -&gt; Str</code></td>
+<td>Skip first N characters</td>
+</tr>
+<tr>
+<td><code>strRepeat</code></td>
+<td><code>Int -&gt; Str -&gt; Str</code></td>
+<td>Repeat string N times</td>
+</tr>
+<tr>
+<td><code>strPadLeft</code></td>
+<td><code>Int -&gt; Str -&gt; Str -&gt; Str</code></td>
+<td>Left-pad to width with fill</td>
+</tr>
+<tr>
+<td><code>strPadRight</code></td>
+<td><code>Int -&gt; Str -&gt; Str -&gt; Str</code></td>
+<td>Right-pad to width with fill</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdlazy-explicit-laziness"><code>Std.Lazy</code> — Explicit laziness<a class="headerlink" href="#stdlazy-explicit-laziness" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Lazy</code><br />
+<strong>Self-tests:</strong> 6/6<br />
+<strong>Description:</strong> Controlled deferred evaluation for strict language semantics. Models thunks as <code>Int -&gt; A</code> to avoid a dedicated Unit type.</p>
+<p><strong>Type:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">Lazy</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Delayed</span><span class="w"> </span><span class="p">(</span><span class="n">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Ready</span><span class="w"> </span><span class="n">A</span>
+</code></pre></div>
+
+<p><strong>Functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lazyDelay</code></td>
+<td><code>(Int -&gt; A) -&gt; Lazy[A]</code></td>
+<td>Create deferred value</td>
+</tr>
+<tr>
+<td><code>lazyReady</code></td>
+<td><code>A -&gt; Lazy[A]</code></td>
+<td>Already-evaluated value</td>
+</tr>
+<tr>
+<td><code>lazyForce</code></td>
+<td><code>Lazy[A] -&gt; (A, Lazy[A])</code></td>
+<td>Force + memoize</td>
+</tr>
+<tr>
+<td><code>lazyValue</code></td>
+<td><code>Lazy[A] -&gt; A</code></td>
+<td>Force and extract value</td>
+</tr>
+<tr>
+<td><code>lazyMap</code></td>
+<td><code>(A -&gt; B) -&gt; Lazy[A] -&gt; Lazy[B]</code></td>
+<td>Map through deferred value</td>
+</tr>
+<tr>
+<td><code>lazyBind</code></td>
+<td><code>Lazy[A] -&gt; (A -&gt; Lazy[B]) -&gt; Lazy[B]</code></td>
+<td>Compose deferred computations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="category-data-structures">Category: Data Structures<a class="headerlink" href="#category-data-structures" title="Permanent link">&para;</a></h2>
+<h3 id="stdmap-ordered-map-red-black-tree"><code>Std.Map</code> — Ordered map (red-black tree)<a class="headerlink" href="#stdmap-ordered-map-red-black-tree" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Map</code><br />
+<strong>LOC:</strong> 223<br />
+<strong>Description:</strong> Functional ordered map using Okasaki's red-black tree. O(log n) insert, lookup, and delete. Keys are compared via an explicit comparator function, making it usable with any ordered type.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mapEmpty</code></td>
+<td><code>RBMap[K][V]</code></td>
+<td>Empty map value</td>
+</tr>
+<tr>
+<td><code>mapInsert</code></td>
+<td><code>(K -&gt; K -&gt; Int) -&gt; K -&gt; V -&gt; RBMap[K][V] -&gt; RBMap[K][V]</code></td>
+<td>Insert key-value pair</td>
+</tr>
+<tr>
+<td><code>mapLookup</code></td>
+<td><code>(K -&gt; K -&gt; Int) -&gt; K -&gt; RBMap[K][V] -&gt; Maybe[V]</code></td>
+<td>Lookup by key</td>
+</tr>
+<tr>
+<td><code>mapDelete</code></td>
+<td><code>(K -&gt; K -&gt; Int) -&gt; K -&gt; RBMap[K][V] -&gt; RBMap[K][V]</code></td>
+<td>Remove key</td>
+</tr>
+<tr>
+<td><code>mapSize</code></td>
+<td><code>RBMap[K][V] -&gt; Int</code></td>
+<td>Number of entries</td>
+</tr>
+<tr>
+<td><code>mapFold</code></td>
+<td><code>(B -&gt; K -&gt; V -&gt; B) -&gt; B -&gt; RBMap[K][V] -&gt; B</code></td>
+<td>In-order fold</td>
+</tr>
+<tr>
+<td><code>mapKeys</code></td>
+<td><code>RBMap[K][V] -&gt; List[K]</code></td>
+<td>All keys in sorted order</td>
+</tr>
+<tr>
+<td><code>mapValues</code></td>
+<td><code>RBMap[K][V] -&gt; List[V]</code></td>
+<td>All values in key order</td>
+</tr>
+<tr>
+<td><code>mapToList</code></td>
+<td><code>RBMap[K][V] -&gt; List[(K, V)]</code></td>
+<td>All pairs in sorted order</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyApp</span><span class="o">.</span><span class="n">Example</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Map</span>
+
+<span class="o">--</span> <span class="n">String</span> <span class="n">comparator</span> <span class="p">(</span><span class="n">lexicographic</span><span class="p">)</span>
+<span class="n">strCmp</span><span class="p">(</span><span class="n">a</span> <span class="n">Str</span><span class="p">)(</span><span class="n">b</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
+    <span class="o">-</span><span class="mi">1</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>
+    <span class="mi">1</span>
+  <span class="k">else</span> <span class="mi">0</span>
+
+<span class="o">--</span> <span class="n">Build</span> <span class="n">a</span> <span class="nb">map</span>
+<span class="n">scores</span> <span class="o">=</span>
+  <span class="n">mapEmpty</span>
+    <span class="o">-&gt;</span> <span class="n">mapInsert</span> <span class="n">strCmp</span> <span class="s2">&quot;alice&quot;</span> <span class="mi">95</span>
+    <span class="o">-&gt;</span> <span class="n">mapInsert</span> <span class="n">strCmp</span> <span class="s2">&quot;bob&quot;</span> <span class="mi">87</span>
+    <span class="o">-&gt;</span> <span class="n">mapInsert</span> <span class="n">strCmp</span> <span class="s2">&quot;carol&quot;</span> <span class="mi">92</span>
+
+<span class="o">--</span> <span class="n">Lookup</span>
+<span class="n">aliceScore</span> <span class="o">=</span> <span class="n">mapLookup</span> <span class="n">strCmp</span> <span class="s2">&quot;alice&quot;</span> <span class="n">scores</span>  <span class="o">--</span> <span class="n">Some</span> <span class="mi">95</span>
+<span class="n">missing</span>    <span class="o">=</span> <span class="n">mapLookup</span> <span class="n">strCmp</span> <span class="s2">&quot;dave&quot;</span>  <span class="n">scores</span>  <span class="o">--</span> <span class="kc">None</span>
+
+<span class="o">--</span> <span class="n">Iterate</span>
+<span class="n">total</span> <span class="o">=</span> <span class="n">mapFold</span> <span class="p">(</span>\<span class="n">acc</span> <span class="n">_k</span> <span class="n">v</span><span class="o">.</span> <span class="n">acc</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span> <span class="mi">0</span> <span class="n">scores</span>  <span class="o">--</span> <span class="mi">274</span>
+</code></pre></div>
+
+<hr />
+<h2 id="category-parsing-and-config">Category: Parsing and Config<a class="headerlink" href="#category-parsing-and-config" title="Permanent link">&para;</a></h2>
+<h3 id="stdtoml-toml-config-parser"><code>Std.Toml</code> — TOML config parser<a class="headerlink" href="#stdtoml-toml-config-parser" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Toml</code><br />
+<strong>Self-tests:</strong> 5/5<br />
+<strong>Description:</strong> Minimal TOML parser for project manifests. Parses <code>[table]</code> headers, <code>key = "value"</code> string pairs, and <code>key = ["a", "b"]</code> string arrays. Pure functional, no mutable state.</p>
+<p><strong>Types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">Manifest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkManifest</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Str</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Str</span><span class="o">]</span><span class="p">)</span>
+<span class="c1">--                    name version entry deps    platform</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parseManifest</code></td>
+<td><code>Str -&gt; Maybe[Manifest]</code></td>
+<td>Parse TOML string to manifest</td>
+</tr>
+<tr>
+<td><code>manifestName</code></td>
+<td><code>Manifest -&gt; Str</code></td>
+<td>Project name</td>
+</tr>
+<tr>
+<td><code>manifestVersion</code></td>
+<td><code>Manifest -&gt; Str</code></td>
+<td>Project version</td>
+</tr>
+<tr>
+<td><code>manifestDeps</code></td>
+<td><code>Manifest -&gt; List[Str]</code></td>
+<td>Dependency keys (flat list)</td>
+</tr>
+<tr>
+<td><code>manifestPlatform</code></td>
+<td><code>Manifest -&gt; List[Str]</code></td>
+<td>Platform target names</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyApp</span><span class="o">.</span><span class="n">Config</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Toml</span>
+
+<span class="n">loadConfig</span><span class="p">(</span><span class="n">path</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="n">content</span> <span class="o">=</span> <span class="n">readFile</span> <span class="n">path</span>
+  <span class="k">match</span> <span class="n">parseManifest</span> <span class="n">content</span>
+    <span class="o">|</span> <span class="kc">None</span> <span class="o">-&gt;</span> <span class="n">printfn</span> <span class="s2">&quot;invalid config&quot;</span>
+    <span class="o">|</span> <span class="n">Some</span> <span class="n">m</span> <span class="o">-&gt;</span> <span class="n">printfn</span> <span class="p">(</span><span class="n">manifestName</span> <span class="n">m</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<h3 id="stdjson-json-parser-and-serializer"><code>Std.Json</code> — JSON parser and serializer<a class="headerlink" href="#stdjson-json-parser-and-serializer" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Json</code><br />
+<strong>Self-tests:</strong> 12/12<br />
+<strong>Description:</strong> JSON parser and serializer built on <code>Std.Parsec</code> combinators. Supports strict number shape validation, string escapes (<code>\uXXXX</code> + surrogate pairs), deterministic serializer, and structural equality helpers.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parseJson</code></td>
+<td><code>Str -&gt; ParseResult[JsonValue]</code></td>
+<td>Parse JSON text into AST</td>
+</tr>
+<tr>
+<td><code>stringify</code></td>
+<td><code>JsonValue -&gt; Str</code></td>
+<td>Serialize AST back to JSON text</td>
+</tr>
+<tr>
+<td><code>equalJson</code></td>
+<td><code>JsonValue -&gt; JsonValue -&gt; Bool</code></td>
+<td>Structural AST equality</td>
+</tr>
+</tbody>
+</table>
+<p>Backward-compatible aliases are also provided:
+- <code>parse</code> (alias of <code>parseJson</code>)
+- <code>renderJson</code> (alias-compatible implementation for <code>stringify</code>)
+- <code>eqJsonValue</code> (alias-compatible implementation for <code>equalJson</code>)</p>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyApp</span><span class="o">.</span><span class="n">JsonUse</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Json</span>
+
+<span class="n">validateAndRoundtrip</span><span class="p">(</span><span class="n">src</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">parseJson</span> <span class="n">src</span>
+    <span class="o">|</span> <span class="n">ParseErr</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="n">strConcat</span> <span class="s2">&quot;ERR: &quot;</span> <span class="n">e</span>
+    <span class="o">|</span> <span class="n">ParseOk</span> <span class="n">v</span> <span class="n">_</span> <span class="o">-&gt;</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">stringify</span> <span class="n">v</span>
+      <span class="k">match</span> <span class="n">parseJson</span> <span class="n">out</span>
+        <span class="o">|</span> <span class="n">ParseErr</span> <span class="n">e2</span> <span class="o">-&gt;</span> <span class="n">strConcat</span> <span class="s2">&quot;ERR2: &quot;</span> <span class="n">e2</span>
+        <span class="o">|</span> <span class="n">ParseOk</span> <span class="n">v2</span> <span class="n">_</span> <span class="o">-&gt;</span>
+          <span class="k">if</span> <span class="n">equalJson</span> <span class="n">v</span> <span class="n">v2</span>
+            <span class="s2">&quot;OK&quot;</span>
+          <span class="k">else</span> <span class="s2">&quot;MISMATCH&quot;</span>
+</code></pre></div>
+
+<hr />
+<h3 id="stdmcpprotocol-json-rpc-mcp-envelope-helpers"><code>Std.McpProtocol</code> — JSON-RPC / MCP envelope helpers<a class="headerlink" href="#stdmcpprotocol-json-rpc-mcp-envelope-helpers" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.McpProtocol</code><br />
+<strong>Self-tests:</strong> covered via host smoke (<code>StdlibStateParsecTests</code>)<br />
+<strong>Description:</strong> Pure ll-lang encode/decode helpers for MCP/JSON-RPC request, notification, success-response, and error-response envelopes. Built on <code>Std.Json</code>.</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">McpId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">McpIdStr</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">McpIdInt</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">McpIdNull</span>
+<span class="n">McpRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkMcpRequest</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">McpId</span><span class="w"> </span><span class="n">JsonValue</span>
+<span class="n">McpNotification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkMcpNotification</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">JsonValue</span>
+<span class="n">McpSuccessResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkMcpSuccessResponse</span><span class="w"> </span><span class="n">McpId</span><span class="w"> </span><span class="n">JsonValue</span>
+<span class="n">McpErrorObject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkMcpErrorObject</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">Maybe</span><span class="o">[</span><span class="n">JsonValue</span><span class="o">]</span>
+<span class="n">McpErrorResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkMcpErrorResponse</span><span class="w"> </span><span class="n">McpId</span><span class="w"> </span><span class="n">McpErrorObject</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parseRequestJson</code></td>
+<td><code>Str -&gt; Result[McpRequest][Str]</code></td>
+<td>Parse+decode request envelope</td>
+</tr>
+<tr>
+<td><code>parseNotificationJson</code></td>
+<td><code>Str -&gt; Result[McpNotification][Str]</code></td>
+<td>Parse+decode notification envelope</td>
+</tr>
+<tr>
+<td><code>encodeRequest</code></td>
+<td><code>McpRequest -&gt; Str</code></td>
+<td>Serialize request envelope</td>
+</tr>
+<tr>
+<td><code>encodeNotification</code></td>
+<td><code>McpNotification -&gt; Str</code></td>
+<td>Serialize notification envelope</td>
+</tr>
+<tr>
+<td><code>encodeSuccess</code></td>
+<td><code>McpSuccessResponse -&gt; Str</code></td>
+<td>Serialize success response</td>
+</tr>
+<tr>
+<td><code>encodeError</code></td>
+<td><code>McpErrorResponse -&gt; Str</code></td>
+<td>Serialize error response</td>
+</tr>
+</tbody>
+</table>
+<p><code>Std.McpProtocol</code> is intentionally transport-agnostic; stdio process lifecycle and tool dispatch remain in host tooling.</p>
+<hr />
+<h3 id="stdreverse-self-host-reverse-foundation"><code>Std.Reverse</code> — self-host reverse foundation<a class="headerlink" href="#stdreverse-self-host-reverse-foundation" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Reverse</code><br />
+<strong>Self-tests:</strong> covered via host smoke (<code>StdlibStateParsecTests</code>)<br />
+<strong>Description:</strong> Minimal reverse-transpiling substrate implemented in ll-lang. Current stable slice recovers module/<code>let</code> declarations from F# output; other targets return explicit upgrade marker.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reverseToLll</code></td>
+<td><code>Str -&gt; Str -&gt; Str</code></td>
+<td>Reverse source for target alias (<code>fs</code>, <code>fsharp</code>, <code>f#</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>For <code>fs</code>/<code>fsharp</code>/<code>f#</code>: extracts <code>module ...</code> and simple <code>let</code>/<code>let rec</code> declarations.</li>
+<li>For non-F# targets: returns a deterministic placeholder with <code>TODO(selfhost:backend)</code> marker.</li>
+</ul>
+<p>This module is intentionally foundation-only in this pass; broader target parity remains tracked under <code>selfhost:backend</code>.</p>
+<hr />
+<h3 id="stdstate-stateful-computation-primitives"><code>Std.State</code> — stateful computation primitives<a class="headerlink" href="#stdstate-stateful-computation-primitives" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.State</code><br />
+<strong>Self-tests:</strong> 7/7<br />
+<strong>Description:</strong> Concrete state monad foundation for self-hosted compiler passes and imperative-style pipelines via <code>stateBind</code>.</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">StateUnit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StateUnit</span>
+<span class="n">StatePair</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkStatePair</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">S</span>
+<span class="k">State</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkState</span><span class="w"> </span><span class="p">(</span><span class="n">S</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">StatePair</span><span class="o">[</span><span class="n">A</span><span class="o">][</span><span class="n">S</span><span class="o">]</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stateRun</code></td>
+<td><code>State[S][A] -&gt; S -&gt; StatePair[A][S]</code></td>
+<td>Run stateful computation</td>
+</tr>
+<tr>
+<td><code>stateEval</code></td>
+<td><code>State[S][A] -&gt; S -&gt; A</code></td>
+<td>Extract result value</td>
+</tr>
+<tr>
+<td><code>stateExec</code></td>
+<td><code>State[S][A] -&gt; S -&gt; S</code></td>
+<td>Extract final state</td>
+</tr>
+<tr>
+<td><code>statePure</code></td>
+<td><code>A -&gt; State[S][A]</code></td>
+<td>Lift pure value</td>
+</tr>
+<tr>
+<td><code>stateMap</code></td>
+<td><code>(A -&gt; B) -&gt; State[S][A] -&gt; State[S][B]</code></td>
+<td>Map over result</td>
+</tr>
+<tr>
+<td><code>stateBind</code></td>
+<td><code>State[S][A] -&gt; (A -&gt; State[S][B]) -&gt; State[S][B]</code></td>
+<td>Sequence computations</td>
+</tr>
+<tr>
+<td><code>stateGet</code></td>
+<td><code>S -&gt; State[S][S]</code></td>
+<td>Read state (seed argument pins <code>S</code> in current compiler)</td>
+</tr>
+<tr>
+<td><code>statePut</code></td>
+<td><code>S -&gt; State[S][StateUnit]</code></td>
+<td>Replace state</td>
+</tr>
+<tr>
+<td><code>stateModify</code></td>
+<td><code>(S -&gt; S) -&gt; State[S][StateUnit]</code></td>
+<td>Transform state</td>
+</tr>
+</tbody>
+</table>
+<p><code>stateGet</code> is temporarily argument-based due current top-level polymorphic value inference limits; once zero-arg polymorphic values are stabilized it can be reduced to a plain <code>State[S][S]</code> value.</p>
+<hr />
+<h3 id="stdtest-unit-test-harness"><code>Std.Test</code> — unit test harness<a class="headerlink" href="#stdtest-unit-test-harness" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Test</code><br />
+<strong>Self-tests:</strong> 8 (4 pass + 4 intentional fails exercising the harness itself)<br />
+<strong>Description:</strong> Lightweight test harness for ll-lang modules. Collects <code>TestResult</code> values, prints OK/FAIL lines, and returns a failure count. Intended for module self-tests reachable via <code>lllc run</code>.</p>
+<p><strong>Type:</strong></p>
+<div class="codehilite"><pre><span></span><code>TestResult = Pass Str | Fail Str
+</code></pre></div>
+
+<p><strong>Functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>assertTrue</code></td>
+<td><code>Str -&gt; Bool -&gt; TestResult</code></td>
+<td>Pass iff condition is true</td>
+</tr>
+<tr>
+<td><code>assertEqInt</code></td>
+<td><code>Str -&gt; Int -&gt; Int -&gt; TestResult</code></td>
+<td>Pass iff ints match</td>
+</tr>
+<tr>
+<td><code>assertEqStr</code></td>
+<td><code>Str -&gt; Str -&gt; Str -&gt; TestResult</code></td>
+<td>Pass iff strings match</td>
+</tr>
+<tr>
+<td><code>assertEqBool</code></td>
+<td><code>Str -&gt; Bool -&gt; Bool -&gt; TestResult</code></td>
+<td>Pass iff bools match</td>
+</tr>
+<tr>
+<td><code>renderResult</code></td>
+<td><code>TestResult -&gt; Str</code></td>
+<td>Format OK/FAIL line</td>
+</tr>
+<tr>
+<td><code>run</code></td>
+<td><code>List[TestResult] -&gt; Int</code></td>
+<td>Print all results; return fail count</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyModule</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Test</span>
+
+<span class="n">main</span> <span class="o">=</span>
+  <span class="n">failCount</span> <span class="o">=</span> <span class="n">run</span>
+    <span class="p">[</span> <span class="n">assertEqInt</span> <span class="s2">&quot;add&quot;</span> <span class="mi">5</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">;</span> <span class="n">assertEqStr</span> <span class="s2">&quot;hello&quot;</span> <span class="s2">&quot;hello&quot;</span> <span class="s2">&quot;hello&quot;</span>
+    <span class="p">;</span> <span class="n">assertTrue</span> <span class="s2">&quot;positive&quot;</span> <span class="p">(</span><span class="mi">3</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">]</span>
+  <span class="n">printfn</span> <span class="p">(</span><span class="n">strConcat</span> <span class="s2">&quot;Done failCount=&quot;</span> <span class="p">(</span><span class="n">intToStr</span> <span class="n">failCount</span><span class="p">))</span>
+</code></pre></div>
+
+<hr />
+<h3 id="stdparsec-parser-combinator-toolkit"><code>Std.Parsec</code> — parser combinator toolkit<a class="headerlink" href="#stdparsec-parser-combinator-toolkit" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Parsec</code><br />
+<strong>Self-tests:</strong> 12/12<br />
+<strong>Description:</strong> Reusable parser-combinator substrate for self-hosted parsing tasks. Works over source text with explicit position tracking and backtracking control.</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">ParsePos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkParsePos</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="nc">Int</span>
+<span class="n">ParseState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkParseState</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">Char</span><span class="o">]</span><span class="w"> </span><span class="n">ParsePos</span>
+<span class="n">ParseError</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkParseError</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">ParsePos</span>
+<span class="n">Parser</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkParser</span><span class="w"> </span><span class="p">(</span><span class="n">ParseState</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ParseStep</span><span class="o">[</span><span class="n">A</span><span class="o">]</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Core functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>runParser</code></td>
+<td>Run parser on <code>Str</code> and return <code>Result</code></td>
+</tr>
+<tr>
+<td><code>parsePure</code> / <code>parseMap</code> / <code>parseBind</code></td>
+<td>Core combinators</td>
+</tr>
+<tr>
+<td><code>parseOrElse</code> / <code>parseTry</code></td>
+<td>Choice + controlled rollback</td>
+</tr>
+<tr>
+<td><code>parseLabel</code> / <code>parseFail</code></td>
+<td>Diagnostics helpers</td>
+</tr>
+<tr>
+<td><code>parseSatisfy</code> / <code>parseChar</code> / <code>parseString</code></td>
+<td>Primitive token parsers</td>
+</tr>
+<tr>
+<td><code>parseOneOf</code> / <code>parseNoneOf</code> / <code>parsePeekChar</code> / <code>parseAnyChar</code> / <code>parseEof</code></td>
+<td>Character/EOF parsers</td>
+</tr>
+<tr>
+<td><code>parseMany</code> / <code>parseMany1</code> / <code>parseOptional</code> / <code>parseSepBy</code> / <code>parseSepBy1</code> / <code>parseBetween</code></td>
+<td>Structural combinators</td>
+</tr>
+<tr>
+<td><code>parseWhitespace</code> / <code>parseSpaces</code> / <code>parseDigit</code> / <code>parseInt</code> / <code>parseQuotedString</code></td>
+<td>Common building blocks</td>
+</tr>
+</tbody>
+</table>
+<p><code>Std.Json</code> uses <code>Std.Parsec</code> as its parser backend.</p>
+<p>Combinator pipelines can use either parenthesized lambdas or trailing lambda sugar:</p>
+<div class="codehilite"><pre><span></span><code>parseBind parseInt \n.
+  parsePure (n + 1)
+</code></pre></div>
+
+<hr />
+<h3 id="stdlazy-explicit-laziness-on-top-of-strict-evaluation"><code>Std.Lazy</code> — explicit laziness on top of strict evaluation<a class="headerlink" href="#stdlazy-explicit-laziness-on-top-of-strict-evaluation" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Lazy</code><br />
+<strong>Description:</strong> Controlled delayed evaluation for expensive or recursive computations without changing strict language semantics.</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">Lazy</span><span class="o">[</span><span class="n">A</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Delayed</span><span class="w"> </span><span class="p">(</span><span class="nc">Int</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Ready</span><span class="w"> </span><span class="n">A</span>
+</code></pre></div>
+
+<p><strong>Core functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lazyDelay</code></td>
+<td><code>(Int -&gt; A) -&gt; Lazy[A]</code></td>
+<td>Create delayed value</td>
+</tr>
+<tr>
+<td><code>lazyReady</code></td>
+<td><code>A -&gt; Lazy[A]</code></td>
+<td>Create already-forced value</td>
+</tr>
+<tr>
+<td><code>lazyForce</code></td>
+<td><code>Lazy[A] -&gt; (A, Lazy[A])</code></td>
+<td>Force and return memoized node</td>
+</tr>
+<tr>
+<td><code>lazyValue</code></td>
+<td><code>Lazy[A] -&gt; A</code></td>
+<td>Force and return value only</td>
+</tr>
+<tr>
+<td><code>lazyMap</code></td>
+<td><code>(A -&gt; B) -&gt; Lazy[A] -&gt; Lazy[B]</code></td>
+<td>Map through delayed value</td>
+</tr>
+<tr>
+<td><code>lazyBind</code></td>
+<td><code>Lazy[A] -&gt; (A -&gt; Lazy[B]) -&gt; Lazy[B]</code></td>
+<td>Compose delayed computations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdlexer-ll-lang-tokenizer"><code>Std.Lexer</code> — ll-lang tokenizer<a class="headerlink" href="#stdlexer-ll-lang-tokenizer" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Lexer</code><br />
+<strong>LOC:</strong> 473<br />
+<strong>Description:</strong> Standalone ll-lang lexer written in ll-lang. Tokenizes ll-lang source to a flat <code>List[Token]</code>. Recognizes all language keywords, identifiers (by case), literals, and operators.</p>
+<p><strong>Token type (selected constructors):</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">Token</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">KwIf</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwElse</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwMatch</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwTrait</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwImpl</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">KwImport</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwExport</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwModule</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwTag</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">KwUnit</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Ident</span><span class="w"> </span><span class="n">Str</span><span class="w">      </span><span class="o">--</span><span class="w"> </span><span class="n">lowercase</span><span class="w"> </span><span class="n">identifier</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TypeId</span><span class="w"> </span><span class="n">Str</span><span class="w">     </span><span class="o">--</span><span class="w"> </span><span class="n">uppercase</span><span class="w"> </span><span class="n">identifier</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">constructor</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">IntLit</span><span class="w"> </span><span class="n">Int</span><span class="w">     </span><span class="o">|</span><span class="w"> </span><span class="n">FloatLit</span><span class="w"> </span><span class="n">Str</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">StrLit</span><span class="w"> </span><span class="n">Str</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">CharLit</span><span class="w"> </span><span class="n">Char</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Arrow</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Eq</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Bar</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">LBrack</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">RBrack</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">LParen</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">RParen</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Plus</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Minus</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Star</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Slash</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">Newline</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Indent</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Dedent</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Eof</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tokenize</code></td>
+<td><code>Str -&gt; List[Token]</code></td>
+<td>Lex a source string to token list</td>
+</tr>
+<tr>
+<td><code>tokenToStr</code></td>
+<td><code>Token -&gt; Str</code></td>
+<td>Debug representation of a token</td>
+</tr>
+<tr>
+<td><code>isKeyword</code></td>
+<td><code>Token -&gt; Bool</code></td>
+<td>Test for keyword token</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyApp</span><span class="o">.</span><span class="n">Analyze</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Lexer</span>
+
+<span class="n">countIdents</span><span class="p">(</span><span class="n">src</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenize</span> <span class="n">src</span>
+  <span class="n">listLen</span> <span class="p">(</span><span class="n">listFilter</span> <span class="p">(</span>\<span class="n">t</span><span class="o">.</span> <span class="n">match</span> <span class="n">t</span> <span class="o">|</span> <span class="n">Ident</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="n">true</span> <span class="o">|</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">)</span> <span class="n">tokens</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<h3 id="stdparser-ll-lang-recursive-descent-parser"><code>Std.Parser</code> — ll-lang recursive-descent parser<a class="headerlink" href="#stdparser-ll-lang-recursive-descent-parser" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Parser</code><br />
+<strong>LOC:</strong> 802<br />
+<strong>Description:</strong> Recursive-descent parser consuming a <code>List[Token]</code> from <code>Std.Lexer</code> and producing an AST. Return convention: every parse function returns <code>(result, remainingTokens)</code>.</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">Expr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">EInt</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">EStr</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">EBool</span><span class="w"> </span><span class="n">Bool</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">EVar</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">ECon</span><span class="w"> </span><span class="nf">Str</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">EApp</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">ELam</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">EIf</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="n">Expr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">EMatch</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Pattern</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Expr</span><span class="o">]</span><span class="p">)</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">ELet</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">EBinOp</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="n">Expr</span>
+
+<span class="n">Decl</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">DFn</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">(Str, TypeExpr)</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Maybe</span><span class="o">[</span><span class="n">TypeExpr</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">Expr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">DType</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Str</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">(Str, List[TypeExpr</span><span class="o">]</span><span class="p">)</span><span class="err">]</span><span class="p">)</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">DTag</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">DImport</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">DExport</span><span class="w"> </span><span class="n">Decl</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parseModule</code></td>
+<td><code>List[Token] -&gt; Maybe[LLModule]</code></td>
+<td>Parse full module from tokens</td>
+</tr>
+<tr>
+<td><code>parseExpr</code></td>
+<td><code>List[Token] -&gt; Maybe[(Expr, List[Token])]</code></td>
+<td>Parse a single expression</td>
+</tr>
+<tr>
+<td><code>parseDecl</code></td>
+<td><code>List[Token] -&gt; Maybe[(Decl, List[Token])]</code></td>
+<td>Parse a single declaration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyApp</span><span class="o">.</span><span class="n">Parse</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Lexer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Parser</span>
+
+<span class="n">parseSource</span><span class="p">(</span><span class="n">src</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenize</span> <span class="n">src</span>
+  <span class="k">match</span> <span class="n">parseModule</span> <span class="n">tokens</span>
+    <span class="o">|</span> <span class="kc">None</span> <span class="o">-&gt;</span> <span class="n">printfn</span> <span class="s2">&quot;parse error&quot;</span>
+    <span class="o">|</span> <span class="n">Some</span> <span class="n">m</span> <span class="o">-&gt;</span> <span class="n">printfn</span> <span class="s2">&quot;ok&quot;</span>
+</code></pre></div>
+
+<hr />
+<h2 id="category-code-generation">Category: Code Generation<a class="headerlink" href="#category-code-generation" title="Permanent link">&para;</a></h2>
+<h3 id="stdelaborator-name-resolver-type-checker"><code>Std.Elaborator</code> — name resolver / type checker<a class="headerlink" href="#stdelaborator-name-resolver-type-checker" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Elaborator</code><br />
+<strong>LOC:</strong> 344<br />
+<strong>Description:</strong> Simplified elaborator pass operating on the AST from <code>Std.Parser</code>. Performs name resolution: detects unbound variables, unbound constructors, and duplicate declarations. Produces an enriched AST or a list of error messages.</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">ElabError</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">UnboundVar</span><span class="w"> </span><span class="nf">Str</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">UnboundCon</span><span class="w"> </span><span class="nf">Str</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">DuplicateDecl</span><span class="w"> </span><span class="nf">Str</span>
+
+<span class="n">ElabResult</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ElabOk</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">ElabErr</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">ElabError</span><span class="o">]</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>elaborate</code></td>
+<td><code>LLModule -&gt; ElabResult[LLModule]</code></td>
+<td>Check a module for binding errors</td>
+</tr>
+<tr>
+<td><code>collectDecls</code></td>
+<td><code>LLModule -&gt; Env</code></td>
+<td>Build environment from module decls</td>
+</tr>
+<tr>
+<td><code>checkExpr</code></td>
+<td><code>Env -&gt; Expr -&gt; List[ElabError]</code></td>
+<td>Check an expression</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdcodegen-f-code-emitter"><code>Std.Codegen</code> — F# code emitter<a class="headerlink" href="#stdcodegen-f-code-emitter" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Codegen</code><br />
+<strong>LOC:</strong> 569<br />
+<strong>Description:</strong> F# source emitter written in ll-lang. Takes the AST from <code>Std.Parser</code> and emits idiomatic F# source. This is the self-hosted reference implementation of the F# backend.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emitModule</code></td>
+<td><code>LLModule -&gt; Str</code></td>
+<td>Emit entire module as F# source</td>
+</tr>
+<tr>
+<td><code>emitDecl</code></td>
+<td><code>Decl -&gt; Str</code></td>
+<td>Emit one declaration</td>
+</tr>
+<tr>
+<td><code>emitExpr</code></td>
+<td><code>Expr -&gt; Int -&gt; Str</code></td>
+<td>Emit expression (indent level)</td>
+</tr>
+<tr>
+<td><code>emitType</code></td>
+<td><code>TypeExpr -&gt; Str</code></td>
+<td>Emit type annotation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyApp</span><span class="o">.</span><span class="n">Transpile</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Lexer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Parser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Codegen</span>
+
+<span class="n">transpileToFSharp</span><span class="p">(</span><span class="n">src</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenize</span> <span class="n">src</span>
+  <span class="k">match</span> <span class="n">parseModule</span> <span class="n">tokens</span>
+    <span class="o">|</span> <span class="kc">None</span> <span class="o">-&gt;</span> <span class="n">Err</span> <span class="s2">&quot;parse error&quot;</span>
+    <span class="o">|</span> <span class="n">Some</span> <span class="n">m</span> <span class="o">-&gt;</span> <span class="n">Ok</span> <span class="p">(</span><span class="n">emitModule</span> <span class="n">m</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<h3 id="stdcodegents-typescript-emitter"><code>Std.CodegenTS</code> — TypeScript emitter<a class="headerlink" href="#stdcodegents-typescript-emitter" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.CodegenTS</code><br />
+<strong>LOC:</strong> 492<br />
+<strong>Description:</strong> TypeScript source emitter written in ll-lang. Emits TypeScript sealed interfaces for ADTs, <code>readonly</code> records, and typed functions.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emitModule</code></td>
+<td><code>LLModule -&gt; Str</code></td>
+<td>Emit module as TypeScript source</td>
+</tr>
+<tr>
+<td><code>emitDecl</code></td>
+<td><code>Decl -&gt; Str</code></td>
+<td>Emit one declaration</td>
+</tr>
+<tr>
+<td><code>emitType</code></td>
+<td><code>TypeExpr -&gt; Str</code></td>
+<td>Emit TypeScript type annotation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdcodegenpy-python-emitter"><code>Std.CodegenPy</code> — Python emitter<a class="headerlink" href="#stdcodegenpy-python-emitter" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.CodegenPy</code><br />
+<strong>LOC:</strong> 501<br />
+<strong>Description:</strong> Python source emitter. Emits <code>@dataclass</code> classes, <code>Union</code> types from <code>typing</code>, and module-level functions.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emitModule</code></td>
+<td><code>LLModule -&gt; Str</code></td>
+<td>Emit module as Python source</td>
+</tr>
+<tr>
+<td><code>emitDecl</code></td>
+<td><code>Decl -&gt; Str</code></td>
+<td>Emit one declaration</td>
+</tr>
+<tr>
+<td><code>emitType</code></td>
+<td><code>TypeExpr -&gt; Str</code></td>
+<td>Emit Python type annotation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdcodegenjava-java-21-emitter"><code>Std.CodegenJava</code> — Java 21 emitter<a class="headerlink" href="#stdcodegenjava-java-21-emitter" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.CodegenJava</code><br />
+<strong>LOC:</strong> 633<br />
+<strong>Description:</strong> Java 21 source emitter. Emits <code>sealed interface</code> + <code>record</code> hierarchies for ADTs, static methods for functions.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emitModule</code></td>
+<td><code>LLModule -&gt; Str</code></td>
+<td>Emit module as Java source</td>
+</tr>
+<tr>
+<td><code>emitDecl</code></td>
+<td><code>Decl -&gt; Str</code></td>
+<td>Emit one declaration</td>
+</tr>
+<tr>
+<td><code>emitType</code></td>
+<td><code>TypeExpr -&gt; Str</code></td>
+<td>Emit Java type annotation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdcodegencsharp-c-emitter"><code>Std.CodegenCSharp</code> — C# emitter<a class="headerlink" href="#stdcodegencsharp-c-emitter" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.CodegenCSharp</code><br />
+<strong>LOC:</strong> 548<br />
+<strong>Description:</strong> C# source emitter. Emits <code>sealed record</code>/<code>interface</code> hierarchies for ADTs, static methods for functions, wrapped IIFE style for <code>let</code>-bindings.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emitModule</code></td>
+<td><code>LLModule -&gt; Str</code></td>
+<td>Emit module as C# source</td>
+</tr>
+<tr>
+<td><code>emitDecl</code></td>
+<td><code>Decl -&gt; Str</code></td>
+<td>Emit one declaration</td>
+</tr>
+<tr>
+<td><code>emitType</code></td>
+<td><code>TypeExpr -&gt; Str</code></td>
+<td>Emit C# type annotation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdcompilertypes-hm-type-representations"><code>Std.CompilerTypes</code> — HM type representations<a class="headerlink" href="#stdcompilertypes-hm-type-representations" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.CompilerTypes</code><br />
+<strong>LOC:</strong> 336<br />
+<strong>Description:</strong> Hindley-Milner type representations for the v2 self-hosted compiler. Provides <code>Scheme</code>, substitution helpers (<code>RBMap[Str][TypeExpr]</code>), free-type-variable utilities, fresh variable generation, unification (<code>unify</code>), and <code>generalize</code>/<code>instantiate</code>. Canonical home for all type-level machinery shared across compiler passes.</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- Flex (unification) vars: TyName &quot;$0&quot;, TyName &quot;$1&quot;, ...</span>
+<span class="c1">-- Rigid type vars: TyName &quot;a&quot;, TyName &quot;b&quot;, ...</span>
+<span class="c1">-- Type names: TyName &quot;Int&quot;, TyName &quot;Maybe&quot;, ...</span>
+
+<span class="n">Scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkScheme</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Str</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">TypeExpr</span>
+
+<span class="n">InferResult</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InferOk</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">InferErr</span><span class="w"> </span><span class="nf">Str</span>
+
+<span class="n">Fresh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkFresh</span><span class="w"> </span><span class="nc">Int</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isFlex</code></td>
+<td><code>Str -&gt; Bool</code></td>
+<td>True if name starts with <code>$</code></td>
+</tr>
+<tr>
+<td><code>freshVarName</code></td>
+<td><code>Int -&gt; Str</code></td>
+<td><code>"$N"</code></td>
+</tr>
+<tr>
+<td><code>freshNext</code></td>
+<td><code>Fresh -&gt; (TypeExpr, Fresh)</code></td>
+<td>Allocate next flex var</td>
+</tr>
+<tr>
+<td><code>generalize</code></td>
+<td><code>RBMap[Str][Scheme] -&gt; TypeExpr -&gt; Scheme</code></td>
+<td>Generalize over free flex vars</td>
+</tr>
+<tr>
+<td><code>instantiate</code></td>
+<td><code>Fresh -&gt; Scheme -&gt; (TypeExpr, Fresh)</code></td>
+<td>Replace quantified vars with fresh flex vars</td>
+</tr>
+<tr>
+<td><code>unify</code></td>
+<td><code>TypeExpr -&gt; TypeExpr -&gt; InferResult[RBMap[Str][TypeExpr]]</code></td>
+<td>Algorithm W unification with occurs check</td>
+</tr>
+<tr>
+<td><code>applyType</code></td>
+<td><code>RBMap[Str][TypeExpr] -&gt; TypeExpr -&gt; TypeExpr</code></td>
+<td>Apply substitution to a type</td>
+</tr>
+<tr>
+<td><code>substCompose</code></td>
+<td><code>Subst -&gt; Subst -&gt; Subst</code></td>
+<td>Compose substitutions (s1 after s2)</td>
+</tr>
+<tr>
+<td><code>renderType</code></td>
+<td><code>TypeExpr -&gt; Str</code></td>
+<td>Pretty-print a type for error messages</td>
+</tr>
+<tr>
+<td><code>ftvTypeList</code></td>
+<td><code>TypeExpr -&gt; List[Str]</code></td>
+<td>Free flex vars in a type</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdcompilertyped-typed-ir-shapes"><code>Std.CompilerTyped</code> — typed IR shapes<a class="headerlink" href="#stdcompilertyped-typed-ir-shapes" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.CompilerTyped</code><br />
+<strong>LOC:</strong> 206<br />
+<strong>Description:</strong> Typed intermediate representation (IR) for the v2 self-hosted compiler. Defines <code>TypedExpr</code>, <code>TypedPattern</code>, <code>TypedFnSig</code>, <code>TypedDecl</code>, and <code>TypedModule</code>. These are the output shapes produced by <code>Std.CompilerInfer</code> and consumed by lowering and backend passes. Flat sum-type design avoids mutual-recursion constraints.</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- Pattern with resolved type</span>
+<span class="n">TypedPattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkTypedPat</span><span class="w"> </span><span class="n">Pattern</span><span class="w"> </span><span class="n">TypeExpr</span>
+
+<span class="c1">-- Expression nodes (last arg is always the expression&#39;s TypeExpr)</span>
+<span class="n">TypedExpr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TEInt</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TEStr</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TEBool</span><span class="w"> </span><span class="n">Bool</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TEVar</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TECon</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TEApp</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TELam</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">TypeExpr</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TeLet</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TEIf</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TEMatch</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">TypedPattern</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">TypedExpr</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TEBinOp</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypedExpr</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">...</span>
+
+<span class="n">TypedDecl</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TDFn</span><span class="w"> </span><span class="n">TypedFnSig</span><span class="w"> </span><span class="n">Scheme</span><span class="w"> </span><span class="n">TypedExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TDLet</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">Scheme</span><span class="w"> </span><span class="n">TypedExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">TDType</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Str</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Constructor</span><span class="o">]</span><span class="p">)</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">...</span>
+
+<span class="n">TypedModule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkTypedModule</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Str</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">TypedDecl</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">RBMap</span><span class="o">[</span><span class="n">Str</span><span class="o">][</span><span class="n">Scheme</span><span class="o">]</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>typedExprType</code></td>
+<td><code>TypedExpr -&gt; TypeExpr</code></td>
+<td>Extract type from any node</td>
+</tr>
+<tr>
+<td><code>typedPatType</code></td>
+<td><code>TypedPattern -&gt; TypeExpr</code></td>
+<td>Extract type from pattern</td>
+</tr>
+<tr>
+<td><code>typedFnName</code></td>
+<td><code>TypedFnSig -&gt; Str</code></td>
+<td>Function name</td>
+</tr>
+<tr>
+<td><code>typedModDecls</code></td>
+<td><code>TypedModule -&gt; List[TypedDecl]</code></td>
+<td>Module declarations</td>
+</tr>
+<tr>
+<td><code>renderTypedExprTag</code></td>
+<td><code>TypedExpr -&gt; Str</code></td>
+<td>Tag name for debugging</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdcompilerinfer-hm-algorithm-w-inference"><code>Std.CompilerInfer</code> — HM Algorithm W inference<a class="headerlink" href="#stdcompilerinfer-hm-algorithm-w-inference" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.CompilerInfer</code><br />
+<strong>LOC:</strong> 471<br />
+<strong>Description:</strong> Hindley-Milner Algorithm W type inference for the v2 self-hosted compiler. Builds on <code>Std.CompilerTypes</code>. Provides <code>InferState</code> threading, a prelude base environment, and <code>inferExpr</code> / <code>inferDecl</code> / <code>inferModule</code> for inferring types over the <code>Expr</code>/<code>Decl</code> AST from <code>Std.Parser</code>.</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- (env, fresh counter, error list, accumulated substitution)</span>
+<span class="n">InferState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkInferState</span>
+<span class="w">  </span><span class="p">(</span><span class="n">RBMap</span><span class="o">[</span><span class="n">Str</span><span class="o">][</span><span class="n">Scheme</span><span class="o">]</span><span class="p">)</span><span class="w">      </span><span class="c1">-- type environment</span>
+<span class="w">  </span><span class="n">Fresh</span><span class="w">                      </span><span class="c1">-- fresh variable counter</span>
+<span class="w">  </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Str</span><span class="o">]</span><span class="p">)</span><span class="w">                </span><span class="c1">-- accumulated errors</span>
+<span class="w">  </span><span class="p">(</span><span class="n">RBMap</span><span class="o">[</span><span class="n">Str</span><span class="o">][</span><span class="n">TypeExpr</span><span class="o">]</span><span class="p">)</span><span class="w">     </span><span class="c1">-- accumulated substitution</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>inferExpr</code></td>
+<td><code>InferState -&gt; Expr -&gt; (TypeExpr, InferState)</code></td>
+<td>Infer type of an expression</td>
+</tr>
+<tr>
+<td><code>inferDecl</code></td>
+<td><code>InferState -&gt; Decl -&gt; InferState</code></td>
+<td>Elaborate one declaration into the env</td>
+</tr>
+<tr>
+<td><code>inferModule</code></td>
+<td><code>List[Decl] -&gt; List[Str]</code></td>
+<td>Infer a whole module; return errors</td>
+</tr>
+<tr>
+<td><code>baseEnv</code></td>
+<td><code>() -&gt; RBMap[Str][Scheme]</code></td>
+<td>Prelude: arithmetic, comparison, <code>printfn</code>, etc.</td>
+</tr>
+<tr>
+<td><code>inferUnify</code></td>
+<td><code>InferState -&gt; TypeExpr -&gt; TypeExpr -&gt; Str -&gt; InferState</code></td>
+<td>Unify two types, compose substitution</td>
+</tr>
+<tr>
+<td><code>inferFreshVar</code></td>
+<td><code>InferState -&gt; (TypeExpr, InferState)</code></td>
+<td>Allocate a fresh flex var</td>
+</tr>
+<tr>
+<td><code>inferInstantiate</code></td>
+<td><code>InferState -&gt; Scheme -&gt; (TypeExpr, InferState)</code></td>
+<td>Instantiate a scheme</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyApp</span><span class="o">.</span><span class="n">Check</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Parser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.CompilerInfer</span>
+
+<span class="n">checkSource</span><span class="p">(</span><span class="n">src</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenize</span> <span class="n">src</span>
+  <span class="k">match</span> <span class="n">parseModule</span> <span class="n">tokens</span>
+    <span class="o">|</span> <span class="kc">None</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="s2">&quot;parse error&quot;</span><span class="p">]</span>
+    <span class="o">|</span> <span class="n">Some</span> <span class="n">m</span> <span class="o">-&gt;</span>
+      <span class="n">inferModule</span> <span class="n">m</span><span class="o">.</span><span class="n">decls</span>
+</code></pre></div>
+
+<hr />
+<h3 id="stdcompilerlower-backend-neutral-lowering-pass"><code>Std.CompilerLower</code> — backend-neutral lowering pass<a class="headerlink" href="#stdcompilerlower-backend-neutral-lowering-pass" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.CompilerLower</code><br />
+<strong>LOC:</strong> 296<br />
+<strong>Description:</strong> Lowering pass for the v2 self-hosted compiler. Takes a <code>TypedModule</code> (from <code>Std.CompilerTyped</code>) and produces a <code>LowModule</code> — a backend-neutral lowered IR. Primary active transformation: <code>TEBinOp</code> desugaring into curried <code>LApp</code> chains. Match/lambda lowering is architecture-complete but semantically stubbed (issue #48).</p>
+<p><strong>Key types:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">LowExpr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LInt</span><span class="w"> </span><span class="nc">Int</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LStr</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LVar</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LApp</span><span class="w"> </span><span class="n">LowExpr</span><span class="w"> </span><span class="n">LowExpr</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LLam</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">TypeExpr</span><span class="w"> </span><span class="n">LowExpr</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LLet</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">LowExpr</span><span class="w"> </span><span class="n">LowExpr</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LIf</span><span class="w"> </span><span class="n">LowExpr</span><span class="w"> </span><span class="n">LowExpr</span><span class="w"> </span><span class="n">LowExpr</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LMatch</span><span class="w"> </span><span class="n">LowExpr</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">TypedPattern</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">LowExpr</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">TypeExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">...</span>
+
+<span class="n">LowDecl</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LDFn</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Param</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">TypeExpr</span><span class="w"> </span><span class="n">Scheme</span><span class="w"> </span><span class="n">LowExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="n">LDLet</span><span class="w"> </span><span class="nf">Str</span><span class="w"> </span><span class="n">Scheme</span><span class="w"> </span><span class="n">LowExpr</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="p">...</span>
+
+<span class="n">LowModule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MkLowModule</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">Str</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="o">[</span><span class="n">LowDecl</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">RBMap</span><span class="o">[</span><span class="n">Str</span><span class="o">][</span><span class="n">Scheme</span><span class="o">]</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lowerModule</code></td>
+<td><code>TypedModule -&gt; LowModule</code></td>
+<td>Lower entire typed module</td>
+</tr>
+<tr>
+<td><code>lowerExpr</code></td>
+<td><code>LowState -&gt; TypedExpr -&gt; (LowExpr, LowState)</code></td>
+<td>Lower one typed expression</td>
+</tr>
+<tr>
+<td><code>lowerDecl</code></td>
+<td><code>LowState -&gt; TypedDecl -&gt; (LowDecl, LowState)</code></td>
+<td>Lower one typed declaration</td>
+</tr>
+<tr>
+<td><code>lowExprType</code></td>
+<td><code>LowExpr -&gt; TypeExpr</code></td>
+<td>Extract type from a lowered expression</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="stdcompiler-full-pipeline-source-f"><code>Std.Compiler</code> — full pipeline (source → F#)<a class="headerlink" href="#stdcompiler-full-pipeline-source-f" title="Permanent link">&para;</a></h3>
+<p><strong>Import:</strong> <code>import Std.Compiler</code><br />
+<strong>LOC:</strong> 1516<br />
+<strong>Description:</strong> End-to-end compiler pipeline in ll-lang: Lexer → Parser → Elaborator → Codegen. Self-contained — all types defined inline. This is the bootstrap compiler that produced <code>compiler₁.fs == compiler₂.fs</code>.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compile</code></td>
+<td><code>Str -&gt; Result[Str][List[Str]]</code></td>
+<td>Compile source string to F#</td>
+</tr>
+<tr>
+<td><code>compileFile</code></td>
+<td><code>Str -&gt; Result[Str][List[Str]]</code></td>
+<td>Read file, compile, return F#</td>
+</tr>
+<tr>
+<td><code>pipeline</code></td>
+<td><code>Str -&gt; Maybe[LLModule]</code></td>
+<td>Lex + parse only</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">MyApp</span><span class="o">.</span><span class="n">Build</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Compiler</span>
+
+<span class="n">buildFile</span><span class="p">(</span><span class="n">path</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">readFile</span> <span class="n">path</span>
+  <span class="k">match</span> <span class="nb">compile</span> <span class="n">src</span>
+    <span class="o">|</span> <span class="n">Err</span> <span class="n">errs</span> <span class="o">-&gt;</span> <span class="n">listFold</span> <span class="p">(</span>\<span class="n">_</span> <span class="n">e</span><span class="o">.</span> <span class="n">printfn</span> <span class="n">e</span><span class="p">)</span> <span class="p">()</span> <span class="n">errs</span>
+    <span class="o">|</span> <span class="n">Ok</span> <span class="n">fsharp</span> <span class="o">-&gt;</span> <span class="n">writeFile</span> <span class="p">(</span><span class="n">strConcat</span> <span class="n">path</span> <span class="s2">&quot;.fs&quot;</span><span class="p">)</span> <span class="n">fsharp</span>
+</code></pre></div>
+
+<hr />
+<h2 id="module-index-by-category">Module index by category<a class="headerlink" href="#module-index-by-category" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Module</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core types</td>
+<td><code>Std.Maybe</code></td>
+<td>Maybe helpers and tests</td>
+</tr>
+<tr>
+<td>Core types</td>
+<td><code>Std.Monad</code></td>
+<td>Compact monadic adapters (<code>Maybe</code>/<code>Result</code>/<code>State</code>)</td>
+</tr>
+<tr>
+<td>Data structures</td>
+<td><code>Std.Map</code></td>
+<td>Ordered map, O(log n)</td>
+</tr>
+<tr>
+<td>Config</td>
+<td><code>Std.Toml</code></td>
+<td>TOML manifest parser</td>
+</tr>
+<tr>
+<td>Parsing</td>
+<td><code>Std.Json</code></td>
+<td>JSON parse + stringify + roundtrip helpers</td>
+</tr>
+<tr>
+<td>Parsing</td>
+<td><code>Std.McpProtocol</code></td>
+<td>JSON-RPC/MCP envelope encode/decode helpers</td>
+</tr>
+<tr>
+<td>Parsing</td>
+<td><code>Std.Reverse</code></td>
+<td>Self-host reverse foundation (<code>fs</code> stable slice)</td>
+</tr>
+<tr>
+<td>Parsing</td>
+<td><code>Std.Parsec</code></td>
+<td>Parser combinator substrate</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td><code>Std.Lazy</code></td>
+<td>Explicit delayed evaluation</td>
+</tr>
+<tr>
+<td>Parsing</td>
+<td><code>Std.Lexer</code></td>
+<td>ll-lang tokenizer</td>
+</tr>
+<tr>
+<td>Parsing</td>
+<td><code>Std.Parser</code></td>
+<td>Recursive-descent parser</td>
+</tr>
+<tr>
+<td>Type checking</td>
+<td><code>Std.Elaborator</code></td>
+<td>Name resolution, binding checks</td>
+</tr>
+<tr>
+<td>Code generation</td>
+<td><code>Std.Codegen</code></td>
+<td>F# emitter</td>
+</tr>
+<tr>
+<td>Code generation</td>
+<td><code>Std.CodegenTS</code></td>
+<td>TypeScript emitter</td>
+</tr>
+<tr>
+<td>Code generation</td>
+<td><code>Std.CodegenPy</code></td>
+<td>Python emitter</td>
+</tr>
+<tr>
+<td>Code generation</td>
+<td><code>Std.CodegenJava</code></td>
+<td>Java emitter</td>
+</tr>
+<tr>
+<td>Code generation</td>
+<td><code>Std.CodegenLLVM</code></td>
+<td>LLVM emitter</td>
+</tr>
+<tr>
+<td>Code generation</td>
+<td><code>Std.CodegenCSharp</code></td>
+<td>C# emitter</td>
+</tr>
+<tr>
+<td>Rendering</td>
+<td><code>Std.Render</code></td>
+<td>Shared rendering helpers</td>
+</tr>
+<tr>
+<td>Testing</td>
+<td><code>Std.Test</code></td>
+<td>Test assertions/utilities</td>
+</tr>
+<tr>
+<td>Type inference</td>
+<td><code>Std.CompilerTypes</code></td>
+<td>HM substitutions, unification, schemes</td>
+</tr>
+<tr>
+<td>Type inference</td>
+<td><code>Std.CompilerTyped</code></td>
+<td>Typed IR shapes (TypedExpr, TypedDecl, TypedModule)</td>
+</tr>
+<tr>
+<td>Type inference</td>
+<td><code>Std.CompilerInfer</code></td>
+<td>Algorithm W for Expr/Decl</td>
+</tr>
+<tr>
+<td>Lowering</td>
+<td><code>Std.CompilerLower</code></td>
+<td>BinOp desugaring; TypedModule → LowModule</td>
+</tr>
+<tr>
+<td>Project system</td>
+<td><code>Std.CompilerManifest</code></td>
+<td>lll.toml parsing, DepSource, LLManifest, validation</td>
+</tr>
+<tr>
+<td>Project system</td>
+<td><code>Std.CompilerLoader</code></td>
+<td>Dependency graph, cycle detection, Kahn's topo sort</td>
+</tr>
+<tr>
+<td>Full pipeline</td>
+<td><code>Std.Compiler</code></td>
+<td>Source pipeline helpers</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="compiler-implementation-modules-vs-reusable-stdlib">Compiler implementation modules vs reusable stdlib<a class="headerlink" href="#compiler-implementation-modules-vs-reusable-stdlib" title="Permanent link">&para;</a></h2>
+<p>The modules below are currently importable like ordinary stdlib modules, but
+they should be read as the self-hosted compiler slice rather than as general
+application-library APIs:</p>
+<ul>
+<li><code>Std.Lexer</code></li>
+<li><code>Std.Parser</code></li>
+<li><code>Std.Elaborator</code></li>
+<li><code>Std.CompilerTypes</code></li>
+<li><code>Std.CompilerTyped</code></li>
+<li><code>Std.CompilerInfer</code></li>
+<li><code>Std.CompilerLower</code></li>
+<li><code>Std.CompilerManifest</code></li>
+<li><code>Std.CompilerLoader</code></li>
+<li><code>Std.Codegen</code></li>
+<li><code>Std.CodegenTS</code></li>
+<li><code>Std.CodegenPy</code></li>
+<li><code>Std.CodegenJava</code></li>
+<li><code>Std.CodegenLLVM</code></li>
+<li><code>Std.Compiler</code></li>
+</ul>
+<p>These modules are important because they show that ll-lang can already express
+substantial compiler logic. They should not be treated as proof that the full
+canonical compiler boundary has already migrated away from stage0. That
+boundary is tracked in
+<a href="/Users/roman/Documents/dev/tens/code/ll-lang/docs/compiler-dev/14-v2-canonical-compiler-boundaries.md">v2 canonical compiler boundaries</a>.</p>
+<hr />
+<h2 id="notes-on-self-hosted-modules">Notes on self-hosted modules<a class="headerlink" href="#notes-on-self-hosted-modules" title="Permanent link">&para;</a></h2>
+<p>The stdlib modules are written in ll-lang and compiled via the bootstrap compiler. Library modules are no longer expected to be independently runnable via <code>main()</code>; smoke/demo entrypoints should live in dedicated executable modules.</p>
+<p>When using multiple modules together in a project, import them in dependency order: <code>Std.Lexer</code> before <code>Std.Parser</code> before <code>Std.Elaborator</code> before <code>Std.Codegen</code>.</p>
+<hr />
+<h2 id="naming-convention-frozen-for-v2">Naming convention (frozen for v2)<a class="headerlink" href="#naming-convention-frozen-for-v2" title="Permanent link">&para;</a></h2>
+<p>All public stdlib names use a <strong><code>verbOnType</code> prefix style</strong> — no namespacing inside modules, no operator overloading. The type prefix is lowercase and comes first.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Prefix</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>List</code></td>
+<td><code>list</code></td>
+<td><code>listMap</code>, <code>listFilter</code>, <code>listFold</code></td>
+</tr>
+<tr>
+<td><code>Maybe</code></td>
+<td><code>maybe</code></td>
+<td><code>maybeMap</code>, <code>maybeBind</code>, <code>maybeWithDefault</code></td>
+</tr>
+<tr>
+<td><code>Result</code></td>
+<td><code>result</code></td>
+<td><code>resultMap</code>, <code>resultBind</code>, <code>resultIsOk</code></td>
+</tr>
+<tr>
+<td><code>Map</code></td>
+<td><code>map</code></td>
+<td><code>mapInsert</code>, <code>mapLookup</code>, <code>mapDelete</code></td>
+</tr>
+<tr>
+<td><code>Str</code></td>
+<td><code>str</code></td>
+<td><code>strConcat</code>, <code>strSplit</code>, <code>strTrim</code></td>
+</tr>
+<tr>
+<td><code>State</code></td>
+<td><code>state</code></td>
+<td><code>stateRun</code>, <code>stateBind</code>, <code>stateGet</code></td>
+</tr>
+<tr>
+<td><code>Parsec</code></td>
+<td><code>parse</code></td>
+<td><code>parsePure</code>, <code>parseBind</code>, <code>parseMany</code></td>
+</tr>
+<tr>
+<td><code>Lazy</code></td>
+<td><code>lazy</code></td>
+<td><code>lazyDelay</code>, <code>lazyForce</code>, <code>lazyValue</code></td>
+</tr>
+<tr>
+<td><code>Json</code></td>
+<td><code>json</code></td>
+<td><code>jsonParse</code>, <code>jsonStringify</code></td>
+</tr>
+<tr>
+<td><code>Toml</code></td>
+<td><code>toml</code></td>
+<td><code>tomlParse</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rules:</strong>
+1. The type-name prefix is always lowercase and always first in the name.
+2. No two functions in different modules may share an unambiguous short name (e.g., <code>map</code> is not a valid export — use <code>mapInsert</code>).
+3. Prelude function names are owned by the prelude; imported modules must not re-export conflicting names.
+4. Legacy names or aliases are removed aggressively; backwards-compatibility shims are not kept.</p>
+<hr />
+<h2 id="prelude-boundary-rule-frozen-for-v2">Prelude boundary rule (frozen for v2)<a class="headerlink" href="#prelude-boundary-rule-frozen-for-v2" title="Permanent link">&para;</a></h2>
+<p><strong>A function belongs in the Prelude if and only if:</strong>
+- It is needed by almost every ll-lang program (≥ 90% of programs would import it otherwise)
+- It operates on a type that is built into the language (<code>List</code>, <code>Maybe</code>, <code>Str</code>, <code>Int</code>, <code>Bool</code>, <code>Char</code>)
+- Its definition is 1–3 lines and has no non-trivial dependencies</p>
+<p><strong>A function does NOT belong in the Prelude if:</strong>
+- It is useful only in specific domains (parsing, state threading, config loading)
+- It requires importing another stdlib module to typecheck
+- It could be replaced by a 2–3 line inline in the call site</p>
+<p><strong>Current Prelude surface is frozen.</strong> Adding to it requires removing something of equal or
+greater cognitive weight. The prelude must stay small enough that a developer can memorize
+it in one sitting.</p>
+<hr />
+<h2 id="compiler-facing-proof-of-use-m3h">Compiler-facing proof-of-use (M3.H)<a class="headerlink" href="#compiler-facing-proof-of-use-m3h" title="Permanent link">&para;</a></h2>
+<p>The following sketch shows the foundation modules supporting a real compiler-shaped task:
+a single-pass diagnostic accumulator that resolves imports, collects errors, and formats them.</p>
+<p>This uses <code>Std.State</code> for pass state, <code>Std.Maybe</code> for optional lookups, <code>Std.Map</code> for the
+module registry, and <code>Std.Result</code> for error propagation.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">module</span> <span class="n">Compiler</span><span class="o">.</span><span class="n">ImportResolver</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.State</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Maybe</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Map</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Std.Result</span>
+
+<span class="o">--</span> <span class="n">Pass</span> <span class="n">state</span><span class="p">:</span> <span class="n">seen</span> <span class="n">module</span> <span class="n">names</span> <span class="o">+</span> <span class="n">accumulated</span> <span class="n">diagnostics</span>
+<span class="n">ResolverState</span> <span class="o">=</span> <span class="n">MkResolverState</span>
+  <span class="p">(</span><span class="n">RBMap</span><span class="p">[</span><span class="n">Str</span><span class="p">][</span><span class="n">Bool</span><span class="p">])</span>   <span class="o">--</span> <span class="n">seen</span> <span class="n">modules</span>
+  <span class="p">(</span><span class="n">List</span><span class="p">[</span><span class="n">Str</span><span class="p">])</span>          <span class="o">--</span> <span class="n">diagnostics</span>
+
+<span class="n">emptyResolverState</span><span class="p">()</span> <span class="o">=</span>
+  <span class="n">MkResolverState</span> <span class="p">(</span><span class="n">mapEmpty</span><span class="p">())</span> <span class="p">[]</span>
+
+<span class="n">addDiag</span><span class="p">(</span><span class="n">diag</span> <span class="n">Str</span><span class="p">)(</span><span class="n">s</span> <span class="n">ResolverState</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">s</span>
+    <span class="o">|</span> <span class="n">MkResolverState</span> <span class="n">seen</span> <span class="n">diags</span> <span class="o">-&gt;</span>
+      <span class="n">MkResolverState</span> <span class="n">seen</span> <span class="p">(</span><span class="n">diag</span> <span class="p">::</span> <span class="n">diags</span><span class="p">)</span>
+
+<span class="n">markSeen</span><span class="p">(</span><span class="n">modName</span> <span class="n">Str</span><span class="p">)(</span><span class="n">s</span> <span class="n">ResolverState</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">s</span>
+    <span class="o">|</span> <span class="n">MkResolverState</span> <span class="n">seen</span> <span class="n">diags</span> <span class="o">-&gt;</span>
+      <span class="n">MkResolverState</span> <span class="p">(</span><span class="n">mapInsert</span> <span class="n">strCmp</span> <span class="n">modName</span> <span class="n">true</span> <span class="n">seen</span><span class="p">)</span> <span class="n">diags</span>
+
+<span class="n">isSeen</span><span class="p">(</span><span class="n">modName</span> <span class="n">Str</span><span class="p">)(</span><span class="n">s</span> <span class="n">ResolverState</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">s</span>
+    <span class="o">|</span> <span class="n">MkResolverState</span> <span class="n">seen</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="n">isSome</span> <span class="p">(</span><span class="n">mapLookup</span> <span class="n">strCmp</span> <span class="n">modName</span> <span class="n">seen</span><span class="p">)</span>
+
+<span class="o">--</span> <span class="n">Resolve</span> <span class="n">one</span> <span class="n">import</span><span class="p">:</span> <span class="n">emit</span> <span class="n">diagnostic</span> <span class="k">if</span> <span class="n">unknown</span><span class="p">,</span> <span class="n">mark</span> <span class="k">as</span> <span class="n">seen</span>
+<span class="n">resolveImport</span><span class="p">(</span><span class="n">known</span> <span class="n">RBMap</span><span class="p">[</span><span class="n">Str</span><span class="p">][</span><span class="n">Bool</span><span class="p">])(</span><span class="n">modName</span> <span class="n">Str</span><span class="p">)</span> <span class="o">=</span>
+  <span class="n">stateBind</span> <span class="p">(</span><span class="n">stateGet</span> <span class="p">(</span><span class="n">emptyResolverState</span><span class="p">()))</span> \<span class="n">s</span><span class="o">.</span>
+  <span class="k">if</span> <span class="n">isSeen</span> <span class="n">modName</span> <span class="n">s</span>
+    <span class="n">statePure</span> <span class="p">()</span>
+  <span class="k">else</span>
+    <span class="k">match</span> <span class="n">mapLookup</span> <span class="n">strCmp</span> <span class="n">modName</span> <span class="n">known</span>
+      <span class="o">|</span> <span class="kc">None</span> <span class="o">-&gt;</span>
+        <span class="n">stateModify</span> <span class="p">(</span><span class="n">addDiag</span> <span class="p">(</span><span class="n">strConcat</span> <span class="s2">&quot;E002 unknown module: &quot;</span> <span class="n">modName</span><span class="p">))</span>
+      <span class="o">|</span> <span class="n">Some</span> <span class="n">_</span> <span class="o">-&gt;</span>
+        <span class="n">stateModify</span> <span class="p">(</span><span class="n">markSeen</span> <span class="n">modName</span><span class="p">)</span>
+
+<span class="o">--</span> <span class="n">Run</span> <span class="n">resolver</span> <span class="n">over</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">imports</span>
+<span class="n">resolveAll</span><span class="p">(</span><span class="n">known</span> <span class="n">RBMap</span><span class="p">[</span><span class="n">Str</span><span class="p">][</span><span class="n">Bool</span><span class="p">])(</span><span class="n">imports</span> <span class="n">List</span><span class="p">[</span><span class="n">Str</span><span class="p">])</span> <span class="o">=</span>
+  <span class="n">listFold</span>
+    <span class="p">(</span>\<span class="n">acc</span> <span class="n">imp</span><span class="o">.</span> <span class="n">stateBind</span> <span class="n">acc</span> <span class="p">(</span>\<span class="n">_</span> <span class="o">.</span> <span class="n">resolveImport</span> <span class="n">known</span> <span class="n">imp</span><span class="p">))</span>
+    <span class="p">(</span><span class="n">statePure</span> <span class="p">())</span>
+    <span class="n">imports</span>
+
+<span class="o">--</span> <span class="n">Entry</span><span class="p">:</span> <span class="n">returns</span> <span class="n">accumulated</span> <span class="n">diagnostics</span>
+<span class="n">checkImports</span><span class="p">(</span><span class="n">known</span> <span class="n">RBMap</span><span class="p">[</span><span class="n">Str</span><span class="p">][</span><span class="n">Bool</span><span class="p">])(</span><span class="n">imports</span> <span class="n">List</span><span class="p">[</span><span class="n">Str</span><span class="p">])</span> <span class="o">=</span>
+  <span class="n">s</span> <span class="o">=</span> <span class="n">stateExec</span> <span class="p">(</span><span class="n">resolveAll</span> <span class="n">known</span> <span class="n">imports</span><span class="p">)</span> <span class="p">(</span><span class="n">emptyResolverState</span><span class="p">())</span>
+  <span class="k">match</span> <span class="n">s</span>
+    <span class="o">|</span> <span class="n">MkResolverState</span> <span class="n">_</span> <span class="n">diags</span> <span class="o">-&gt;</span> <span class="n">diags</span>
+</code></pre></div>
+
+<p>This sketch validates that <code>Std.State</code> + <code>Std.Map</code> + <code>Std.Maybe</code> compose correctly for
+compiler-style pass work without fighting the language or requiring ad hoc helpers.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

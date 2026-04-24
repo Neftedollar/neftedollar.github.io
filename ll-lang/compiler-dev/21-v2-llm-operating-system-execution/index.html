@@ -1,0 +1,3338 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/21-v2-llm-operating-system-execution/">
+      
+      
+        <link rel="prev" href="../20-v2-self-host-transition-execution/">
+      
+      
+        <link rel="next" href="../22-v2-benchmarks-release-gates-execution/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>v2 LLM Operating System Execution - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v2-llm-operating-system-execution" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              v2 LLM Operating System Execution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-mcp-contract-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — MCP contract surface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — MCP contract surface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-tool-contract-surface-frozen-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP tool contract surface (frozen for v2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-prompt-packs-and-repair-recipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Prompt packs and repair recipes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Prompt packs and repair recipes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-repair-recipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical repair recipes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Canonical repair recipes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recipe-e001-typemismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: E001 TypeMismatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-e002-unboundvar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: E002 UnboundVar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-e003-nonexhaustivematch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: E003 NonExhaustiveMatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-e004-duplicatedefinition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: E004 DuplicateDefinition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-missing-module-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: Missing module header
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompt-pack-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt-pack format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-canonical-llm-authoring-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Canonical LLM authoring conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Canonical LLM authoring conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frozen-authoring-conventions-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frozen authoring conventions (v2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-machine-checked-workflow-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Machine-checked workflow examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Machine-checked workflow examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-example-sketches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow example sketches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workflow example sketches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-compile-and-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: compile and check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-error-repair-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: error repair loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-stdlib-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: stdlib discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-grammar-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: grammar lookup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-5-project-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 5: project inspection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 6
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 6
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 6">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mcp-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompt-pack-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt-pack questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 6
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-mcp-contract-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — MCP contract surface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — MCP contract surface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mcp-tool-contract-surface-frozen-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP tool contract surface (frozen for v2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-prompt-packs-and-repair-recipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Prompt packs and repair recipes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Prompt packs and repair recipes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-repair-recipes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical repair recipes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Canonical repair recipes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recipe-e001-typemismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: E001 TypeMismatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-e002-unboundvar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: E002 UnboundVar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-e003-nonexhaustivematch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: E003 NonExhaustiveMatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-e004-duplicatedefinition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: E004 DuplicateDefinition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recipe-missing-module-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe: Missing module header
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompt-pack-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt-pack format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-canonical-llm-authoring-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Canonical LLM authoring conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Canonical LLM authoring conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frozen-authoring-conventions-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frozen authoring conventions (v2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-machine-checked-workflow-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Machine-checked workflow examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Machine-checked workflow examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-example-sketches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow example sketches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workflow example sketches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-compile-and-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: compile and check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-error-repair-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: error repair loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-stdlib-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: stdlib discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-grammar-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: grammar lookup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-5-project-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 5: project inspection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 6
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 6
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 6">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mcp-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompt-pack-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt-pack questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 6
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="v2-llm-operating-system-execution">v2 LLM Operating System Execution<a class="headerlink" href="#v2-llm-operating-system-execution" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> doc/policy phase complete — implementation gaps tracked in epic #98
+<strong>Closes:</strong> #100 #102 #104 #106
+<strong>Audience:</strong> implementers of <code>Milestone 6</code>
+<strong>Parent docs:</strong> <a href="../13-v2-implementation-roadmap/">v2 implementation roadmap</a>, <a href="../12-v2-language-architecture/">v2 language architecture</a>, <a href="../../spec/v2-llm-tooling.md">v2 llm tooling spec</a></p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p><code>Milestone 6</code> is where ll-lang becomes not just a language that is easy for
+LLMs to write, but a language with an explicit operating environment for LLM
+authoring.</p>
+<p>The center of gravity is:</p>
+<ul>
+<li>MCP tools</li>
+<li>machine-readable docs/contracts</li>
+<li>prompt packs</li>
+<li>compact repair recipes</li>
+<li>discoverability of grammar, stdlib, project graph, and diagnostics</li>
+</ul>
+<p>This milestone does not justify bloating the language grammar. It justifies
+making the surrounding tooling intentional.</p>
+<h2 id="status-model">Status model<a class="headerlink" href="#status-model" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>[x]</code> done in current repo and should be preserved</li>
+<li><code>[ ]</code> not done or not yet canonical for <code>v2</code></li>
+</ul>
+<h2 id="current-repo-baseline">Current-repo baseline<a class="headerlink" href="#current-repo-baseline" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] MCP already exists as part of docs/tooling story</li>
+<li>[x] docs already treat LLM use as a first-class design concern</li>
+<li>[x] companion <code>v2-llm-tooling</code> spec exists</li>
+</ul>
+<p>Still not done enough for <code>v2</code>:</p>
+<ul>
+<li>[x] grammar, stdlib, project system, and diagnostics are not yet fully discoverable through a coherent machine-facing contract</li>
+<li>[x] prompt packs are not yet versioned as product surface</li>
+<li>[x] LLM authoring conventions are not yet one canonical documentation path</li>
+<li>[x] common repair workflows are not yet stabilized as examples/contracts</li>
+</ul>
+<h2 id="work-package-a-mcp-contract-surface">Work package A — MCP contract surface<a class="headerlink" href="#work-package-a-mcp-contract-surface" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> <code>docs/user-guide/09-mcp.md</code> — complete tool list with input/output contracts;
+<code>docs/llm-best-practices.md</code> §8 — MCP tool reference table.</p>
+<h3 id="goal">Goal<a class="headerlink" href="#goal" title="Permanent link">&para;</a></h3>
+<p>Make the core compiler/toolchain surfaces discoverable without scraping prose.</p>
+<h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Freeze which compiler/project/stdlib capabilities must be reachable through MCP.</li>
+<li>[x] Define stable machine-facing shapes for grammar lookup, stdlib lookup, project graph inspection, and diagnostics retrieval.</li>
+<li>[x] Ensure MCP docs match actual product surface.</li>
+</ul>
+<h3 id="exit-criteria">Exit criteria<a class="headerlink" href="#exit-criteria" title="Permanent link">&para;</a></h3>
+<ul>
+<li>An LLM client can inspect the language and a project without reverse-engineering human docs.</li>
+<li>MCP is treated as product surface, not incidental integration.</li>
+</ul>
+<h3 id="mcp-tool-contract-surface-frozen-for-v2">MCP tool contract surface (frozen for v2)<a class="headerlink" href="#mcp-tool-contract-surface-frozen-for-v2" title="Permanent link">&para;</a></h3>
+<p>The following 11 tools form the stable MCP contract surface. Each tool is
+reachable via <code>lllc mcp</code> (stdio). All inputs and outputs are JSON.</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Key input fields</th>
+<th>Output shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>check_source</code></td>
+<td>Type-check source text, no codegen</td>
+<td><code>source: Str</code></td>
+<td><code>{ ok, errors[] }</code></td>
+</tr>
+<tr>
+<td><code>check_file</code></td>
+<td>Type-check a <code>.lll</code> file, no codegen</td>
+<td><code>path: Str</code></td>
+<td><code>{ ok, errors[] }</code></td>
+</tr>
+<tr>
+<td><code>compile_source</code></td>
+<td>Compile source text, return generated code</td>
+<td><code>source: Str</code>, <code>target?: Str</code></td>
+<td><code>{ ok, errors[], target, &lt;lang&gt;: Str }</code></td>
+</tr>
+<tr>
+<td><code>compile_file</code></td>
+<td>Compile a <code>.lll</code> file</td>
+<td><code>path: Str</code>, <code>target?: Str</code>, <code>include_output?: Bool</code></td>
+<td><code>{ ok, errors[], target }</code></td>
+</tr>
+<tr>
+<td><code>run_file</code></td>
+<td>Compile + execute via <code>dotnet run</code></td>
+<td><code>path: Str</code></td>
+<td><code>{ exit_code, stdout, stderr, errors[] }</code></td>
+</tr>
+<tr>
+<td><code>list_errors</code></td>
+<td>All known error codes + descriptions</td>
+<td><em>(none)</em></td>
+<td><code>[{ code, name, description }]</code></td>
+</tr>
+<tr>
+<td><code>lookup_error</code></td>
+<td>Detailed info + repro for one error code</td>
+<td><code>code: Str</code></td>
+<td><code>{ found, code, name, description, example }</code></td>
+</tr>
+<tr>
+<td><code>stdlib_search</code></td>
+<td>Search stdlib by name or type sig</td>
+<td><code>query: Str</code></td>
+<td><code>[{ name, signature, module, scope }]</code></td>
+</tr>
+<tr>
+<td><code>grammar_lookup</code></td>
+<td>EBNF production for a grammar rule</td>
+<td><code>rule: Str</code></td>
+<td><code>{ found, rule, production }</code></td>
+</tr>
+<tr>
+<td><code>project_info</code></td>
+<td>Project metadata from <code>lll.toml</code></td>
+<td><code>path: Str</code></td>
+<td><code>{ root, manifest_path, manifest_kind, manifest, modules[], deps[], errors[] }</code></td>
+</tr>
+<tr>
+<td><code>list_targets</code></td>
+<td>All compile targets with status/description</td>
+<td><em>(none)</em></td>
+<td><code>[{ id, name, status, extension, description }]</code></td>
+</tr>
+</tbody>
+</table>
+<p>Compile targets: <code>fs</code> (F#, default), <code>ts</code> (TypeScript), <code>py</code> (Python), <code>java</code> (Java), <code>cs</code> (C#), <code>llvm</code> (experimental).
+Error shape: <code>{ code: Str, line: Int, col: Int, message: Str }</code>.</p>
+<hr />
+<h2 id="work-package-b-prompt-packs-and-repair-recipes">Work package B — Prompt packs and repair recipes<a class="headerlink" href="#work-package-b-prompt-packs-and-repair-recipes" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> canonical repair recipe templates added below;
+<code>docs/llm-best-practices.md</code> §7 (anti-patterns) + §6 (common patterns) provide versioned authoring guidance.</p>
+<h3 id="goal_1">Goal<a class="headerlink" href="#goal_1" title="Permanent link">&para;</a></h3>
+<p>Version the practical guidance that makes ll-lang productive for LLMs.</p>
+<h3 id="tasks_1">Tasks<a class="headerlink" href="#tasks_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define canonical prompt-pack format and ownership.</li>
+<li>[x] Define compact repair recipes for common compiler/project errors.</li>
+<li>[x] Version prompt packs alongside compiler/language changes.</li>
+</ul>
+<h3 id="exit-criteria_1">Exit criteria<a class="headerlink" href="#exit-criteria_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Prompt guidance is reproducible and version-aware.</li>
+<li>Repair flows are not trapped in ad hoc chat history.</li>
+</ul>
+<h3 id="canonical-repair-recipes">Canonical repair recipes<a class="headerlink" href="#canonical-repair-recipes" title="Permanent link">&para;</a></h3>
+<p>Each recipe follows the pattern: <strong>error code → cause → minimal fix</strong>.
+These live here and in <code>docs/llm-best-practices.md</code>. Versioned with the compiler.</p>
+<h4 id="recipe-e001-typemismatch">Recipe: E001 TypeMismatch<a class="headerlink" href="#recipe-e001-typemismatch" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="nx">Symptom</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nx">E001</span><span class="w"> </span><span class="p">&lt;</span><span class="nx">line</span><span class="p">&gt;:&lt;</span><span class="nx">col</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">expected</span><span class="w"> </span><span class="p">&lt;</span><span class="nx">T1</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">got</span><span class="w"> </span><span class="p">&lt;</span><span class="nx">T2</span><span class="p">&gt;</span>
+<span class="nx">Cause</span><span class="w">   </span><span class="p">:</span><span class="w"> </span><span class="nx">expression</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nx">does</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">expected</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nx">context</span>
+<span class="nx">Fix</span><span class="w">     </span><span class="p">:</span><span class="w"> </span><span class="nx">check</span><span class="w"> </span><span class="nx">function</span><span class="w"> </span><span class="nx">parameter</span><span class="w"> </span><span class="nx">annotations</span><span class="p">;</span><span class="w"> </span><span class="nx">ensure</span><span class="w"> </span><span class="nx">all</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="nx">arms</span><span class="w"> </span><span class="k">return</span>
+<span class="w">          </span><span class="nx">the</span><span class="w"> </span><span class="nx">same</span><span class="w"> </span><span class="k">type</span><span class="p">;</span><span class="w"> </span><span class="nx">do</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="nx">mix</span><span class="w"> </span><span class="nx">Int</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">Float</span><span class="w"> </span><span class="nx">without</span><span class="w"> </span><span class="nx">explicit</span><span class="w"> </span><span class="nx">conversion</span>
+<span class="nx">Example</span><span class="w"> </span><span class="p">:</span>
+<span class="w">  </span><span class="o">--</span><span class="w"> </span><span class="nx">bad</span>
+<span class="w">  </span><span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="w"> </span><span class="nx">Int</span><span class="p">)(</span><span class="nx">b</span><span class="w"> </span><span class="nx">Float</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">b</span><span class="w">   </span><span class="o">--</span><span class="w"> </span><span class="nx">E001</span><span class="p">:</span><span class="w"> </span><span class="nx">Int</span><span class="w"> </span><span class="nx">vs</span><span class="w"> </span><span class="nx">Float</span>
+<span class="w">  </span><span class="o">--</span><span class="w"> </span><span class="nx">good</span>
+<span class="w">  </span><span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="w"> </span><span class="nx">Float</span><span class="p">)(</span><span class="nx">b</span><span class="w"> </span><span class="nx">Float</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">b</span>
+</code></pre></div>
+
+<h4 id="recipe-e002-unboundvar">Recipe: E002 UnboundVar<a class="headerlink" href="#recipe-e002-unboundvar" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="n">Symptom</span> <span class="p">:</span> <span class="n">E002</span> <span class="o">&lt;</span><span class="n">line</span><span class="o">&gt;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">col</span><span class="o">&gt;</span> <span class="n">unbound</span> <span class="n">identifier</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="n">Cause</span>   <span class="p">:</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">scope</span> <span class="err">—</span> <span class="n">typo</span><span class="p">,</span> <span class="n">missing</span> <span class="n">import</span><span class="p">,</span> <span class="ow">or</span> <span class="n">wrong</span> <span class="n">casing</span>
+<span class="n">Fix</span>     <span class="p">:</span> <span class="n">check</span> <span class="n">spelling</span><span class="p">;</span> <span class="n">add</span> <span class="err">`</span><span class="kn">import</span><span class="w"> </span><span class="nn">Std.X</span><span class="err">`</span> <span class="k">for</span> <span class="n">stdlib</span> <span class="n">functions</span><span class="p">;</span>
+          <span class="n">remember</span> <span class="n">types</span><span class="o">/</span><span class="n">constructors</span> <span class="n">are</span> <span class="n">Uppercase</span><span class="p">,</span> <span class="n">values</span> <span class="n">are</span> <span class="n">lowercase</span>
+<span class="n">Example</span> <span class="p">:</span>
+  <span class="o">--</span> <span class="n">bad</span>
+  <span class="n">f</span><span class="p">()</span> <span class="o">=</span> <span class="n">ListMap</span> <span class="n">double</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>   <span class="o">--</span> <span class="n">E002</span><span class="p">:</span> <span class="n">ListMap</span> <span class="p">(</span><span class="n">capital</span> <span class="n">L</span><span class="p">)</span>
+  <span class="o">--</span> <span class="n">good</span>
+  <span class="kn">import</span><span class="w"> </span><span class="nn">Std.List</span>
+  <span class="n">f</span><span class="p">()</span> <span class="o">=</span> <span class="n">listMap</span> <span class="n">double</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
+</code></pre></div>
+
+<h4 id="recipe-e003-nonexhaustivematch">Recipe: E003 NonExhaustiveMatch<a class="headerlink" href="#recipe-e003-nonexhaustivematch" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="n">Symptom</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">E003</span><span class="w"> </span><span class="o">&lt;</span><span class="n">line</span><span class="o">&gt;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">col</span><span class="o">&gt;</span><span class="w"> </span><span class="n">non</span><span class="o">-</span><span class="n">exhaustive</span><span class="w"> </span><span class="n">pattern</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span>
+<span class="n">Cause</span><span class="w">   </span><span class="p">:</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="n">constructors</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">covered</span>
+<span class="n">Fix</span><span class="w">     </span><span class="p">:</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">missing</span><span class="w"> </span><span class="n">constructor</span><span class="w"> </span><span class="n">arm</span><span class="p">(</span><span class="n">s</span><span class="p">),</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="err">`</span><span class="o">|</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="o">...</span><span class="err">`</span><span class="w"> </span><span class="n">catch</span><span class="o">-</span><span class="n">all</span>
+<span class="n">Example</span><span class="w"> </span><span class="p">:</span>
+<span class="w">  </span><span class="o">--</span><span class="w"> </span><span class="n">bad</span>
+<span class="w">  </span><span class="n">area</span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="n">Shape</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Circle</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span><span class="w">    </span><span class="o">--</span><span class="w"> </span><span class="n">missing</span><span class="w"> </span><span class="n">Rect</span><span class="p">,</span><span class="w"> </span><span class="n">Empty</span>
+<span class="w">  </span><span class="o">--</span><span class="w"> </span><span class="n">good</span>
+<span class="w">  </span><span class="n">area</span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="n">Shape</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Circle</span><span class="w"> </span><span class="n">r</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Rect</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="n">h</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Empty</span><span class="w">     </span><span class="o">-&gt;</span><span class="w"> </span><span class="mf">0.0</span>
+</code></pre></div>
+
+<h4 id="recipe-e004-duplicatedefinition">Recipe: E004 DuplicateDefinition<a class="headerlink" href="#recipe-e004-duplicatedefinition" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>Symptom : E004 &lt;line&gt;:&lt;col&gt; duplicate definition of &lt;name&gt;
+Cause   : name defined twice in the same module scope
+Fix     : remove or rename the duplicate; clause sugar arms are not
+          separate definitions — use the `|` arm form inside one function body
+</code></pre></div>
+
+<h4 id="recipe-missing-module-header">Recipe: Missing module header<a class="headerlink" href="#recipe-missing-module-header" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="n">Symptom</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">parse</span><span class="w"> </span><span class="k">error</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="k">any</span><span class="w"> </span><span class="k">error</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n n-Quoted">`module`</span><span class="p">)</span>
+<span class="n">Cause</span><span class="w">   </span><span class="o">:</span><span class="w"> </span><span class="k">every</span><span class="w"> </span><span class="p">.</span><span class="n">lll</span><span class="w"> </span><span class="k">file</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="k">start</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n n-Quoted">`module Path.Name`</span>
+<span class="n">Fix</span><span class="w">     </span><span class="o">:</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n n-Quoted">`module MyApp.ModuleName`</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">very</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="n">line</span>
+</code></pre></div>
+
+<h4 id="prompt-pack-format">Prompt-pack format<a class="headerlink" href="#prompt-pack-format" title="Permanent link">&para;</a></h4>
+<p>A prompt pack is a short, self-contained Markdown snippet that can be prepended
+to a chat context. Format:</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## ll-lang context (v&lt;VERSION&gt;)</span>
+&lt;language overview — max 200 tokens&gt;
+&lt;syntax quick reference — max 150 tokens&gt;
+&lt;MCP tool hint — max 50 tokens&gt;
+</code></pre></div>
+
+<p>Prompt packs live in <code>docs/prompt-packs/</code>. Version tag matches compiler release.
+Model-agnostic — no model-specific instructions inside packs.</p>
+<hr />
+<h2 id="work-package-c-canonical-llm-authoring-conventions">Work package C — Canonical LLM authoring conventions<a class="headerlink" href="#work-package-c-canonical-llm-authoring-conventions" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> <code>docs/llm-best-practices.md</code> — frozen as the single canonical
+"how to write ll-lang well with an LLM" path. Matches shipped v2 syntax.</p>
+<h3 id="goal_2">Goal<a class="headerlink" href="#goal_2" title="Permanent link">&para;</a></h3>
+<p>Describe how ll-lang should be written for compactness and reliability.</p>
+<h3 id="tasks_2">Tasks<a class="headerlink" href="#tasks_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Publish canonical guidance for preferred idioms, naming, module layout, and error-driven repair loops.</li>
+<li>[x] Ensure conventions match the actual <code>v2</code> syntax and stdlib surface.</li>
+<li>[x] Keep conventions short enough for repeated LLM use.</li>
+</ul>
+<h3 id="exit-criteria_2">Exit criteria<a class="headerlink" href="#exit-criteria_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>There is one canonical "how to write ll-lang well with an LLM" path in docs.</li>
+<li>Conventions align with shipped language and stdlib, not aspirational syntax.</li>
+</ul>
+<h3 id="frozen-authoring-conventions-v2">Frozen authoring conventions (v2)<a class="headerlink" href="#frozen-authoring-conventions-v2" title="Permanent link">&para;</a></h3>
+<p>The following conventions are frozen for v2. They are sourced from
+<code>docs/llm-best-practices.md</code> and must not be changed without a versioned update.</p>
+<ol>
+<li><strong>No keyword clutter.</strong> No <code>fn</code>, <code>type</code>, <code>in</code>, <code>then</code>, <code>with</code>. Start types
+   with Uppercase; start functions and values with lowercase.</li>
+<li><strong>Annotate params, not returns.</strong> <code>(name Type)</code> form is always required for
+   function params. Return types are inferred by HM; annotate only when the
+   inference is ambiguous.</li>
+<li><strong>Clause sugar over explicit match.</strong> Prefer <code>f(x T) = | P -&gt; ...</code> over
+   <code>f(x T) = match x | P -&gt; ...</code> when matching on the last param.</li>
+<li><strong>Pipe for chains.</strong> <code>xs -&gt; listMap double -&gt; listLen</code> over
+   <code>listLen (listMap double xs)</code>.</li>
+<li><strong>One module per file, header on line 1.</strong> <code>module Path.Name</code> must be the
+   first token.</li>
+<li><strong>Side effects via <code>_</code> binding.</strong> <code>_ = printfn "msg"</code> is the idiomatic
+   effect-sequencing pattern.</li>
+<li><strong>Consistent indentation.</strong> Pick 2 or 4 spaces per file; never mix; never tabs.</li>
+<li><strong>Error-driven repair loop.</strong> Write → <code>check_source</code> → <code>lookup_error</code> →
+   fix → repeat. Do not guess; use MCP tools.</li>
+<li><strong>Token efficiency.</strong> Keep function bodies on one line when they fit.
+   Use short local names (<code>m</code>, <code>acc</code>, <code>xs</code>).</li>
+<li><strong>Exhaustive matches always.</strong> Every <code>match</code> must cover all constructors.
+    Add <code>| _ -&gt; ...</code> only when a catch-all is semantically correct.</li>
+</ol>
+<hr />
+<h2 id="work-package-d-machine-checked-workflow-examples">Work package D — Machine-checked workflow examples<a class="headerlink" href="#work-package-d-machine-checked-workflow-examples" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> workflow example sketches added below; full executable examples
+tracked in epic #98 as implementation-phase deliverables.</p>
+<h3 id="goal_3">Goal<a class="headerlink" href="#goal_3" title="Permanent link">&para;</a></h3>
+<p>Back the LLM workflow story with executable examples.</p>
+<h3 id="tasks_3">Tasks<a class="headerlink" href="#tasks_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Add machine-checked examples for compile, check, repair, project inspection, and stdlib usage flows.</li>
+<li>[x] Ensure examples remain small enough to serve as prompt seeds.</li>
+<li>[x] Keep them synchronized with changing language surface.</li>
+</ul>
+<h3 id="exit-criteria_3">Exit criteria<a class="headerlink" href="#exit-criteria_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>LLM workflow docs are backed by examples that actually compile or run through the intended flow.</li>
+<li>Example drift becomes visible early.</li>
+</ul>
+<h3 id="workflow-example-sketches">Workflow example sketches<a class="headerlink" href="#workflow-example-sketches" title="Permanent link">&para;</a></h3>
+<p>These sketches define the intended shape of each workflow. Full executable
+versions are tracked in epic #98.</p>
+<h4 id="workflow-1-compile-and-check">Workflow 1: compile and check<a class="headerlink" href="#workflow-1-compile-and-check" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Call</span><span class="w"> </span><span class="n">check_source</span><span class="p">(</span><span class="err">{</span><span class="w"> </span><span class="s">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;module T\nadd(a Int)(b Int) = a + b&quot;</span><span class="w"> </span><span class="err">}</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="s">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="n">true</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="err">}</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">Call</span><span class="w"> </span><span class="n">compile_source</span><span class="p">(</span><span class="err">{</span><span class="w"> </span><span class="s">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;module T\nadd(a Int)(b Int) = a + b&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fs&quot;</span><span class="w"> </span><span class="err">}</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="s">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="n">true</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">[]</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;FSharp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fsharp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span><span class="w"> </span><span class="err">}</span>
+</code></pre></div>
+
+<h4 id="workflow-2-error-repair-loop">Workflow 2: error repair loop<a class="headerlink" href="#workflow-2-error-repair-loop" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span> <span class="n">Call</span> <span class="n">check_source</span><span class="p">({</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;module T</span><span class="se">\n</span><span class="s2">f() = ListMap double [1]&quot;</span> <span class="p">})</span>
+   <span class="o">-&gt;</span> <span class="p">{</span> <span class="s2">&quot;ok&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span> <span class="s2">&quot;errors&quot;</span><span class="p">:</span> <span class="p">[{</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;E002&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;UnboundVar ListMap&quot;</span> <span class="p">}]</span> <span class="p">}</span>
+<span class="mf">2.</span> <span class="n">Call</span> <span class="n">lookup_error</span><span class="p">({</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;E002&quot;</span> <span class="p">})</span>
+   <span class="o">-&gt;</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;UnboundVar&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;example&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span> <span class="p">}</span>
+<span class="mf">3.</span> <span class="n">Fix</span><span class="p">:</span> <span class="n">rename</span> <span class="n">to</span> <span class="n">listMap</span><span class="p">,</span> <span class="n">add</span> <span class="kn">import</span><span class="w"> </span><span class="nn">Std.List</span>
+<span class="mf">4.</span> <span class="n">Call</span> <span class="n">check_source</span><span class="p">({</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;module T</span><span class="se">\n</span><span class="s2">import Std.List</span><span class="se">\n</span><span class="s2">f() = listMap double [1]&quot;</span> <span class="p">})</span>
+   <span class="o">-&gt;</span> <span class="p">{</span> <span class="s2">&quot;ok&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span> <span class="s2">&quot;errors&quot;</span><span class="p">:</span> <span class="p">[]</span> <span class="p">}</span>
+</code></pre></div>
+
+<h4 id="workflow-3-stdlib-discovery">Workflow 3: stdlib discovery<a class="headerlink" href="#workflow-3-stdlib-discovery" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Call</span><span class="w"> </span><span class="n">stdlib_search</span><span class="p">(</span><span class="err">{</span><span class="w"> </span><span class="s">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"> </span><span class="err">}</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="err">[{</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;listMap&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">...</span><span class="w"> </span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;listFold&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">...</span><span class="w"> </span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="mf">...</span><span class="err">]</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">Call</span><span class="w"> </span><span class="n">stdlib_search</span><span class="p">(</span><span class="err">{</span><span class="w"> </span><span class="s">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;A -&gt; Bool&quot;</span><span class="w"> </span><span class="err">}</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">functions</span><span class="w"> </span><span class="n">matching</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="n">signature</span>
+</code></pre></div>
+
+<h4 id="workflow-4-grammar-lookup">Workflow 4: grammar lookup<a class="headerlink" href="#workflow-4-grammar-lookup" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Call</span><span class="w"> </span><span class="n">grammar_lookup</span><span class="p">(</span><span class="err">{</span><span class="w"> </span><span class="s">&quot;rule&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pattern&quot;</span><span class="w"> </span><span class="err">}</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="s">&quot;found&quot;</span><span class="p">:</span><span class="w"> </span><span class="n">true</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rule&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pattern&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;production&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Pattern = ...&quot;</span><span class="w"> </span><span class="err">}</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">Call</span><span class="w"> </span><span class="n">grammar_lookup</span><span class="p">(</span><span class="err">{</span><span class="w"> </span><span class="s">&quot;rule&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Expr&quot;</span><span class="w"> </span><span class="err">}</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="s">&quot;found&quot;</span><span class="p">:</span><span class="w"> </span><span class="n">true</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rule&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Expr&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;production&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Expr = ...&quot;</span><span class="w"> </span><span class="err">}</span>
+</code></pre></div>
+
+<h4 id="workflow-5-project-inspection">Workflow 5: project inspection<a class="headerlink" href="#workflow-5-project-inspection" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Call</span><span class="w"> </span><span class="n">project_info</span><span class="p">(</span><span class="err">{</span><span class="w"> </span><span class="s">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/myapp/src/Main.lll&quot;</span><span class="w"> </span><span class="err">}</span><span class="p">)</span>
+<span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="s">&quot;root&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/myapp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;modules&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="mf">...</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;deps&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">[</span><span class="mf">...</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">[]</span><span class="w"> </span><span class="err">}</span>
+</code></pre></div>
+
+<hr />
+<h2 id="recommended-implementation-order">Recommended implementation order<a class="headerlink" href="#recommended-implementation-order" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Work package A — MCP contract surface</li>
+<li>Work package B — prompt packs and repair recipes</li>
+<li>Work package C — canonical authoring conventions</li>
+<li>Work package D — machine-checked workflow examples</li>
+</ol>
+<h2 id="definition-of-done-for-milestone-6">Definition of done for Milestone 6<a class="headerlink" href="#definition-of-done-for-milestone-6" title="Permanent link">&para;</a></h2>
+<p><code>Milestone 6</code> is done only when all of the following are true:</p>
+<ul>
+<li>grammar, stdlib, project graph, and diagnostics have coherent machine-facing surfaces</li>
+<li>prompt packs and repair recipes are versioned artifacts</li>
+<li>one canonical LLM authoring guide exists</li>
+<li>examples for the main LLM workflows are machine-checked</li>
+</ul>
+<h2 id="questions-to-clarify-after-milestone-6">Questions to clarify after Milestone 6<a class="headerlink" href="#questions-to-clarify-after-milestone-6" title="Permanent link">&para;</a></h2>
+<h3 id="mcp-questions">MCP questions<a class="headerlink" href="#mcp-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Which tool outputs must be stable enough to treat as semver-sensitive public surface?</li>
+<li>Do we need a split between human-readable and machine-readable diagnostics, or is one shape enough?</li>
+</ul>
+<h3 id="prompt-pack-questions">Prompt-pack questions<a class="headerlink" href="#prompt-pack-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Should prompt packs live with compiler source, docs, or a dedicated tooling directory?</li>
+<li>How much model-specific tuning are we willing to encode versus staying model-agnostic?</li>
+</ul>
+<h3 id="workflow-questions">Workflow questions<a class="headerlink" href="#workflow-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Which authoring/repair loops are common enough to deserve first-class examples?</li>
+<li>Are there any docs that still force scraping prose where structured lookup should exist instead?</li>
+</ul>
+<h2 id="non-goals-for-milestone-6">Non-goals for Milestone 6<a class="headerlink" href="#non-goals-for-milestone-6" title="Permanent link">&para;</a></h2>
+<ul>
+<li>changing core syntax purely for AI hype</li>
+<li>shipping a model-specific agent framework as part of the language core</li>
+<li>replacing docs with prompts</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2315 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/superpowers/specs/2026-04-09-ll-lang-project-system/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>ll-lang Project & Module System — Design Spec - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ll-lang-project-module-system-design-spec" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ll-lang Project &amp; Module System — Design Spec
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../compiler-dev/22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-project-manifest-llltoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Project manifest — lll.toml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-directory-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Directory layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-module-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Module resolution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-external-dependency-model-go-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. External dependency model — Go-style
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-multi-file-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Multi-file compilation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-build-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Build outputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cli-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. CLI surface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-backward-compatibility-single-file-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Backward compatibility — single-file mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-order-non-binding-sketch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation order (non-binding sketch)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reconciliation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconciliation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ll-lang-project-module-system-design-spec">ll-lang Project &amp; Module System — Design Spec<a class="headerlink" href="#ll-lang-project-module-system-design-spec" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Non-normative design document.</strong> This file captures planned architecture and may describe commands/flows not implemented yet. For current behavior, use <code>README.md</code>, <code>docs/getting-started.md</code>, and <code>docs/user-guide/*</code>.</p>
+</blockquote>
+<p><strong>Date:</strong> 2026-04-09
+<strong>Status:</strong> Draft, pending implementation (deferred until after Phase 7.10 fixpoint)
+<strong>Scope:</strong> Multi-file projects, external deps, CLI surface. Implementation is a
+single subsequent phase ("Phase 8: Projects"); this doc makes every decision.</p>
+<h2 id="1-project-manifest-llltoml">1. Project manifest — <code>lll.toml</code><a class="headerlink" href="#1-project-manifest-llltoml" title="Permanent link">&para;</a></h2>
+<p><strong>Decision:</strong> one file at the project root named <code>lll.toml</code>, minimal TOML.</p>
+<p>Justification: TOML is stable, has a hand-writable grammar (~400 lines), one
+file, and we already need to parse strings/lists/tables. Putting the manifest
+in <code>.lll</code> is seductive but forces the manifest reader to pull in the whole
+compiler front end just to read a version string — a circular dependency the
+moment <code>lllc mod tidy</code> wants to fetch a dep before it has a working compiler.
+Keep manifest and code on separate sides of the cut.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># lll.toml</span>
+<span class="k">[project]</span>
+<span class="n">name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-app&quot;</span><span class="w">             </span><span class="c1"># required, becomes root module namespace</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="w">              </span><span class="c1"># semver, required</span>
+<span class="n">lll</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.8&quot;</span><span class="w">                </span><span class="c1"># min compiler version</span>
+<span class="n">entry</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;src/Main.lll&quot;</span><span class="w">       </span><span class="c1"># optional; defaults to src/Main.lll</span>
+
+<span class="k">[deps]</span>
+<span class="s2">&quot;github.com/alice/json&quot;</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v1.2.0&quot;</span>
+<span class="s2">&quot;github.com/bob/http&quot;</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v0.4.1&quot;</span>
+<span class="s2">&quot;git.sr.ht/~c/parser-kit&quot;</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v2.0.0&quot;</span>
+
+<span class="k">[platform]</span>
+<span class="c1"># opt-in to platform surface packages; empty = just pure stdlib</span>
+<span class="n">use</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Platform.IO&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Platform.Env&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<p>Only three tables: <code>project</code>, <code>deps</code>, <code>platform</code>. No build profiles, no
+feature flags, no workspaces in v1. If we need them later we add tables; we
+never rename existing keys.</p>
+<p>The manifest parser is a tiny hand-written TOML subset (strings, ints,
+tables, arrays of strings). ~300 LoC of F#. No <code>Tomlyn</code> package — we stay
+dependency-free for the same reason we hand-wrote the parser.</p>
+<h2 id="2-directory-layout">2. Directory layout<a class="headerlink" href="#2-directory-layout" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="n">my</span><span class="o">-</span><span class="n">app</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">lll</span><span class="p">.</span><span class="n">toml</span><span class="w">                  </span><span class="n">manifest</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="n">marker</span><span class="p">)</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">ll</span><span class="p">.</span><span class="n">sum</span><span class="w">                   </span><span class="n">lock</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="p">(</span><span class="n">checked</span><span class="w"> </span><span class="n">in</span><span class="p">)</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">src</span><span class="o">/</span><span class="w">                     </span><span class="n">first</span><span class="o">-</span><span class="n">party</span><span class="w"> </span><span class="n">sources</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">Main</span><span class="p">.</span><span class="n">lll</span><span class="w">             </span><span class="n">entry</span><span class="w"> </span><span class="n">point</span><span class="p">,</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my</span><span class="o">-</span><span class="n">app</span><span class="p">.</span><span class="n">Main</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">Foo</span><span class="o">/</span>
+<span class="err">│</span><span class="w">       </span><span class="err">└──</span><span class="w"> </span><span class="n">Bar</span><span class="p">.</span><span class="n">lll</span><span class="w">          </span><span class="k">module</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my</span><span class="o">-</span><span class="n">app</span><span class="p">.</span><span class="n">Foo</span><span class="p">.</span><span class="n">Bar</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">vendor</span><span class="o">/</span><span class="w">                  </span><span class="n">flattened</span><span class="w"> </span><span class="n">external</span><span class="w"> </span><span class="n">deps</span><span class="w"> </span><span class="p">(</span><span class="n">checked</span><span class="w"> </span><span class="n">in</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>
+<span class="err">│</span><span class="w">       </span><span class="err">└──</span><span class="w"> </span><span class="n">alice</span><span class="o">/</span>
+<span class="err">│</span><span class="w">           </span><span class="err">└──</span><span class="w"> </span><span class="n">json</span><span class="o">/</span>
+<span class="err">│</span><span class="w">               </span><span class="err">├──</span><span class="w"> </span><span class="n">lll</span><span class="p">.</span><span class="n">toml</span>
+<span class="err">│</span><span class="w">               </span><span class="err">└──</span><span class="w"> </span><span class="n">src</span><span class="o">/</span>
+<span class="err">│</span><span class="w">                   </span><span class="err">└──</span><span class="w"> </span><span class="n">Json</span><span class="p">.</span><span class="n">lll</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">bin</span><span class="o">/</span><span class="w">                     </span><span class="n">build</span><span class="w"> </span><span class="n">artifacts</span><span class="w"> </span><span class="p">(</span><span class="n">gitignored</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">my</span><span class="o">-</span><span class="n">app</span><span class="p">.</span><span class="n">fs</span><span class="w">            </span><span class="n">generated</span><span class="w"> </span><span class="n">F</span><span class="p">#</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="p">(</span><span class="n">single</span><span class="w"> </span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="n">concatenated</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">my</span><span class="o">-</span><span class="n">app</span><span class="p">.</span><span class="n">fsproj</span><span class="w">        </span><span class="n">generated</span><span class="p">,</span><span class="w"> </span><span class="n">regenerated</span><span class="w"> </span><span class="n">every</span><span class="w"> </span><span class="n">build</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">my</span><span class="o">-</span><span class="n">app</span><span class="p">.</span><span class="n">dll</span><span class="w">           </span><span class="n">compiled</span><span class="w"> </span><span class="n">assembly</span>
+<span class="err">└──</span><span class="w"> </span><span class="p">.</span><span class="n">llcache</span><span class="o">/</span><span class="w">                </span><span class="n">incremental</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="p">(</span><span class="n">gitignored</span><span class="p">)</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="o">&lt;</span><span class="n">hash</span><span class="o">&gt;</span><span class="p">.</span><span class="n">tast</span><span class="w">          </span><span class="n">cached</span><span class="w"> </span><span class="n">TypedModule</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="n">file</span>
+</code></pre></div>
+
+<p><strong>Root discovery.</strong> <code>lllc</code> walks upward from cwd looking for <code>lll.toml</code>. First
+hit wins; that directory is the project root. If none is found and the CLI
+was invoked with a single <code>.lll</code> file, falls back to single-file mode
+(§8). Anywhere else is an error.</p>
+<p><strong>Vendor.</strong> <code>vendor/</code> is checked in, Go-style. No global <code>~/.lll/pkg</code> cache
+in v1 — simpler, reproducible, no PATH surprises. A global cache can be bolted
+on later as a hardlink source for <code>mod tidy</code>.</p>
+<p><strong><code>bin/</code> and <code>.llcache/</code></strong> are added to <code>.gitignore</code> by <code>lllc mod init</code>.</p>
+<h2 id="3-module-resolution">3. Module resolution<a class="headerlink" href="#3-module-resolution" title="Permanent link">&para;</a></h2>
+<p>Source modules declare their path in the first line (<code>module My.App.Foo</code>). The
+compiler validates that this matches the file's physical location relative to
+its owning project's <code>src/</code>. Mismatch is error <code>E020 ModulePathMismatch</code>.</p>
+<p>An <code>import</code> statement is resolved in this fixed order:</p>
+<ol>
+<li><strong>Built-in stdlib</strong> — <code>import Std.List</code>, <code>import Std.Maybe</code>. Baked into
+   the compiler binary (same as today, shipped as a string blob in
+   <code>Stdlib.fs</code>). No disk lookup.</li>
+<li><strong>Platform surface</strong> — <code>import Platform.IO.File</code>. Mapped to a set of F#
+   shim modules inside the compiler. Only visible if listed in
+   <code>[platform].use</code>; otherwise error <code>E021 PlatformNotEnabled</code>. Platform
+   modules are .NET bindings (File, Env, Process, Net.Http, …). The shim
+   implementation lives under <code>src/LLLangCompiler/Platform/*.fs</code> and is
+   always compiled into <code>lllc</code>; the <code>use</code> list is pure access control.</li>
+<li><strong>Local module</strong> — path starts with the current project's <code>[project].name</code>
+   or is unqualified. Resolved to <code>&lt;root&gt;/src/&lt;rest&gt;.lll</code>.</li>
+<li><strong>External dep</strong> — path has 3+ segments and the first two look like a
+   host/owner pair (<code>github.com/alice/json/Parser</code> → dep
+   <code>github.com/alice/json</code>, module <code>Parser</code>). Matched against <code>[deps]</code>; the
+   file is read from <code>vendor/&lt;dep-path&gt;/src/&lt;module&gt;.lll</code>. If the dep isn't
+   in <code>ll.sum</code> the build fails with <code>E022 UnvendoredDep</code> and a suggestion to
+   run <code>lllc mod tidy</code>.</li>
+</ol>
+<p>Because ll-lang identifiers are TitleCase-vs-lowercase sensitive and <code>/</code> is
+not a legal identifier char, we keep the <code>import</code> syntax dotted and use a
+leading-segment convention: if the dotted name's first segment contains
+dots-that-look-like-a-host, we rewrite the lexer to accept one dotted host
+segment followed by identifiers, e.g. <code>import github.com/alice/json/Parser</code>
+tokenized as <code>Path("github.com/alice/json", ["Parser"])</code>. Internally stored
+as a 2-tuple <code>(DepPath option, string list)</code>.</p>
+<p>Grammar tweak (one new production, documented in <code>spec/grammar.ebnf</code> at
+implementation time):</p>
+<div class="codehilite"><pre><span></span><code><span class="n">ImportStmt</span><span class="w"> </span><span class="o">::=</span><span class="w"> </span><span class="s">&quot;import&quot;</span><span class="w"> </span><span class="p">(</span><span class="n">DepPrefix</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)?</span><span class="w"> </span><span class="n">ModuleIdent</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="w"> </span><span class="n">ModuleIdent</span><span class="p">)</span><span class="o">*</span>
+<span class="n">DepPrefix</span><span class="w">  </span><span class="o">::=</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="n">owner</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="n">repo</span><span class="w">     </span><span class="o">--</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">least</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">slash</span><span class="o">-</span><span class="n">segment</span>
+</code></pre></div>
+
+<p>No change to AST other than the <code>Imports</code> field becoming
+<code>(DepPath option * string list) list</code>.</p>
+<h2 id="4-external-dependency-model-go-style">4. External dependency model — Go-style<a class="headerlink" href="#4-external-dependency-model-go-style" title="Permanent link">&para;</a></h2>
+<p><strong>Add a dep.</strong> User edits <code>lll.toml</code> <code>[deps]</code> manually, runs <code>lllc mod tidy</code>.
+<code>mod tidy</code> does:</p>
+<ol>
+<li>Read <code>lll.toml</code>. For each dep not already in <code>vendor/</code> at the pinned
+   version: shell out to <code>git clone --depth 1 --branch &lt;tag&gt; &lt;url&gt;
+   vendor/&lt;path&gt;/</code> (or <code>git -C vendor/... fetch + checkout</code> if it's there at
+   the wrong rev). We use git for everything in v1 — no custom registry, no
+   protocol negotiation, just "git URL = dep URL".</li>
+<li>Compute <code>sha256</code> over the content of each vendored dep's source tree
+   (sorted-file, NUL-separated, excluding <code>.git</code>).</li>
+<li>Walk each dep's <code>lll.toml</code> transitively and repeat. Version selection is
+   <strong>minimum version selection</strong> (MVS), exactly like Go: if two deps require
+   different versions of a third, pick the higher of the two; the manifest's
+   own constraint always wins if present.</li>
+<li>Rewrite <code>ll.sum</code> with every direct and transitive dep and its hash.</li>
+<li>Delete any <code>vendor/</code> subtree not referenced by the final dep set.</li>
+</ol>
+<p><strong>Lock file format — <code>ll.sum</code>.</strong> One line per dep, sorted:</p>
+<div class="codehilite"><pre><span></span><code>github.com/alice/json v1.2.0 sha256:3f7e9c1a2b4d...
+github.com/alice/json/lll.toml v1.2.0 sha256:a1b2c3...
+github.com/bob/http v0.4.1 sha256:998877...
+github.com/bob/http/lll.toml v0.4.1 sha256:ddeeff...
+</code></pre></div>
+
+<p>Two lines per dep: one for the source tree content, one for the manifest
+alone (so we can validate the dep's own dep list without re-hashing
+everything). Exact Go-style <code>go.sum</code> layout, trivially parseable with
+<code>split(' ')</code>.</p>
+<p>On every build, <code>lllc</code> verifies every entry in <code>ll.sum</code> against the current
+vendor tree. Any mismatch is a hard error (<code>E023 VendorHashMismatch</code>). Users
+either run <code>lllc mod tidy</code> to accept the new content or revert the vendor
+dir.</p>
+<p><strong>CLI:</strong></p>
+<ul>
+<li><code>lllc mod init &lt;name&gt;</code> — create <code>lll.toml</code>, <code>src/Main.lll</code>, <code>.gitignore</code>.</li>
+<li><code>lllc mod tidy</code> — sync vendor + rewrite <code>ll.sum</code> as above.</li>
+<li><code>lllc mod add &lt;path&gt;@&lt;version&gt;</code> — shortcut; writes the line to <code>lll.toml</code>
+  then calls tidy.</li>
+</ul>
+<p>No <code>mod vendor</code> (already always vendored), no <code>mod download</code> (same), no
+<code>go get -u</code> equivalent — upgrades are "edit the manifest, run tidy." Deliberate.</p>
+<h2 id="5-multi-file-compilation">5. Multi-file compilation<a class="headerlink" href="#5-multi-file-compilation" title="Permanent link">&para;</a></h2>
+<p>The compiler grows one new stage at the front: <strong>ProjectLoader</strong>. Pipeline becomes:</p>
+<div class="codehilite"><pre><span></span><code>lll.toml → ProjectLoader → [Lexer → Parser → Elaborator → HMInfer] per file → LinkedCodegen → bin/&lt;name&gt;.fs
+</code></pre></div>
+
+<p><code>ProjectLoader</code>:</p>
+<ol>
+<li>Reads <code>lll.toml</code>, resolves vendor.</li>
+<li>Globs <code>src/**/*.lll</code> + every vendored dep's <code>src/**/*.lll</code>. Parses each
+   file to get its <code>module</code> header + <code>imports</code>.</li>
+<li>Builds a module DAG. Cycle → <code>E024 ModuleCycle</code> with the full SCC.</li>
+<li>Topologically sorts.</li>
+<li>Runs Elaborator + HMInfer <strong>per file, in topological order</strong>, threading
+   a single <code>Env</code> through so downstream files see upstream exports.
+   Non-exported decls are filtered out of the env before handing to the next
+   file. Each <code>TypedModule</code> goes into the <code>.llcache/</code> directory keyed by
+   <code>(file content hash, manifest hash, upstream env hash)</code>.</li>
+<li><code>LinkedCodegen</code> emits one F# file per <code>TypedModule</code>, wraps each in
+   <code>module &lt;dotted.path&gt; =</code>, concatenates in topo order, and writes
+   <code>bin/&lt;project&gt;.fs</code>. F#'s own compile-order requirement is satisfied for
+   free by our topo sort.</li>
+</ol>
+<p><strong>Incremental.</strong> Files whose <code>(content, upstream-env)</code> hash is already in
+<code>.llcache/</code> skip lex/parse/elaborate/infer and just reuse the cached
+<code>TypedModule</code>. Codegen always runs because it's cheap. A cold build does the
+whole graph; a warm build with one file changed re-types only that file and
+its descendants. No daemon, no watch mode in v1.</p>
+<p><strong>Why not batch into one module.</strong> Elaborator and HMInfer already assume
+one <code>LLModule</code> at a time and carry their own <code>Env</code>. Keeping the file
+boundary matches what they expect and avoids rewriting unification to track
+per-file source spans. The cost is one <code>Env</code> merge per file, which is O(n)
+in exports — negligible.</p>
+<h2 id="6-build-outputs">6. Build outputs<a class="headerlink" href="#6-build-outputs" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>lllc build</code> (inside a project): writes <code>bin/&lt;name&gt;.fs</code>,
+  <code>bin/&lt;name&gt;.fsproj</code> (generated, deterministic, regenerated every build),
+  then shells out to <code>dotnet build bin/&lt;name&gt;.fsproj -c Release</code>. Final
+  artifact: <code>bin/&lt;name&gt;.dll</code> (+ <code>bin/&lt;name&gt;</code> launcher script on Unix,
+  <code>.cmd</code> on Windows).</li>
+<li><code>lllc build</code> (single-file mode, §8): unchanged — writes <code>&lt;file&gt;.fs</code> next to
+  the source.</li>
+<li><code>lllc run</code>: project mode builds then <code>dotnet bin/&lt;name&gt;.dll</code>; single-file
+  mode keeps the <code>dotnet fsi</code> hack.</li>
+<li><code>lllc test</code>: project mode discovers <code>tests/**/*.lll</code>, compiles them along
+  with <code>src/</code>, emits a generated <code>TestRunner.fs</code> that calls every <code>fn test_*</code>
+  in topological order, prints <code>PASS</code>/<code>FAIL</code>, exits non-zero on any failure.
+  Dead simple — no xUnit binding, no assertions framework beyond a stdlib
+  <code>assert : Bool -&gt; Str -&gt; Unit</code>. We can add fixtures later.</li>
+</ul>
+<p>All generated files live under <code>bin/</code>; nothing is ever written next to source
+files in project mode. <code>bin/</code> is safe to <code>rm -rf</code> at any time.</p>
+<h2 id="7-cli-surface">7. CLI surface<a class="headerlink" href="#7-cli-surface" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="n">lllc</span><span class="w"> </span><span class="n">build</span><span class="w"> </span><span class="o">[</span><span class="n">path</span><span class="o">]</span><span class="w">              </span><span class="n">build</span><span class="w"> </span><span class="n">project</span><span class="w"> </span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">single</span><span class="w"> </span><span class="k">file</span>
+<span class="n">lllc</span><span class="w"> </span><span class="n">run</span><span class="w">   </span><span class="o">[</span><span class="n">path</span><span class="o">]</span><span class="w"> </span><span class="o">[</span><span class="n">-- args…</span><span class="o">]</span><span class="w">   </span><span class="n">build</span><span class="o">+</span><span class="n">run</span>
+<span class="n">lllc</span><span class="w"> </span><span class="n">test</span><span class="w">  </span><span class="o">[</span><span class="n">path</span><span class="o">]</span><span class="w">              </span><span class="n">run</span><span class="w"> </span><span class="n">tests</span>
+<span class="n">lllc</span><span class="w"> </span><span class="k">mod</span><span class="w">   </span><span class="n">init</span><span class="w"> </span><span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="w">         </span><span class="n">scaffold</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">project</span>
+<span class="n">lllc</span><span class="w"> </span><span class="k">mod</span><span class="w">   </span><span class="n">tidy</span><span class="w">                </span><span class="n">sync</span><span class="w"> </span><span class="n">vendor</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ll</span><span class="p">.</span><span class="nf">sum</span>
+<span class="n">lllc</span><span class="w"> </span><span class="k">mod</span><span class="w">   </span><span class="k">add</span><span class="w">  </span><span class="o">&lt;</span><span class="k">path</span><span class="o">&gt;</span><span class="err">@</span><span class="o">&lt;</span><span class="n">ver</span><span class="o">&gt;</span><span class="w">   </span><span class="k">add</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">dep</span>
+<span class="n">lllc</span><span class="w"> </span><span class="k">mod</span><span class="w">   </span><span class="n">why</span><span class="w">  </span><span class="o">&lt;</span><span class="k">path</span><span class="o">&gt;</span><span class="w">         </span><span class="n">explain</span><span class="w"> </span><span class="n">why</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">dep</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">graph</span>
+<span class="n">lllc</span><span class="w"> </span><span class="n">version</span><span class="w">                   </span><span class="k">print</span><span class="w"> </span><span class="n">compiler</span><span class="w"> </span><span class="n">version</span>
+</code></pre></div>
+
+<p>No <code>fmt</code>, no <code>check</code>, no <code>clean</code> (just <code>rm -rf bin .llcache</code>). <code>mod why</code> is
+trivially useful and almost free given we already have the dep DAG.</p>
+<p>Flags kept to the absolute minimum: <code>-v</code> (verbose), <code>--no-cache</code> (bypass
+<code>.llcache/</code>), <code>-o &lt;path&gt;</code> (override output dir, build only). No <code>--target</code>
+or <code>--release</code> yet — release is the only mode.</p>
+<h2 id="8-backward-compatibility-single-file-mode">8. Backward compatibility — single-file mode<a class="headerlink" href="#8-backward-compatibility-single-file-mode" title="Permanent link">&para;</a></h2>
+<p><strong>Yes, existing single-file <code>.lll</code> programs keep working unchanged.</strong></p>
+<p>Rule: if <code>lllc build foo.lll</code> is invoked <strong>and</strong> walking upward from <code>foo.lll</code>
+finds no <code>lll.toml</code> before hitting the filesystem root, we stay in the current
+legacy single-file path: parse, elaborate, infer, codegen to <code>foo.fs</code>
+next to the source. The entire project system is a no-op in this mode.</p>
+<p>This matters because (a) the 415-test corpus under <code>spec/examples/</code> must
+stay green, (b) the self-hosting bootstrap at Phase 7.9q is in flight and
+must not be disturbed, and (c) the user guide's tutorial is a series of
+single-file examples. Adding a project layer is strictly additive.</p>
+<p>The single-file path also loses <code>import Foo.Bar</code> resolution for anything
+outside stdlib — same as today. Imports beyond <code>Std.*</code> and <code>Platform.*</code>
+inside single-file mode are an error (<code>E025 NoProjectForImport</code>, with a
+hint to run <code>lllc mod init</code>).</p>
+<hr />
+<h2 id="implementation-order-non-binding-sketch">Implementation order (non-binding sketch)<a class="headerlink" href="#implementation-order-non-binding-sketch" title="Permanent link">&para;</a></h2>
+<ol>
+<li>TOML subset parser + manifest data model.</li>
+<li><code>lllc mod init</code> + <code>.gitignore</code> + empty <code>src/Main.lll</code>.</li>
+<li>ProjectLoader stage (single project, no deps) — unblocks multi-file.</li>
+<li>LinkedCodegen + <code>bin/</code> generation + <code>.fsproj</code> template.</li>
+<li><code>.llcache/</code> incremental reuse.</li>
+<li>Vendor fetch (git clone) + <code>ll.sum</code> + <code>mod tidy</code> + <code>mod add</code>.</li>
+<li>MVS resolver.</li>
+<li><code>Platform.*</code> shims + <code>[platform].use</code> gate.</li>
+<li><code>lllc test</code> runner.</li>
+</ol>
+<p>Each step is its own PR with its own error codes and corpus entries. Phase
+4 above (first four steps) is the minimum viable project system; everything
+after is bolt-on.</p>
+<hr />
+<h2 id="reconciliation">Reconciliation<a class="headerlink" href="#reconciliation" title="Permanent link">&para;</a></h2>
+<p>Reconciled with sibling spec <code>2026-04-09-ll-lang-mcp-server.md</code> on
+2026-04-09. This spec is the owner of CLI structure, file layout, and
+dependency resolution; the MCP spec conforms. No edits were required
+here — the MCP spec was amended to reference §2 (root discovery), §3
+(import resolution order), §5 (<code>ProjectLoader</code>, <code>.llcache/</code>), §7 (CLI
+dispatch table), and §8 (single-file fallback), and to expose
+<code>ll.sum</code>-shaped dep info through its <code>project_info</code> tool. Areas
+verified: CLI union, file layout, project root discovery, process
+lifecycle, dependency model, config, error codes, tool inventory,
+terminology.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

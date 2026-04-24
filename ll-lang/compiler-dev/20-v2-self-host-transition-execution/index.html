@@ -1,0 +1,3232 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/20-v2-self-host-transition-execution/">
+      
+      
+        <link rel="prev" href="../19-v2-syntax-ergonomics-execution/">
+      
+      
+        <link rel="next" href="../21-v2-llm-operating-system-execution/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>v2 Self-Host Transition Execution - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v2-self-host-transition-execution" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              v2 Self-Host Transition Execution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-canonical-path-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — Canonical path promotion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — Canonical path promotion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-module-ownership-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical module ownership table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-stage0-isolation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Stage0 isolation policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Stage0 isolation policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage0-isolation-policy-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage0 isolation policy statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-self-hosted-build-capability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Self-hosted build capability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Self-hosted build capability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-build-capability-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current build capability baseline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimum-self-build-guarantee-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum self-build guarantee for v2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimum-real-project-guarantee-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum "real project" guarantee for v2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-feature-first-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Feature-first policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Feature-first policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-first-policy-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature-first policy statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-e-recovery-and-fixpoint-discipline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package E — Recovery and fixpoint discipline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package E — Recovery and fixpoint discipline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixpoint-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixpoint protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 5
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 5
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 5">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canonical-path-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical-path questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bootstrap-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bootstrap questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 5
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-repo-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-repo baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-a-canonical-path-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package A — Canonical path promotion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package A — Canonical path promotion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-module-ownership-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical module ownership table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-b-stage0-isolation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package B — Stage0 isolation policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package B — Stage0 isolation policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage0-isolation-policy-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage0 isolation policy statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-c-self-hosted-build-capability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package C — Self-hosted build capability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package C — Self-hosted build capability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-build-capability-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current build capability baseline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimum-self-build-guarantee-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum self-build guarantee for v2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimum-real-project-guarantee-for-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum "real project" guarantee for v2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-d-feature-first-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package D — Feature-first policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package D — Feature-first policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-first-policy-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature-first policy statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#work-package-e-recovery-and-fixpoint-discipline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Work package E — Recovery and fixpoint discipline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Work package E — Recovery and fixpoint discipline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tasks_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixpoint-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixpoint protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exit-criteria_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-implementation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended implementation order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definition-of-done-for-milestone-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition of done for Milestone 5
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions-to-clarify-after-milestone-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions to clarify after Milestone 5
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions to clarify after Milestone 5">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canonical-path-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical-path questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bootstrap-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bootstrap questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals-for-milestone-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals for Milestone 5
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="v2-self-host-transition-execution">v2 Self-Host Transition Execution<a class="headerlink" href="#v2-self-host-transition-execution" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> doc/policy phase complete — implementation gaps tracked in epic #86
+<strong>Closes:</strong> #88 #90 #92 #93 #95
+<strong>Audience:</strong> implementers of <code>Milestone 5</code><br />
+<strong>Parent docs:</strong> <a href="../13-v2-implementation-roadmap/">v2 implementation roadmap</a>, <a href="../../spec/v2-self-hosting.md">v2 self-hosting spec</a>, <a href="../14-v2-canonical-compiler-boundaries/">v2 canonical compiler boundaries</a></p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p><code>Milestone 5</code> is where self-hosting stops being a side-path demo and becomes
+the canonical development reality.</p>
+<p>The goal is not only "compiler builds compiler". The goal is:</p>
+<ul>
+<li>canonical source of truth is ll-lang</li>
+<li>stage0 is bootstrap only</li>
+<li>feature development flows through self-hosted path first</li>
+<li>recovery remains documented and realistic</li>
+</ul>
+<h2 id="status-model">Status model<a class="headerlink" href="#status-model" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>[x]</code> done in current repo and should be preserved</li>
+<li><code>[ ]</code> not done or not yet canonical for <code>v2</code></li>
+</ul>
+<h2 id="current-repo-baseline">Current-repo baseline<a class="headerlink" href="#current-repo-baseline" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] a self-hosted compiler slice exists</li>
+<li>[x] stage0 F# compiler exists and is operational</li>
+<li>[x] self-hosting is already part of product direction and docs</li>
+<li>[x] target external mappings are sourced from ll-lang <code>FFI.lll</code> sidecars (SDK/vendor), not hardcoded backend tables</li>
+</ul>
+<p>Still not done enough for <code>v2</code>:</p>
+<ul>
+<li>[ ] the ll-lang compiler is not yet the unambiguous canonical implementation path</li>
+<li>[ ] stage0 is still too central to everyday architecture and contributor understanding</li>
+<li>[ ] feature-first policy for ll-lang-owned implementation is not fully enforced</li>
+<li>[ ] self-host build path is not yet the default contributor workflow</li>
+</ul>
+<h2 id="work-package-a-canonical-path-promotion">Work package A — Canonical path promotion<a class="headerlink" href="#work-package-a-canonical-path-promotion" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> doc/policy phase — #88</p>
+<h3 id="goal">Goal<a class="headerlink" href="#goal" title="Permanent link">&para;</a></h3>
+<p>Promote the ll-lang implementation from "special path" to "default path".</p>
+<h3 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define the canonical self-hosted compiler entrypoint and invocation path.</li>
+<li>[x] Ensure docs stop presenting stage0 as the active architecture.</li>
+<li>[x] Make canonical build/check/run narratives self-host-first.</li>
+</ul>
+<h3 id="canonical-module-ownership-table">Canonical module ownership table<a class="headerlink" href="#canonical-module-ownership-table" title="Permanent link">&para;</a></h3>
+<p>The following ll-lang modules are the canonical owners of their respective
+compiler subsystems. Any parallel F# (stage0) implementation is a bootstrap
+mirror only and is not the authoritative version.</p>
+<table>
+<thead>
+<tr>
+<th>Subsystem</th>
+<th>Canonical ll-lang module</th>
+<th>Stage0 mirror status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lexer</td>
+<td><code>ll-lang/compiler/Lexer</code></td>
+<td>bootstrap mirror — frozen</td>
+</tr>
+<tr>
+<td>Parser</td>
+<td><code>ll-lang/compiler/Parser</code></td>
+<td>bootstrap mirror — frozen</td>
+</tr>
+<tr>
+<td>Elaborator / type-checker</td>
+<td><code>ll-lang/compiler/Elaborate</code></td>
+<td>bootstrap mirror — frozen</td>
+</tr>
+<tr>
+<td>H-M inference</td>
+<td><code>ll-lang/compiler/Infer</code></td>
+<td>bootstrap mirror — frozen</td>
+</tr>
+<tr>
+<td>F# codegen</td>
+<td><code>ll-lang/compiler/Codegen</code></td>
+<td>bootstrap mirror — frozen</td>
+</tr>
+<tr>
+<td>Stdlib (core)</td>
+<td><code>ll-lang/stdlib/Core</code></td>
+<td>not mirrored</td>
+</tr>
+<tr>
+<td>Stdlib (collections)</td>
+<td><code>ll-lang/stdlib/Collections</code></td>
+<td>not mirrored</td>
+</tr>
+<tr>
+<td>Stdlib (io)</td>
+<td><code>ll-lang/stdlib/IO</code></td>
+<td>not mirrored</td>
+</tr>
+<tr>
+<td>Build driver</td>
+<td><code>ll-lang/compiler/Driver</code></td>
+<td>bootstrap mirror — frozen</td>
+</tr>
+</tbody>
+</table>
+<p>The self-hosted compiler entrypoint is <code>ll-lang/compiler/Driver</code>. Contributors
+should invoke the compiler through this path. Stage0 invocation (<code>dotnet run
+--project src/LLLangCompiler</code>) is reserved for bootstrap recovery only.</p>
+<h3 id="exit-criteria">Exit criteria<a class="headerlink" href="#exit-criteria" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A new contributor reading the docs can tell which compiler is canonical. ✓</li>
+<li>The self-hosted path is the default story, not an appendix. ✓</li>
+</ul>
+<h2 id="work-package-b-stage0-isolation-policy">Work package B — Stage0 isolation policy<a class="headerlink" href="#work-package-b-stage0-isolation-policy" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> doc/policy phase — #90</p>
+<h3 id="goal_1">Goal<a class="headerlink" href="#goal_1" title="Permanent link">&para;</a></h3>
+<p>Keep bootstrap valuable without letting it remain the active product identity.</p>
+<h3 id="tasks_1">Tasks<a class="headerlink" href="#tasks_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define which directories and commands are bootstrap-only.</li>
+<li>[x] Define which work is allowed to land in stage0 and why.</li>
+<li>[x] Document maintenance policy for stage0.</li>
+<li>[x] Ensure bootstrap language in docs is explicit and narrow.</li>
+</ul>
+<h3 id="stage0-isolation-policy-statement">Stage0 isolation policy statement<a class="headerlink" href="#stage0-isolation-policy-statement" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Policy:</strong> stage0 (<code>src/LLLangCompiler/</code>) receives no new features. Only
+critical bootstrap fixes — those required to keep the self-hosted build path
+alive — are permitted to land in stage0. Any other change must go through the
+ll-lang self-hosted implementation first.</p>
+</blockquote>
+<p><strong>Bootstrap-only directories and commands:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Path / command</th>
+<th>Role</th>
+<th>Permitted changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/LLLangCompiler/</code></td>
+<td>stage0 F# compiler</td>
+<td>critical bootstrap fixes only</td>
+</tr>
+<tr>
+<td><code>dotnet run --project src/LLLangCompiler</code></td>
+<td>stage0 invocation</td>
+<td>no new flags or behaviour</td>
+</tr>
+<tr>
+<td><code>dotnet test</code> (stage0 tests)</td>
+<td>stage0 regression suite</td>
+<td>fixes to keep existing tests green</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What counts as a critical bootstrap fix:</strong>
+- A parser or lexer bug that prevents the stage0 compiler from parsing valid
+  ll-lang source needed to drive the self-hosted build
+- A codegen defect that causes the self-hosted binary produced by stage0 to
+  crash on startup</p>
+<p><strong>What does not count:</strong>
+- Language improvements
+- Performance work
+- New syntax support
+- Any feature that is not strictly required to keep the bootstrap cycle alive</p>
+<h3 id="exit-criteria_1">Exit criteria<a class="headerlink" href="#exit-criteria_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Stage0 is clearly a recovery/bootstrap artifact. ✓</li>
+<li>Contributors do not mistake bootstrap internals for active source of truth. ✓</li>
+</ul>
+<h2 id="work-package-c-self-hosted-build-capability">Work package C — Self-hosted build capability<a class="headerlink" href="#work-package-c-self-hosted-build-capability" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> doc/policy phase — #92</p>
+<h3 id="goal_2">Goal<a class="headerlink" href="#goal_2" title="Permanent link">&para;</a></h3>
+<p>Require the self-hosted compiler to build itself and real projects, not only toy examples.</p>
+<h3 id="tasks_2">Tasks<a class="headerlink" href="#tasks_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define the minimum self-build guarantee for <code>v2</code>.</li>
+<li>[x] Define the minimum "real project" guarantee for <code>v2</code>.</li>
+<li>[x] Ensure a stdlib-consuming multi-module project is part of the milestone validation story.</li>
+</ul>
+<h3 id="current-build-capability-baseline">Current build capability baseline<a class="headerlink" href="#current-build-capability-baseline" title="Permanent link">&para;</a></h3>
+<p>As of the doc/policy phase, the self-hosted compiler can:</p>
+<ul>
+<li>parse and type-check the ll-lang stdlib modules (10 modules, ~5857 LOC)</li>
+<li>produce runnable F# output for the stdlib and compiler driver modules</li>
+<li>run the compiler test corpus end-to-end via stage0-produced binary</li>
+</ul>
+<p>The self-hosted compiler <strong>cannot yet</strong> (tracked as implementation gaps in #86):</p>
+<ul>
+<li>fully compile itself without stage0 assistance on all subsystems</li>
+<li>compile an arbitrary third-party multi-module project without manual
+  dependency ordering</li>
+</ul>
+<h3 id="minimum-self-build-guarantee-for-v2">Minimum self-build guarantee for v2<a class="headerlink" href="#minimum-self-build-guarantee-for-v2" title="Permanent link">&para;</a></h3>
+<p><code>v2</code> ships when the self-hosted compiler can compile the following slice
+without stage0 involvement beyond initial bootstrap:</p>
+<ol>
+<li><code>ll-lang/stdlib/Core</code>, <code>Collections</code>, <code>IO</code> — full compilation</li>
+<li><code>ll-lang/compiler/Lexer</code>, <code>Parser</code>, <code>Elaborate</code>, <code>Infer</code> — full compilation</li>
+<li><code>ll-lang/compiler/Codegen</code>, <code>Driver</code> — full compilation</li>
+<li>The compiler driver binary, invocable as <code>ll-lang build</code></li>
+</ol>
+<p>If one subsystem still blocks full self-build at v2 cut, the maximum acceptable
+fallback is: all subsystems except the blocking one pass self-build, and the
+blocking subsystem is tracked as a known gap with a concrete fix timeline.</p>
+<h3 id="minimum-real-project-guarantee-for-v2">Minimum "real project" guarantee for v2<a class="headerlink" href="#minimum-real-project-guarantee-for-v2" title="Permanent link">&para;</a></h3>
+<p>The self-hosted compiler must be able to build at least one non-trivial project
+that is not the compiler itself:</p>
+<ul>
+<li>the project must use at least two stdlib modules</li>
+<li>the project must span at least two source files</li>
+<li>the project must produce a runnable artifact</li>
+</ul>
+<h3 id="exit-criteria_2">Exit criteria<a class="headerlink" href="#exit-criteria_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Self-hosted compiler can build itself or the maximal agreed working slice. ✓ (policy defined; implementation tracked in #86)</li>
+<li>Self-hosted compiler can build a non-trivial project with dependencies. ✓ (policy defined; implementation tracked in #86)</li>
+</ul>
+<h2 id="work-package-d-feature-first-policy">Work package D — Feature-first policy<a class="headerlink" href="#work-package-d-feature-first-policy" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> doc/policy phase — #93</p>
+<h3 id="goal_3">Goal<a class="headerlink" href="#goal_3" title="Permanent link">&para;</a></h3>
+<p>Prevent new compiler work from silently continuing to accumulate in stage0.</p>
+<h3 id="tasks_3">Tasks<a class="headerlink" href="#tasks_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Freeze the policy that new compiler features land in ll-lang first.</li>
+<li>[x] Define what counts as an allowed bootstrap mirror or sync step.</li>
+<li>[x] Add docs language that makes any stage0-only feature work clearly exceptional.</li>
+</ul>
+<h3 id="feature-first-policy-statement">Feature-first policy statement<a class="headerlink" href="#feature-first-policy-statement" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Rule:</strong> any new compiler feature must have a ll-lang implementation plan
+before stage0 receives it. A feature that exists only in F# (stage0) is
+explicitly incomplete for <code>v2</code> purposes and must not be counted as shipped.</p>
+</blockquote>
+<p><strong>What "ll-lang implementation plan" means in practice:</strong>
+- A GitHub issue with label <code>self-host</code> describing the ll-lang implementation
+- The issue is linked to the relevant epic (#86 or a sub-epic)
+- The issue is created before or simultaneously with any stage0 work</p>
+<p><strong>Allowed bootstrap mirror / sync steps:</strong>
+- Porting a feature from ll-lang to stage0 after the ll-lang version is
+  complete, solely to keep the bootstrap cycle building
+- Fixing a stage0 defect that was introduced during such a port</p>
+<p><strong>Explicitly not allowed:</strong>
+- Designing a feature in stage0 first, with "ll-lang later" as a footnote
+- Merging a stage0-only feature as "good enough for now"
+- Treating ll-lang implementation as optional for features that affect
+  user-visible language behaviour</p>
+<p><strong>Labelling convention:</strong> PRs that add anything to <code>src/LLLangCompiler/</code>
+without a corresponding <code>ll-lang</code> implementation issue must be flagged
+<code>bootstrap-only</code> and reviewed against this policy before merge.</p>
+<h3 id="exit-criteria_3">Exit criteria<a class="headerlink" href="#exit-criteria_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>"Implemented only in F#" is automatically recognized as incomplete for <code>v2</code>. ✓</li>
+<li>Contributor workflow favors ll-lang implementation by default. ✓</li>
+</ul>
+<h2 id="work-package-e-recovery-and-fixpoint-discipline">Work package E — Recovery and fixpoint discipline<a class="headerlink" href="#work-package-e-recovery-and-fixpoint-discipline" title="Permanent link">&para;</a></h2>
+<p><strong>Closed by:</strong> doc/policy phase — #95</p>
+<h3 id="goal_4">Goal<a class="headerlink" href="#goal_4" title="Permanent link">&para;</a></h3>
+<p>Keep the self-host transition operationally safe.</p>
+<h3 id="tasks_4">Tasks<a class="headerlink" href="#tasks_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[x] Define stage1/stage2/recovery workflow in contributor docs.</li>
+<li>[x] Define what fixpoint validates and what it does not validate.</li>
+<li>[x] Keep bootstrap recovery instructions concrete and short.</li>
+</ul>
+<h3 id="fixpoint-protocol">Fixpoint protocol<a class="headerlink" href="#fixpoint-protocol" title="Permanent link">&para;</a></h3>
+<p><strong>Definitions:</strong></p>
+<ul>
+<li><strong>stage0:</strong> the F# compiler in <code>src/LLLangCompiler/</code> — used only for bootstrap</li>
+<li><strong>stage1:</strong> the binary produced by compiling ll-lang sources with stage0</li>
+<li><strong>stage2:</strong> the binary produced by compiling ll-lang sources with stage1</li>
+</ul>
+<p><strong>Fixpoint check:</strong> stage1 and stage2 produce byte-for-byte identical output
+for the same input. This is the primary correctness gate for the self-hosted
+compiler.</p>
+<p><strong>What fixpoint validates:</strong>
+- The ll-lang compiler is self-consistent: it produces the same binary from
+  its own source regardless of whether stage0 or a prior self-hosted binary
+  drove the compilation
+- Code generation is deterministic across two compilation generations</p>
+<p><strong>What fixpoint does not validate:</strong>
+- Correctness of the language semantics (this is validated by the test corpus)
+- Performance
+- Bootstrap compatibility with stage0 changes not yet mirrored to ll-lang</p>
+<p><strong>Stage1/stage2/recovery workflow:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nx">Normal</span><span class="w"> </span><span class="nx">development</span><span class="p">:</span>
+<span class="w">  </span><span class="mi">1</span><span class="p">.</span><span class="w"> </span><span class="nx">Edit</span><span class="w"> </span><span class="nx">ll</span><span class="o">-</span><span class="nx">lang</span><span class="w"> </span><span class="nx">sources</span>
+<span class="w">  </span><span class="mi">2</span><span class="p">.</span><span class="w"> </span><span class="nx">Build</span><span class="w"> </span><span class="nx">stage1</span><span class="p">:</span><span class="w">  </span><span class="nx">stage0</span><span class="w"> </span><span class="nx">compiles</span><span class="w"> </span><span class="nx">ll</span><span class="o">-</span><span class="nx">lang</span><span class="w"> </span><span class="nx">sources</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="nx">stage1</span><span class="w"> </span><span class="nx">binary</span>
+<span class="w">  </span><span class="mi">3</span><span class="p">.</span><span class="w"> </span><span class="nx">Build</span><span class="w"> </span><span class="nx">stage2</span><span class="p">:</span><span class="w">  </span><span class="nx">stage1</span><span class="w"> </span><span class="nx">compiles</span><span class="w"> </span><span class="nx">ll</span><span class="o">-</span><span class="nx">lang</span><span class="w"> </span><span class="nx">sources</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="nx">stage2</span><span class="w"> </span><span class="nx">binary</span>
+<span class="w">  </span><span class="mi">4</span><span class="p">.</span><span class="w"> </span><span class="nx">Fixpoint</span><span class="w"> </span><span class="nx">check</span><span class="p">:</span><span class="w"> </span><span class="nx">diff</span><span class="w"> </span><span class="nx">stage1</span><span class="w"> </span><span class="nx">output</span><span class="w"> </span><span class="nx">vs</span><span class="w"> </span><span class="nx">stage2</span><span class="w"> </span><span class="nx">output</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="nx">must</span><span class="w"> </span><span class="k">match</span>
+<span class="w">  </span><span class="mi">5</span><span class="p">.</span><span class="w"> </span><span class="nx">Run</span><span class="w"> </span><span class="nx">test</span><span class="w"> </span><span class="nx">corpus</span><span class="w"> </span><span class="nx">against</span><span class="w"> </span><span class="nx">stage1</span>
+
+<span class="nx">Bootstrap</span><span class="w"> </span><span class="nx">recovery</span><span class="w"> </span><span class="p">(</span><span class="nx">when</span><span class="w"> </span><span class="nx">stage0</span><span class="w"> </span><span class="nx">cannot</span><span class="w"> </span><span class="nx">build</span><span class="w"> </span><span class="nx">ll</span><span class="o">-</span><span class="nx">lang</span><span class="w"> </span><span class="nx">sources</span><span class="p">):</span>
+<span class="w">  </span><span class="mi">1</span><span class="p">.</span><span class="w"> </span><span class="nx">Identify</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">stage0</span><span class="w"> </span><span class="nx">defect</span><span class="w"> </span><span class="p">(</span><span class="nx">parser</span><span class="p">,</span><span class="w"> </span><span class="nx">typechecker</span><span class="p">,</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">codegen</span><span class="w"> </span><span class="nx">gap</span><span class="p">)</span>
+<span class="w">  </span><span class="mi">2</span><span class="p">.</span><span class="w"> </span><span class="nx">Apply</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">minimal</span><span class="w"> </span><span class="nx">fix</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">stage0</span><span class="w"> </span><span class="p">(</span><span class="nx">critical</span><span class="w"> </span><span class="nx">bootstrap</span><span class="w"> </span><span class="nx">fix</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="nx">see</span><span class="w"> </span><span class="nx">WP</span><span class="w"> </span><span class="nx">B</span><span class="w"> </span><span class="nx">policy</span><span class="p">)</span>
+<span class="w">  </span><span class="mi">3</span><span class="p">.</span><span class="w"> </span><span class="nx">Rebuild</span><span class="w"> </span><span class="nx">stage1</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">fixed</span><span class="w"> </span><span class="nx">stage0</span>
+<span class="w">  </span><span class="mi">4</span><span class="p">.</span><span class="w"> </span><span class="nx">Re</span><span class="o">-</span><span class="nx">run</span><span class="w"> </span><span class="nx">fixpoint</span><span class="w"> </span><span class="nx">check</span>
+<span class="w">  </span><span class="mi">5</span><span class="p">.</span><span class="w"> </span><span class="nx">File</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">stage0</span><span class="w"> </span><span class="nx">patch</span><span class="w"> </span><span class="nx">issue</span><span class="w"> </span><span class="nx">with</span><span class="w"> </span><span class="nx">label</span><span class="w"> </span><span class="err">`</span><span class="nx">bootstrap</span><span class="o">-</span><span class="nx">fix</span><span class="err">`</span>
+</code></pre></div>
+
+<p><strong>Fixpoint is one gate among several.</strong> A green fixpoint does not mean the
+compiler is correct — it means the compiler is self-consistent. The test
+corpus, the real-project build guarantee (WP C), and code review are the other
+gates.</p>
+<h3 id="exit-criteria_4">Exit criteria<a class="headerlink" href="#exit-criteria_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Recovery is documented enough that self-hosting is not brittle heroics. ✓</li>
+<li>Fixpoint is treated as one gate among several, not the only proof of correctness. ✓</li>
+</ul>
+<h2 id="recommended-implementation-order">Recommended implementation order<a class="headerlink" href="#recommended-implementation-order" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Work package A — canonical path promotion</li>
+<li>Work package B — stage0 isolation</li>
+<li>Work package C — self-hosted build capability</li>
+<li>Work package D — feature-first policy</li>
+<li>Work package E — recovery and fixpoint discipline</li>
+</ol>
+<h2 id="definition-of-done-for-milestone-5">Definition of done for Milestone 5<a class="headerlink" href="#definition-of-done-for-milestone-5" title="Permanent link">&para;</a></h2>
+<p><code>Milestone 5</code> is done only when all of the following are true:</p>
+<ul>
+<li>ll-lang implementation is the documented canonical compiler</li>
+<li>stage0 is isolated and explicitly bootstrap-only</li>
+<li>self-hosted compiler can build itself and a real dependency-bearing project</li>
+<li>contributor workflow and feature policy are self-host-first</li>
+<li>recovery path remains documented and usable</li>
+</ul>
+<h2 id="questions-to-clarify-after-milestone-5">Questions to clarify after Milestone 5<a class="headerlink" href="#questions-to-clarify-after-milestone-5" title="Permanent link">&para;</a></h2>
+<h3 id="canonical-path-questions">Canonical-path questions<a class="headerlink" href="#canonical-path-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Is there still any command naming or directory layout that makes stage0 feel "more official" than the self-hosted path?</li>
+<li>Which self-hosted entrypoint should remain user-facing long term?</li>
+</ul>
+<h3 id="bootstrap-questions">Bootstrap questions<a class="headerlink" href="#bootstrap-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>What is the minimum bootstrap maintenance we are willing to carry after <code>v2</code>?</li>
+<li>Which stage0 subsystems are still mirrors versus intentionally frozen?</li>
+</ul>
+<h3 id="validation-questions">Validation questions<a class="headerlink" href="#validation-questions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>What is the smallest acceptable self-hosted build slice if one subsystem still blocks full self-build?</li>
+<li>Which smoke projects best represent real-world confidence for self-hosted builds?</li>
+</ul>
+<h2 id="non-goals-for-milestone-5">Non-goals for Milestone 5<a class="headerlink" href="#non-goals-for-milestone-5" title="Permanent link">&para;</a></h2>
+<ul>
+<li>deleting stage0 from the repo</li>
+<li>cross-platform bootstrap independence</li>
+<li>advanced optimizer or packaging work unrelated to self-host transition</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3128 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Statically-typed functional language for LLM code generation">
+      
+      
+      
+        <link rel="canonical" href="https://neftedollar.com/ll-lang/compiler-dev/01-architecture-overview/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../02-lexer/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Architecture overview - ll-lang</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ll-lang" />
+  <meta property="og:description" content="Statically-typed functional language for LLM code generation" />
+  <meta property="og:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://neftedollar.com/ll-lang/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ll-lang" />
+  <meta name="twitter:description" content="Statically-typed functional language for LLM code generation" />
+  <meta name="twitter:image" content="https://neftedollar.com/ll-lang/assets/social/og.png" />
+
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture-overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ll-lang" class="md-header__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ll-lang
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ll-lang" class="md-nav__button md-logo" aria-label="ll-lang" data-md-component="logo">
+      
+  <img src="../../assets/brand/ll-mark.svg" alt="logo">
+
+    </a>
+    ll-lang
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Neftedollar/ll-lang" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Neftedollar/ll-lang
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/01-installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/02-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/03-types-and-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types and inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/04-tags-and-units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tags and units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/05-traits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/06-modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules and Projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/07-error-codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/08-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The lllc CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/09-llm-prompting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompting an LLM to write ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/10-targets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/11-java-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Target
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-hello-world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 01: Hello, World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-types-and-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 02: Types and Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/03-building-a-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 03: Building a Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/04-multi-target/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial 04: Compiling to Multiple Targets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Language Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stdlib-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standard Library Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compiler Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Compiler Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stage0-vs-v2-canonical-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage0 vs v2 canonical architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stage0 vs v2 canonical architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v2-self-hosted-compiler-current-state-milestone-1-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v2 self-hosted compiler — current state (Milestone 1 complete)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-file-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single-file mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#project-mode-phase-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project mode (Phase 8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-by-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module-by-module
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module-by-module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tokenfs-token-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token.fs — token types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lexerfs-tokenizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lexer.fs — tokenizer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#astfs-untyped-surface-ast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AST.fs — untyped surface AST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parserfs-recursive-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parser.fs — recursive descent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elaboratorfs-declared-type-checking-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elaborator.fs — declared-type checking pass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typesfs-type-scheme-plumbing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types.fs — type-scheme plumbing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typedastfs-typed-ast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypedAST.fs — typed AST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hminferfs-algorithm-w" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HMInfer.fs — Algorithm W
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegenfs-f-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codegen.fs — F# emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegentsfs-typescript-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenTS.fs — TypeScript emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegenpyfs-python-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenPy.fs — Python emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegenjavafs-java-21-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenJava.fs — Java 21 emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegencsharpfs-c-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenCSharp.fs — C# emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegenllvmfs-llvm-ir-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenLLVM.fs — LLVM IR emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platformfs-targetsdk-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform.fs — target/SDK registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manifestfs-toml-subset-parser-phase-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manifest.fs — TOML subset parser (Phase 8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#projectloaderfs-multi-file-project-driver-phase-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ProjectLoader.fs — multi-file project driver (Phase 8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilerfs-pipeline-glue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiler.fs — pipeline glue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lllcselfsrcmcplll-self-hosted-mcp-server-phase-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lllcself/src/Mcp.lll — self-hosted MCP server (Phase 9)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srclllangtoolprogramfs-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/LLLangTool/Program.fs — CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#f-compile-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F# compile order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-target-dispatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-target dispatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package system
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parser-and-inference-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parser and Inference Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-lexer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-elaborator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elaborator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hm-inference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    H-M inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-adding-an-error-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a new error code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-self-hosting-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosting roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-multi-target-codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Target Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-v2-language-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Language Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-v2-implementation-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Implementation Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-v2-canonical-compiler-boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Canonical Compiler Boundaries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-v2-pass-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Pass Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-v2-project-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Project System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-v2-stdlib-foundation-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Stdlib Foundation Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-v2-compiler-boundaries-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Compiler Boundaries Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-v2-syntax-ergonomics-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Syntax Ergonomics Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-v2-self-host-transition-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Self-Host Transition Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-v2-llm-operating-system-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 LLM Operating System Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-v2-benchmarks-release-gates-execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 Benchmarks and Release Gates Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-contract-1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang Release Contract 1.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ll-lang v2 Release Gates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../why-ll-lang/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ll-lang
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stage0-vs-v2-canonical-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage0 vs v2 canonical architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stage0 vs v2 canonical architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v2-self-hosted-compiler-current-state-milestone-1-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v2 self-hosted compiler — current state (Milestone 1 complete)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-file-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single-file mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#project-mode-phase-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project mode (Phase 8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-by-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module-by-module
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module-by-module">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tokenfs-token-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token.fs — token types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lexerfs-tokenizer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lexer.fs — tokenizer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#astfs-untyped-surface-ast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AST.fs — untyped surface AST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parserfs-recursive-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parser.fs — recursive descent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elaboratorfs-declared-type-checking-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elaborator.fs — declared-type checking pass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typesfs-type-scheme-plumbing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types.fs — type-scheme plumbing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typedastfs-typed-ast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypedAST.fs — typed AST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hminferfs-algorithm-w" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HMInfer.fs — Algorithm W
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegenfs-f-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codegen.fs — F# emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegentsfs-typescript-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenTS.fs — TypeScript emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegenpyfs-python-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenPy.fs — Python emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegenjavafs-java-21-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenJava.fs — Java 21 emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegencsharpfs-c-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenCSharp.fs — C# emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codegenllvmfs-llvm-ir-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CodegenLLVM.fs — LLVM IR emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platformfs-targetsdk-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform.fs — target/SDK registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manifestfs-toml-subset-parser-phase-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manifest.fs — TOML subset parser (Phase 8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#projectloaderfs-multi-file-project-driver-phase-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ProjectLoader.fs — multi-file project driver (Phase 8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compilerfs-pipeline-glue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiler.fs — pipeline glue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lllcselfsrcmcplll-self-hosted-mcp-server-phase-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lllcself/src/Mcp.lll — self-hosted MCP server (Phase 9)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srclllangtoolprogramfs-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/LLLangTool/Program.fs — CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#f-compile-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F# compile order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-target-dispatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-target dispatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package system
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parser-and-inference-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parser and Inference Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="architecture-overview">Architecture overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> All 10 phases complete. Bootstrap fixpoint achieved (<code>compiler₁.fs == compiler₂.fs</code>).</p>
+<h2 id="stage0-vs-v2-canonical-architecture">Stage0 vs v2 canonical architecture<a class="headerlink" href="#stage0-vs-v2-canonical-architecture" title="Permanent link">&para;</a></h2>
+<p>This document describes the <strong>stage0 bootstrap</strong> compiler (<code>src/LLLangCompiler/*.fs</code>). Stage0 is
+<strong>frozen</strong> — it is the bootstrap implementation only, not the long-term source of truth for any
+subsystem.</p>
+<p>The <strong>canonical v2 compiler</strong> is the self-hosted implementation under <code>stdlib/src/*.lll</code>.
+Canonical ownership, pass contracts, and migration notes are the binding authority:</p>
+<ul>
+<li><a href="../14-v2-canonical-compiler-boundaries/">14-v2-canonical-compiler-boundaries.md</a> — frozen ownership table</li>
+<li><a href="../15-v2-pass-contracts/">15-v2-pass-contracts.md</a> — frozen pass contracts</li>
+</ul>
+<p><strong>Namespace split:</strong>
+- <strong><code>Compiler.*</code></strong> — self-hosted compiler implementation phases
+- <strong><code>Std.*</code></strong> — reusable foundation library modules</p>
+<p>Stage0 F# files are <strong>bootstrap mirrors</strong>. Where a self-hosted ll-lang module owns a subsystem,
+the stage0 file is transitional and must not receive new feature work.</p>
+<h3 id="v2-self-hosted-compiler-current-state-milestone-1-complete">v2 self-hosted compiler — current state (Milestone 1 complete)<a class="headerlink" href="#v2-self-hosted-compiler-current-state-milestone-1-complete" title="Permanent link">&para;</a></h3>
+<p>The following ll-lang modules are now the canonical owners of their subsystems:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>ll-lang file</th>
+<th>Tests</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lexer</td>
+<td><code>stdlib/src/Lexer.lll</code></td>
+<td>—</td>
+<td>transitional bootstrap</td>
+</tr>
+<tr>
+<td>Parser</td>
+<td><code>stdlib/src/Parser.lll</code></td>
+<td>—</td>
+<td>transitional bootstrap</td>
+</tr>
+<tr>
+<td>Elaborator</td>
+<td><code>stdlib/src/Elaborator.lll</code></td>
+<td>—</td>
+<td>transitional bootstrap</td>
+</tr>
+<tr>
+<td>Type representations</td>
+<td><code>stdlib/src/CompilerTypes.lll</code></td>
+<td>20/20</td>
+<td><strong>canonical</strong></td>
+</tr>
+<tr>
+<td>Typed IR shapes</td>
+<td><code>stdlib/src/CompilerTyped.lll</code></td>
+<td>15/15</td>
+<td><strong>canonical</strong></td>
+</tr>
+<tr>
+<td>HM inference</td>
+<td><code>stdlib/src/CompilerInfer.lll</code></td>
+<td>12/12</td>
+<td><strong>canonical</strong></td>
+</tr>
+<tr>
+<td>Lowering</td>
+<td><code>stdlib/src/CompilerLower.lll</code></td>
+<td>16/16</td>
+<td><strong>canonical</strong></td>
+</tr>
+<tr>
+<td>F# codegen</td>
+<td><code>stdlib/src/Codegen.lll</code></td>
+<td>—</td>
+<td>transitional bootstrap</td>
+</tr>
+<tr>
+<td>TypeScript codegen</td>
+<td><code>stdlib/src/CodegenTS.lll</code></td>
+<td>—</td>
+<td>transitional bootstrap</td>
+</tr>
+<tr>
+<td>Python codegen</td>
+<td><code>stdlib/src/CodegenPy.lll</code></td>
+<td>—</td>
+<td>transitional bootstrap</td>
+</tr>
+<tr>
+<td>Java codegen</td>
+<td><code>stdlib/src/CodegenJava.lll</code></td>
+<td>—</td>
+<td>transitional bootstrap</td>
+</tr>
+<tr>
+<td>C# codegen</td>
+<td><code>stdlib/src/CodegenCSharp.lll</code></td>
+<td>—</td>
+<td>transitional bootstrap</td>
+</tr>
+<tr>
+<td>Full pipeline</td>
+<td><code>stdlib/src/Compiler.lll</code></td>
+<td>—</td>
+<td>transitional bootstrap</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Canonical</strong> = ll-lang module is the authority; stage0 is a compatibility mirror only.<br />
+<strong>Transitional bootstrap</strong> = ll-lang module exists but parity gate not yet enforced.</p>
+<hr />
+<p>The compiler is a straight pipeline: source text in, target source out. Each
+stage is a pure function (modulo the small <code>InferState</code> used in HM) and
+returns <code>Result&lt;_, LLError list&gt;</code>.</p>
+<h2 id="pipeline">Pipeline<a class="headerlink" href="#pipeline" title="Permanent link">&para;</a></h2>
+<h3 id="single-file-mode">Single-file mode<a class="headerlink" href="#single-file-mode" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="p">.</span><span class="nx">lll</span><span class="w"> </span><span class="nx">source</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
+<span class="w">        </span><span class="err">│</span>
+<span class="w">        </span><span class="err">▼</span>
+<span class="w">   </span><span class="nx">Lexer</span><span class="p">.</span><span class="nx">tokenize</span><span class="w">                 </span><span class="nx">Tok</span><span class="w"> </span><span class="nx">list</span><span class="w"> </span><span class="nx">with</span><span class="w"> </span><span class="nx">INDENT</span><span class="o">/</span><span class="nx">DEDENT</span>
+<span class="w">        </span><span class="err">│</span>
+<span class="w">        </span><span class="err">▼</span>
+<span class="w">   </span><span class="nx">Parser</span><span class="p">.</span><span class="nx">parseModuleWithPos</span><span class="w">      </span><span class="nx">LLModule</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nx">AST</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">PosMap</span>
+<span class="w">        </span><span class="err">│</span>
+<span class="w">        </span><span class="err">▼</span>
+<span class="w">   </span><span class="nx">Elaborator</span><span class="p">.</span><span class="nx">elaborate</span><span class="w">           </span><span class="p">(</span><span class="nx">LLModule</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">TypeEnv</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">E001</span><span class="p">..</span><span class="nx">E005</span><span class="w"> </span><span class="nx">checks</span>
+<span class="w">        </span><span class="err">│</span>
+<span class="w">        </span><span class="err">▼</span>
+<span class="w">   </span><span class="nx">HMInfer</span><span class="p">.</span><span class="nx">infer</span><span class="w">                  </span><span class="nx">TypedModule</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nx">typed</span><span class="w"> </span><span class="nx">AST</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">Env</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">dispatch</span><span class="w"> </span><span class="nx">map</span>
+<span class="w">        </span><span class="err">│</span>
+<span class="w">        </span><span class="err">▼</span>
+<span class="w">   </span><span class="nx">Codegen</span><span class="o">*</span><span class="p">.</span><span class="nx">emit</span><span class="w">                  </span><span class="nx">Target</span><span class="w"> </span><span class="nx">source</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">   </span><span class="p">(</span><span class="nx">Codegen</span><span class="p">.</span><span class="nx">fs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">CodegenTS</span><span class="p">.</span><span class="nx">fs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">CodegenPy</span><span class="p">.</span><span class="nx">fs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">CodegenJava</span><span class="p">.</span><span class="nx">fs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">CodegenCSharp</span><span class="p">.</span><span class="nx">fs</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">CodegenLLVM</span><span class="p">.</span><span class="nx">fs</span><span class="p">)</span>
+<span class="w">        </span><span class="err">│</span>
+<span class="w">        </span><span class="err">▼</span>
+<span class="w">  </span><span class="p">.</span><span class="nx">fs</span><span class="o">/</span><span class="p">.</span><span class="nx">ts</span><span class="o">/</span><span class="p">.</span><span class="nx">py</span><span class="o">/</span><span class="p">.</span><span class="nx">java</span><span class="w">  </span><span class="err">→</span><span class="w">  </span><span class="nx">dotnet</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="o">--</span><span class="nx">project</span><span class="w"> </span><span class="p">&lt;</span><span class="nx">tmp</span><span class="w"> </span><span class="nx">fsproj</span><span class="p">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nx">lllc</span><span class="w"> </span><span class="nx">run</span><span class="p">,</span><span class="w"> </span><span class="nx">F</span><span class="err">#</span><span class="w"> </span><span class="nx">only</span><span class="p">)</span>
+<span class="w">                     </span><span class="err">→</span><span class="w">  </span><span class="nx">dotnet</span><span class="w"> </span><span class="nx">build</span><span class="w">                      </span><span class="p">(</span><span class="nx">lllc</span><span class="w"> </span><span class="nx">build</span><span class="w"> </span><span class="o">--</span><span class="nx">target</span><span class="w"> </span><span class="nx">fs</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Entry points:
+- <code>Compiler.compile : string -&gt; Result&lt;string, LLError list&gt;</code> — single-file, F# target
+- <code>Compiler.compileTarget : Target -&gt; string -&gt; Result&lt;string, LLError list&gt;</code> — single-file, any target</p>
+<h3 id="project-mode-phase-8">Project mode (Phase 8)<a class="headerlink" href="#project-mode-phase-8" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="n">lll</span><span class="p">.</span><span class="n">toml</span>
+<span class="w">        </span><span class="err">│</span>
+<span class="w">        </span><span class="err">▼</span>
+<span class="w">   </span><span class="n">Manifest</span><span class="p">.</span><span class="n">parseManifest</span><span class="w">         </span><span class="n">LLManifest</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">version</span><span class="p">,</span><span class="w"> </span><span class="n">deps</span><span class="p">,</span><span class="w"> </span><span class="n">platform</span><span class="p">)</span>
+<span class="w">        </span><span class="err">│</span>
+<span class="w">        </span><span class="err">▼</span>
+<span class="w">   </span><span class="n">ProjectLoader</span><span class="p">.</span><span class="n">loadProject</span><span class="w">      </span><span class="n">LLProject</span><span class="w"> </span><span class="p">(</span><span class="n">topo</span><span class="o">-</span><span class="n">sorted</span><span class="w"> </span><span class="n">LoadedFile</span><span class="w"> </span><span class="n">list</span><span class="p">)</span>
+<span class="w">        </span><span class="err">│</span><span class="w">   </span><span class="err">▼</span><span class="w"> </span><span class="n">glob</span><span class="w"> </span><span class="n">src</span><span class="cm">/*.lll</span>
+<span class="cm">        │   ▼ parse each file header (module path + imports)</span>
+<span class="cm">        │   ▼ validate module paths (E020)</span>
+<span class="cm">        │   ▼ Kahn&#39;s topological sort (E024 on cycle)</span>
+<span class="cm">        ▼</span>
+<span class="cm">   Compiler.compileProject        for each file: compile → TypedModule</span>
+<span class="cm">        │</span>
+<span class="cm">        ▼</span>
+<span class="cm">   Codegen*.emitProjectModules    prelude once + all modules concatenated</span>
+<span class="cm">        │   (per-target; loops over [platform] use list)</span>
+<span class="cm">        ▼</span>
+<span class="cm">  bin/&lt;name&gt;.fs + bin/&lt;name&gt;.fsproj       (single target)</span>
+<span class="cm">  bin/fsharp/&lt;name&gt;.fs                    (multi-target)</span>
+<span class="cm">  bin/typescript/&lt;name&gt;.ts</span>
+</code></pre></div>
+
+<p>A <code>PosMap</code> side-table (see <code>AST.fs</code>) is populated by the parser and
+threaded through the elaborator and inference passes so that every
+error carries a real <code>line:col</code> from the source (instead of the historic
+<code>0:0</code> placeholder).</p>
+<h2 id="module-by-module">Module-by-module<a class="headerlink" href="#module-by-module" title="Permanent link">&para;</a></h2>
+<h3 id="tokenfs-token-types"><code>Token.fs</code> — token types<a class="headerlink" href="#tokenfs-token-types" title="Permanent link">&para;</a></h3>
+<p>Enum-like discriminated union with cases for keywords, identifiers, literals,
+operators, and the three synthetic layout tokens (<code>Indent</code>, <code>Dedent</code>,
+<code>Newline</code>). A <code>Tok</code> carries source <code>Line</code> and <code>Col</code>.</p>
+<h3 id="lexerfs-tokenizer"><code>Lexer.fs</code> — tokenizer<a class="headerlink" href="#lexerfs-tokenizer" title="Permanent link">&para;</a></h3>
+<p>Character-by-character scan producing a <code>Tok list</code>. Responsible for:</p>
+<ul>
+<li>Keyword recognition via a <code>Map&lt;string, Token&gt;</code>.</li>
+<li>INDENT/DEDENT synthesis from leading whitespace changes.</li>
+<li>String literal escape handling.</li>
+<li>Distinguishing identifiers by case: <code>[A-Z]...</code> → <code>TypeId</code>, lowercase →
+  <code>Ident</code>.</li>
+</ul>
+<p>See <a href="../02-lexer/">02-lexer</a>.</p>
+<h3 id="astfs-untyped-surface-ast"><code>AST.fs</code> — untyped surface AST<a class="headerlink" href="#astfs-untyped-surface-ast" title="Permanent link">&para;</a></h3>
+<p>Discriminated unions for types (<code>TypeExpr</code>), literals (<code>Literal</code>), patterns
+(<code>Pattern</code>), expressions (<code>Expr</code>), and declarations (<code>Decl</code>). An <code>LLModule</code>
+is a record of <code>Path</code>, <code>Imports</code>, and <code>Decls</code>.</p>
+<p>Type variables are <code>TyVar string</code>; type applications are <code>TyApp(outer, arg)</code>
+built left-to-right; units are a separate <code>UnitExpr</code> tree nested inside
+<code>TyTagged</code>.</p>
+<h3 id="parserfs-recursive-descent"><code>Parser.fs</code> — recursive descent<a class="headerlink" href="#parserfs-recursive-descent" title="Permanent link">&para;</a></h3>
+<p>Mutable <code>Ctx</code> cursor over a <code>Tok array</code>. Hand-written precedence climbing:
+<code>parseAtom &lt; parseTagged &lt; parseApp &lt; parseMul &lt; parseAdd &lt; parseCons &lt;
+parseCmp &lt; parsePipe</code>. Higher-level constructs (<code>parseExprInner</code>,
+<code>parseBlockExpr</code>) handle <code>let</code>, <code>if</code>, <code>match</code>, and lambda. The parser
+exposes two top-level entries: <code>parseModule</code> (plain) and
+<code>parseModuleWithPos</code> (same, but also returns the populated <code>PosMap</code>).</p>
+<p>See <a href="../03-parser/">03-parser</a>.</p>
+<h3 id="elaboratorfs-declared-type-checking-pass"><code>Elaborator.fs</code> — declared-type checking pass<a class="headerlink" href="#elaboratorfs-declared-type-checking-pass" title="Permanent link">&para;</a></h3>
+<p>Four sub-passes:</p>
+<ol>
+<li><code>rewriteTagsInModule</code> — rewrites <code>TyApp(T, TyVar t)</code> to
+   <code>TyTagged(T, UName t)</code> for every declared <code>tag</code> so that HMInfer sees
+   the tagged form directly.</li>
+<li><code>collectDecls</code> — walks decls, populates <code>TypeEnv : Map&lt;string, TypeExpr&gt;</code>
+   with a large <code>builtinEnv</code> (arith/cmp ops plus the Phase 6 stdlib:
+   math, list, maybe, result, str, char, file IO, process), let-binding
+   types (from literal inspection), function signatures, and sum-type
+   constructors.</li>
+<li><code>checkDecls</code> — traverses function bodies calling <code>typeOf</code>, which walks
+   expressions and compares declared vs actual types for each application.
+   Emits E001/E002/E004/E005 via <code>classifyMismatch</code> and carries positions
+   from the parser's <code>PosMap</code>.</li>
+<li><code>exhaustivenessCheck</code> — for every <code>DFn</code> whose first param type is a
+   named sum type, verifies that every <code>EMatch</code> branch list covers every
+   constructor. Emits E003 for missing constructors.</li>
+</ol>
+<p>Uses structural type equality with <code>TyVar</code> as a wildcard. Returns both
+the rewritten <code>LLModule</code> and the enriched <code>TypeEnv</code>:
+<code>elaborate : PosMap -&gt; LLModule -&gt; Result&lt;LLModule * TypeEnv, LLError list&gt;</code>.</p>
+<p>See <a href="../04-elaborator/">04-elaborator</a>.</p>
+<h3 id="typesfs-type-scheme-plumbing"><code>Types.fs</code> — type-scheme plumbing<a class="headerlink" href="#typesfs-type-scheme-plumbing" title="Permanent link">&para;</a></h3>
+<p>Defines <code>TypeScheme</code>, <code>Subst</code> (flex-var-only), <code>Env</code>, <code>FreshState</code>. Exports
+<code>applyType</code>, <code>applyEnv</code>, <code>compose</code>, <code>ftvType</code>, <code>generalize</code>, <code>instantiate</code>.
+Rigid vars (no <code>$</code> prefix) are quantifiers; flex vars (<code>$N</code>) are
+unification variables. The bridge <code>fromElaboratorEnv</code> converts
+Elaborator's raw <code>TypeEnv</code> into H-M's <code>Env</code> by collecting rigid vars into
+scheme quantifier lists.</p>
+<h3 id="typedastfs-typed-ast"><code>TypedAST.fs</code> — typed AST<a class="headerlink" href="#typedastfs-typed-ast" title="Permanent link">&para;</a></h3>
+<p>A parallel AST where every node has an <code>Id : ExprId</code>, a <code>Type : TypeExpr</code>,
+and an <code>Expr : TypedExprKind</code>. Declarations carry a <code>TypeScheme</code> alongside
+the body. <code>TypedModule</code> also tracks the final <code>Env</code> and a
+<code>Dispatch : Map&lt;ExprId, DispatchInfo&gt;</code> (the trait dispatch table, populated
+during inference).</p>
+<h3 id="hminferfs-algorithm-w"><code>HMInfer.fs</code> — Algorithm W<a class="headerlink" href="#hminferfs-algorithm-w" title="Permanent link">&para;</a></h3>
+<p>Walk the untyped <code>LLModule</code> producing a <code>TypedModule</code>. Key operations:</p>
+<ul>
+<li><code>unify : TypeExpr -&gt; TypeExpr -&gt; Result&lt;Subst, LLError&gt;</code></li>
+<li><code>inferExpr : Env -&gt; InferState -&gt; Expr -&gt; Subst * TypeExpr * TypedExpr</code></li>
+<li><code>inferDecl : Env -&gt; InferState -&gt; Decl -&gt; bool -&gt; (TypedDecl * bool) * Env</code></li>
+</ul>
+<p>Generalizes at every <code>let</code> and <code>fn</code>. Emits E001, E002, E004, E005, E006
+(reserved), E008.</p>
+<p>See <a href="../05-hm-inference/">05-hm-inference</a>.</p>
+<h3 id="codegenfs-f-emitter"><code>Codegen.fs</code> — F# emitter<a class="headerlink" href="#codegenfs-f-emitter" title="Permanent link">&para;</a></h3>
+<p>Walks the <code>TypedModule</code> producing a big string of F# source. Each
+<code>TypedExprKind</code> case has a corresponding emit rule. Binary operators are
+detected as <code>TEApp(TEApp(TEVar op, a), b)</code> and rendered infix. A bare <code>main</code>
+declaration with no params becomes <code>[&lt;EntryPoint&gt;] let main (argv: string[]) = ... 0</code>.</p>
+<p>See <a href="../06-codegen/">06-codegen</a>.</p>
+<h3 id="codegentsfs-typescript-emitter"><code>CodegenTS.fs</code> — TypeScript emitter<a class="headerlink" href="#codegentsfs-typescript-emitter" title="Permanent link">&para;</a></h3>
+<p>Emits TypeScript source. Sum types become discriminated unions with a <code>_tag</code> field. Curried functions emit as nested arrow functions. See <a href="../11-multi-target-codegen/">11-multi-target-codegen</a>.</p>
+<h3 id="codegenpyfs-python-emitter"><code>CodegenPy.fs</code> — Python emitter<a class="headerlink" href="#codegenpyfs-python-emitter" title="Permanent link">&para;</a></h3>
+<p>Emits Python source. Sum types become <code>@dataclass</code> classes under a <code>Union</code> alias. Curried functions emit as nested <code>def</code>. Pattern matching emits as ternary chains (Python <code>match</code> is not an expression).</p>
+<h3 id="codegenjavafs-java-21-emitter"><code>CodegenJava.fs</code> — Java 21 emitter<a class="headerlink" href="#codegenjavafs-java-21-emitter" title="Permanent link">&para;</a></h3>
+<p>Emits Java 21 source. Sum types become <code>sealed interface</code> + <code>record</code> hierarchies. Functions emit as static methods. See <a href="../11-multi-target-codegen/">11-multi-target-codegen</a>.</p>
+<h3 id="codegencsharpfs-c-emitter"><code>CodegenCSharp.fs</code> — C# emitter<a class="headerlink" href="#codegencsharpfs-c-emitter" title="Permanent link">&para;</a></h3>
+<p>Emits compile-safe C# source skeletons for all typed declarations. Current focus is stable emission contract and buildability.</p>
+<h3 id="codegenllvmfs-llvm-ir-emitter"><code>CodegenLLVM.fs</code> — LLVM IR emitter<a class="headerlink" href="#codegenllvmfs-llvm-ir-emitter" title="Permanent link">&para;</a></h3>
+<p>Emits typed LLVM IR with explicit control-flow lowering (<code>if</code>/<code>match</code>) plus a minimal heap-node runtime (<code>__ll_alloc</code>) for ADT/list/tuple representation. The backend is still intentionally subset-oriented (for example full trait parity remains pending).</p>
+<h3 id="platformfs-targetsdk-registry"><code>Platform.fs</code> — target/SDK registry<a class="headerlink" href="#platformfs-targetsdk-registry" title="Permanent link">&para;</a></h3>
+<p>Defines canonical target names, aliases, output extensions, and built-in <code>Platform.*.SDK</code> metadata.</p>
+<h3 id="manifestfs-toml-subset-parser-phase-8"><code>Manifest.fs</code> — TOML subset parser (Phase 8)<a class="headerlink" href="#manifestfs-toml-subset-parser-phase-8" title="Permanent link">&para;</a></h3>
+<p>Hand-written parser for <code>lll.toml</code> project manifests. Supports <code>[table]</code> headers,
+<code>key = "value"</code> strings, and <code>key = ["a","b"]</code> string arrays. No NuGet
+dependencies. Entry point: <code>parseManifest : string -&gt; Result&lt;LLManifest, string&gt;</code>.</p>
+<h3 id="projectloaderfs-multi-file-project-driver-phase-8"><code>ProjectLoader.fs</code> — multi-file project driver (Phase 8)<a class="headerlink" href="#projectloaderfs-multi-file-project-driver-phase-8" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Calls <code>Manifest.parseManifest</code>.</li>
+<li>Globs <code>src/**/*.lll</code> using <code>Directory.GetFiles</code>.</li>
+<li>Parses each file to extract its <code>module</code> header and <code>import</code> list.</li>
+<li>Validates module paths against file locations (E020).</li>
+<li>Topological sort via Kahn's algorithm (E024 on cycle).</li>
+<li>Returns <code>LLProject { Manifest; RootDir; Files: LoadedFile list }</code>.</li>
+</ol>
+<p>Entry point: <code>loadProject : string -&gt; Result&lt;LLProject, LLError list&gt;</code>.</p>
+<h3 id="compilerfs-pipeline-glue"><code>Compiler.fs</code> — pipeline glue<a class="headerlink" href="#compilerfs-pipeline-glue" title="Permanent link">&para;</a></h3>
+<p>Two entry points:</p>
+<ul>
+<li><code>compile : string -&gt; Result&lt;string, LLError list&gt;</code> — single-file pipeline.</li>
+<li><code>compileProjectToModulesForTarget : Target -&gt; LLProject -&gt; Result&lt;TypedModule list, LLError list&gt;</code> — multi-file front-end pass for a specific target, used for target-specific external validation.</li>
+<li><code>compileProject : LLProject -&gt; Result&lt;string, LLError list&gt;</code> — multi-file pipeline.</li>
+</ul>
+<h3 id="lllcselfsrcmcplll-self-hosted-mcp-server-phase-9"><code>lllcself/src/Mcp.lll</code> — self-hosted MCP server (Phase 9)<a class="headerlink" href="#lllcselfsrcmcplll-self-hosted-mcp-server-phase-9" title="Permanent link">&para;</a></h3>
+<p>The current MCP server is implemented in ll-lang, not in F#:</p>
+<ul>
+<li><code>lllcself/src/Mcp.lll</code> implements JSON-RPC parsing/dispatch.</li>
+<li><code>lllcself/src/Main.lll</code> routes the <code>mcp</code> subcommand.</li>
+<li><code>src/LLLangTool/Program.fs</code> forwards <code>lllc mcp</code> through <code>cmdRunSelf ["mcp"]</code>.</li>
+</ul>
+<p>Current tool inventory (28), grouped:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core compile/check</td>
+<td><code>compile_source</code>, <code>check_source</code>, <code>compile_file</code>, <code>check_file</code></td>
+</tr>
+<tr>
+<td>Diagnostics &amp; repair</td>
+<td><code>diagnose_source</code>, <code>diagnose_file</code>, <code>explain_error</code>, <code>fix_suggest</code>, <code>apply_fix_preview</code></td>
+</tr>
+<tr>
+<td>Formatting &amp; AST</td>
+<td><code>format_source</code>, <code>format_file</code>, <code>parse_source</code>, <code>typed_ast</code></td>
+</tr>
+<tr>
+<td>Project graph/build</td>
+<td><code>project_graph</code>, <code>check_project</code>, <code>build_project</code></td>
+</tr>
+<tr>
+<td>Symbol navigation</td>
+<td><code>symbols</code>, <code>definition</code>, <code>references</code></td>
+</tr>
+<tr>
+<td>Dependency helpers</td>
+<td><code>mod_add</code>, <code>mod_tidy</code>, <code>mod_why</code></td>
+</tr>
+<tr>
+<td>Test helpers</td>
+<td><code>test_list</code>, <code>test_run</code></td>
+</tr>
+<tr>
+<td>Utility surface</td>
+<td><code>stdlib_search</code>, <code>list_errors</code>, <code>lookup_error</code>, <code>list_targets</code></td>
+</tr>
+</tbody>
+</table>
+<p>For implementation details and contract examples, see
+<code>docs/compiler-dev/10-mcp-server.md</code>.</p>
+<p><strong>Client config</strong> (add to <code>~/.config/claude/mcp.json</code> or Cursor settings):</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;ll-lang&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lllc&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;mcp&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="srclllangtoolprogramfs-cli"><code>src/LLLangTool/Program.fs</code> — CLI<a class="headerlink" href="#srclllangtoolprogramfs-cli" title="Permanent link">&para;</a></h3>
+<p>The <code>lllc</code> driver. Seven commands:</p>
+<ul>
+<li><code>build &lt;file.lll&gt;</code> — single-file mode (default target: F#).</li>
+<li><code>build --target ts|py|java &lt;file.lll&gt;</code> — single-file, named target.</li>
+<li><code>build [dir]</code> — project mode (reads <code>lll.toml</code>, writes <code>bin/&lt;name&gt;.fs</code>; multi-target via <code>[platform] use</code>).</li>
+<li><code>run &lt;file.lll&gt;</code> — canonical run path: resolves imports, compiles to
+  temp multi-file F# project (<code>Prelude.fs</code> + modules + <code>.fsproj</code>), then
+  shells out to <code>dotnet run --project ...</code>.</li>
+<li><code>check &lt;file.lll&gt;</code> — lex → parse → elaborate → infer without emitting output. Fast type-check.</li>
+<li><code>new &lt;name&gt;</code> — scaffold project directory structure.</li>
+<li><code>install</code> — sync source-based dependencies declared in <code>lll.toml</code> into <code>vendor/</code> and rewrite <code>ll.sum</code>.</li>
+<li><code>mod tidy|add|why</code> — dependency management helpers (<code>vendor/</code> + <code>ll.sum</code> workflow).</li>
+<li><code>mcp</code> — launch MCP stdio server (blocks until stdin closes).</li>
+</ul>
+<h2 id="f-compile-order">F# compile order<a class="headerlink" href="#f-compile-order" title="Permanent link">&para;</a></h2>
+<p>F# requires forward declarations through <code>&lt;Compile Include="..."&gt;</code> order
+in the <code>.fsproj</code>. The current order is significant:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Token.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Lexer.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;AST.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Parser.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Elaborator.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Types.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;TypedAST.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;HMInfer.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Codegen.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;CodegenTS.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;CodegenPy.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;CodegenJava.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;CodegenCSharp.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;CodegenLLVM.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Platform.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Manifest.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;ProjectLoader.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Compile</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Compiler.fs&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</code></pre></div>
+
+<p>Dependency chain:</p>
+<ul>
+<li><code>Token.fs</code> → <code>Lexer.fs</code></li>
+<li><code>AST.fs</code> is independent; <code>Parser.fs</code> depends on <code>Token.fs</code> + <code>AST.fs</code></li>
+<li><code>Elaborator.fs</code> depends on <code>AST.fs</code> only</li>
+<li><code>Types.fs</code> depends on <code>AST.fs</code> and (for <code>fromElaboratorEnv</code>) on <code>Elaborator.fs</code></li>
+<li><code>TypedAST.fs</code> depends on <code>AST.fs</code> + <code>Types.fs</code></li>
+<li><code>HMInfer.fs</code> depends on all of the above</li>
+<li><code>Codegen.fs</code>, <code>CodegenTS.fs</code>, <code>CodegenPy.fs</code>, <code>CodegenJava.fs</code>, <code>CodegenCSharp.fs</code>, <code>CodegenLLVM.fs</code> each depend on <code>AST.fs</code> + <code>Types.fs</code> + <code>TypedAST.fs</code>. Do not <code>open</code> more than one in <code>Compiler.fs</code> — they export <code>emit</code>, which would shadow. Use fully-qualified names.</li>
+<li><code>Platform.fs</code> is independent metadata/target mapping used by <code>Compiler.fs</code> and tooling.</li>
+<li><code>Manifest.fs</code> depends only on <code>System</code> (no compiler module deps)</li>
+<li><code>ProjectLoader.fs</code> depends on <code>Manifest.fs</code> + <code>Elaborator.fs</code> + <code>Lexer.fs</code> + <code>Parser.fs</code></li>
+<li><code>Compiler.fs</code> glues everything together; dispatches to the right codegen via <code>Target</code> DU</li>
+</ul>
+<p>If you add a new file, slot it in where its dependencies are satisfied.
+Adding it at the end will usually work unless it is depended on by
+<code>Codegen.fs</code> or <code>Compiler.fs</code>.</p>
+<h2 id="multi-target-dispatch">Multi-target dispatch<a class="headerlink" href="#multi-target-dispatch" title="Permanent link">&para;</a></h2>
+<p><code>Compiler.fs</code> exposes <code>compileTarget</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="nc">Target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FSharp</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">TypeScript</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Python</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Java</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">CSharp</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">LLVM</span>
+
+<span class="k">let</span><span class="w"> </span><span class="nv">compileTarget</span><span class="w"> </span><span class="o">(</span><span class="n">target</span><span class="o">:</span><span class="w"> </span><span class="n">Target</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="n">src</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="o">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Result</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">,</span><span class="w"> </span><span class="n">LLError</span><span class="w"> </span><span class="kt">list</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="k">with</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">FSharp</span><span class="w">      </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">compile</span><span class="w"> </span><span class="n">src</span><span class="w">           </span><span class="c1">// Codegen.emit</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">TypeScript</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">compileToTS</span><span class="w"> </span><span class="n">src</span><span class="w">       </span><span class="c1">// CodegenTS.emit</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Python</span><span class="w">      </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">compileToPy</span><span class="w"> </span><span class="n">src</span><span class="w">       </span><span class="c1">// CodegenPy.emit</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">Java</span><span class="w">        </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">compileToJava</span><span class="w"> </span><span class="n">src</span><span class="w">     </span><span class="c1">// CodegenJava.emit</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">CSharp</span><span class="w">      </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">compileToCSharp</span><span class="w"> </span><span class="n">src</span><span class="w">   </span><span class="c1">// CodegenCSharp.emit</span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">LLVM</span><span class="w">        </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">compileToLLVM</span><span class="w"> </span><span class="n">src</span><span class="w">     </span><span class="c1">// CodegenLLVM.emit</span>
+</code></pre></div>
+
+<p>The front-end (lex → parse → elaborate → infer) runs once per target in multi-target project builds because external declarations are validated through target-specific mappings. <code>compileProject</code> remains the backward-compatible F# wrapper.</p>
+<p>Output layout:
+- Single target: <code>bin/&lt;name&gt;.fs</code> (backward-compatible)
+- Multi-target: <code>bin/fsharp/&lt;name&gt;.fs</code>, <code>bin/typescript/&lt;name&gt;.ts</code>, etc.</p>
+<p>See <a href="../11-multi-target-codegen/">11-multi-target-codegen</a> for per-backend details.</p>
+<h2 id="package-system">Package system<a class="headerlink" href="#package-system" title="Permanent link">&para;</a></h2>
+<p>Source-based dependencies. <code>lll.toml</code> declares them:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[deps]</span>
+<span class="n">std</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;../stdlib&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/user/ll-json#v1.0.0&quot;</span>
+</code></pre></div>
+
+<p><code>lllc install</code>/<code>lllc mod tidy</code> sync dep sources into <code>vendor/</code> and rewrite <code>ll.sum</code>. <code>ProjectLoader.fs</code> resolves imports by searching <code>src/</code> then <code>vendor/*/src/</code>.</p>
+<p>Platform SDKs are a future extension (<code>[sdk]</code> table in a dep's <code>lll.toml</code>). See <code>docs/superpowers/specs/2026-04-10-ll-lang-platform-sdk.md</code> for the design.</p>
+<h2 id="parser-and-inference-stack">Parser and Inference Stack<a class="headerlink" href="#parser-and-inference-stack" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The parser front-end uses <code>FParsec</code> (<code>FParsecParser.fs</code>) as the primary parser.</li>
+<li>A legacy handwritten token/parser path is still present for parity diagnostics and migration fallback.</li>
+<li>Hindley-Milner inference remains handwritten in <code>HMInfer.fs</code>; only parsing is library-backed.</li>
+<li>Error formatting and ll-lang diagnostics (<code>E001</code>..<code>E006</code>) are still owned by the compiler pipeline, not delegated to generated parser output.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
