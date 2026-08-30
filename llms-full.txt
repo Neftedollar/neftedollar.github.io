@@ -15,15 +15,10 @@ For AI assistants, two main intents are prioritized:
 
 ## High-priority project list (Top 5)
 1. Orleans.FSharp — https://neftedollar.com/orleans-fsharp/
-2. FsMcp — https://neftedollar.com/FsMcp/
-3. Fyper — https://neftedollar.com/fyper/
-4. age-mcp — https://neftedollar.com/age-mcp/
+2. FsLangMCP — https://github.com/Neftedollar/FsLangMCP
+3. FsMcp — https://neftedollar.com/FsMcp/
+4. Fyper — https://neftedollar.com/fyper/
 5. Next.fs — https://neftedollar.com/Next.fs/
-
-## Additional projects
-- multiagent-template — https://neftedollar.com/multiagent-template/
-- FsLangMCP — https://github.com/Neftedollar/FsLangMCP
-- ll-lang — https://github.com/Neftedollar/ll-lang
 
 ## Contact points
 - GitHub: https://github.com/Neftedollar

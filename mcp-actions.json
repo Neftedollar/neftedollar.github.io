@@ -30,6 +30,14 @@
       "priority": "high"
     },
     {
+      "id": "open-fslangmcp",
+      "name": "Open FsLangMCP",
+      "description": "Open the FsLangMCP repository.",
+      "method": "link",
+      "href": "https://github.com/Neftedollar/FsLangMCP",
+      "priority": "high"
+    },
+    {
       "id": "open-fsmcp",
       "name": "Open FsMcp",
       "description": "Open FsMcp project docs.",
@@ -43,14 +51,6 @@
       "description": "Open Fyper project docs.",
       "method": "link",
       "href": "https://neftedollar.com/fyper/",
-      "priority": "high"
-    },
-    {
-      "id": "open-age-mcp",
-      "name": "Open age-mcp",
-      "description": "Open age-mcp project docs.",
-      "method": "link",
-      "href": "https://neftedollar.com/age-mcp/",
       "priority": "high"
     },
     {

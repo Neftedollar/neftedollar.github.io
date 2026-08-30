@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roman Melnikov (Neftedollar) — CTO, F#/.NET Engineer, Open-Source Projects</title>
-    <meta name="description" content="Roman Melnikov (Neftedollar): CTO, F#/.NET and Orleans engineer, founder of the F# community in CIS. Projects: Orleans.FSharp, FsMcp, Fyper, age-mcp, Next.fs.">
-    <meta name="keywords" content="Roman Melnikov, Neftedollar, F#, .NET, Orleans, MCP, CTO, open source, Orleans.FSharp, FsMcp, Fyper, age-mcp, Next.fs">
+    <meta name="description" content="Roman Melnikov (Neftedollar): CTO, F#/.NET and Orleans engineer, founder of the F# community in CIS. Projects: Orleans.FSharp, FsLangMCP, FsMcp, Fyper, Next.fs.">
+    <meta name="keywords" content="Roman Melnikov, Neftedollar, F#, .NET, Orleans, MCP, CTO, open source, Orleans.FSharp, FsLangMCP, FsMcp, Fyper, Next.fs">
     <link rel="canonical" href="https://neftedollar.com/">
     <link rel="sitemap" href="https://neftedollar.com/sitemap.xml">
     <link rel="mcp-actions" href="https://neftedollar.com/mcp-actions.json">
@@ -21,7 +21,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Roman Melnikov (Neftedollar) — CTO, F#/.NET Engineer">
-    <meta name="twitter:description" content="CTO and F#/.NET engineer. Founder of the F# community in CIS. Projects: Orleans.FSharp, FsMcp, Fyper, age-mcp, Next.fs.">
+    <meta name="twitter:description" content="CTO and F#/.NET engineer. Founder of the F# community in CIS. Projects: Orleans.FSharp, FsLangMCP, FsMcp, Fyper, Next.fs.">
 
     <!-- Person Schema -->
     <script type="application/ld+json">
@@ -52,9 +52,9 @@
       "numberOfItems": 5,
       "itemListElement": [
         {"@type":"ListItem","position":1,"url":"https://neftedollar.com/orleans-fsharp/","name":"Orleans.FSharp"},
-        {"@type":"ListItem","position":2,"url":"https://neftedollar.com/FsMcp/","name":"FsMcp"},
-        {"@type":"ListItem","position":3,"url":"https://neftedollar.com/fyper/","name":"Fyper"},
-        {"@type":"ListItem","position":4,"url":"https://neftedollar.com/age-mcp/","name":"age-mcp"},
+        {"@type":"ListItem","position":2,"url":"https://github.com/Neftedollar/FsLangMCP","name":"FsLangMCP"},
+        {"@type":"ListItem","position":3,"url":"https://neftedollar.com/FsMcp/","name":"FsMcp"},
+        {"@type":"ListItem","position":4,"url":"https://neftedollar.com/fyper/","name":"Fyper"},
         {"@type":"ListItem","position":5,"url":"https://neftedollar.com/Next.fs/","name":"Next.fs"}
       ]
     }
@@ -102,6 +102,17 @@
           handler: async function () {
             window.location.assign('https://neftedollar.com/orleans-fsharp/');
             return { success: true, url: 'https://neftedollar.com/orleans-fsharp/' };
+          }
+        });
+
+        safeRegister({
+          id: 'open-fslangmcp',
+          name: 'Open FsLangMCP',
+          description: 'Open the FsLangMCP repository.',
+          parameters: { type: 'object', properties: {} },
+          handler: async function () {
+            window.location.assign('https://github.com/Neftedollar/FsLangMCP');
+            return { success: true, url: 'https://github.com/Neftedollar/FsLangMCP' };
           }
         });
 
@@ -216,12 +227,6 @@
             line-height: 1.4;
         }
 
-        .other-projects {
-            margin-top: 1.1rem;
-            font-size: 0.92rem;
-        }
-
-        .other-projects a { color: #9ac0ff; }
     </style>
 </head>
 <body>
@@ -246,6 +251,10 @@
                 <strong>Orleans.FSharp</strong>
                 <span>Idiomatic F# API for Microsoft Orleans.</span>
             </a>
+            <a class="project-card" href="https://github.com/Neftedollar/FsLangMCP" rel="noopener" data-mcp-action="open-fslangmcp" data-mcp-description="Open the FsLangMCP repository">
+                <strong>FsLangMCP</strong>
+                <span>Semantic F# compiler intelligence for AI coding agents.</span>
+            </a>
             <a class="project-card" href="https://neftedollar.com/FsMcp/" rel="noopener" data-mcp-action="open-fsmcp" data-mcp-description="Open FsMcp documentation">
                 <strong>FsMcp</strong>
                 <span>F# toolkit for building MCP servers and clients.</span>
@@ -254,22 +263,11 @@
                 <strong>Fyper</strong>
                 <span>Type-safe Cypher ORM/query builder for F#.</span>
             </a>
-            <a class="project-card" href="https://neftedollar.com/age-mcp/" rel="noopener" data-mcp-action="open-age-mcp" data-mcp-description="Open age-mcp docs">
-                <strong>age-mcp</strong>
-                <span>MCP server for Apache AGE graph databases.</span>
-            </a>
             <a class="project-card" href="https://neftedollar.com/Next.fs/" rel="noopener" data-mcp-action="open-next-fs" data-mcp-description="Open Next.fs docs">
                 <strong>Next.fs</strong>
                 <span>F# bindings for Next.js App Router patterns.</span>
             </a>
         </div>
-
-        <p class="other-projects">
-            Other projects:
-            <a href="https://neftedollar.com/multiagent-template/" rel="noopener">multiagent-template</a>,
-            <a href="https://github.com/Neftedollar/FsLangMCP" rel="noopener">FsLangMCP</a>,
-            <a href="https://github.com/Neftedollar/ll-lang" rel="noopener">ll-lang</a>
-        </p>
     </main>
 </body>
 </html>
