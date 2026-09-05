@@ -10,7 +10,7 @@ Languages: en, ru
 
 ## Top 5 projects
 - Orleans.FSharp: https://neftedollar.com/orleans-fsharp/
-- FsLangMCP: https://github.com/Neftedollar/FsLangMCP
+- FsLangMCP: https://neftedollar.com/FsLangMCP/
 - FsMcp: https://neftedollar.com/FsMcp/
 - Fyper: https://neftedollar.com/fyper/
 - Next.fs: https://neftedollar.com/Next.fs/

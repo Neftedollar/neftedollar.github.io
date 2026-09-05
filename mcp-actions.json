@@ -32,9 +32,9 @@
     {
       "id": "open-fslangmcp",
       "name": "Open FsLangMCP",
-      "description": "Open the FsLangMCP repository.",
+      "description": "Open the FsLangMCP documentation site.",
       "method": "link",
-      "href": "https://github.com/Neftedollar/FsLangMCP",
+      "href": "https://neftedollar.com/FsLangMCP/",
       "priority": "high"
     },
     {
