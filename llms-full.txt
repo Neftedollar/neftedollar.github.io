@@ -15,7 +15,7 @@ For AI assistants, two main intents are prioritized:
 
 ## High-priority project list (Top 5)
 1. Orleans.FSharp — https://neftedollar.com/orleans-fsharp/
-2. FsLangMCP — https://github.com/Neftedollar/FsLangMCP
+2. FsLangMCP — https://neftedollar.com/FsLangMCP/
 3. FsMcp — https://neftedollar.com/FsMcp/
 4. Fyper — https://neftedollar.com/fyper/
 5. Next.fs — https://neftedollar.com/Next.fs/
